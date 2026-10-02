@@ -18,6 +18,8 @@ import { createAdminSession } from "~/server/admin/operator";
 import { sponsorDestination } from "./sponsor-clicks";
 import { coderabbitCampaign } from "~/lib/sponsor-campaign";
 
+import { siteUrl } from "~/test-support/site";
+
 const pageViewId = "245446b3-90c6-4843-b7a2-3ca364c70a12";
 const context = {
   params: Promise.resolve({ campaign: coderabbitCampaign.id }),
@@ -29,11 +31,11 @@ function request(
   query = "",
 ) {
   return new NextRequest(
-    `https://gitdiagram.com/out/${coderabbitCampaign.id}/impression${query}`,
+    siteUrl(`/out/${coderabbitCampaign.id}/impression${query}`),
     {
       method: "POST",
       headers: {
-        origin: "https://gitdiagram.com",
+        origin: siteUrl(),
         "content-type": "application/json",
         "user-agent": "Mozilla/5.0 Chrome/145.0.0.0 Safari/537.36",
         ...headers,
@@ -87,7 +89,7 @@ it("records loaded ad impressions independently with the same browser identity a
   });
   const click = await GET(
     new NextRequest(
-      `https://gitdiagram.com/out/${coderabbitCampaign.id}?placement=home`,
+      siteUrl(`/out/${coderabbitCampaign.id}?placement=home`),
       {
         headers: {
           "user-agent": "Mozilla/5.0",

@@ -1134,7 +1134,7 @@ describe("feed cut (the vertical MP4)", () => {
     // Later beats still come in on their words.
     expect(stage.opacity(stage.node("handler"))).toBe(0);
     expect(document.getElementById("feed-tag")?.textContent).toBe(
-      "gitdiagram.com/acme/demo",
+      "acme/demo",
     );
     expect(document.getElementById("feed-headline")?.textContent).toBe("Demo");
     // The scene is laid out below the header.
@@ -1162,7 +1162,7 @@ describe("feed cut (the vertical MP4)", () => {
     expect(visible(stage, card)).toBe(false);
     stage.seek(timing.SPEECH_END);
     expect(visible(stage, card)).toBe(true);
-    expect(card.textContent).toContain("gitdiagram.com/acme/demo");
+    expect(card.textContent).toContain("acme/demo");
     // Captions still show the last line while it plays.
     expect(stage.captions()).toContain("later.");
   });

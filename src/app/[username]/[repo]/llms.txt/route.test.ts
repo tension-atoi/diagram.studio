@@ -37,8 +37,10 @@ vi.mock("~/server/explainer/cache", () => ({
 
 import { GET, revalidate } from "./route";
 
+import { siteUrl } from "~/test-support/site";
+
 const call = (username: string, repo: string) =>
-  GET(new Request(`https://gitdiagram.com/${username}/${repo}.md`), {
+  GET(new Request(siteUrl(`/${username}/${repo}.md`)), {
     params: Promise.resolve({ username, repo }),
   });
 
@@ -82,7 +84,7 @@ describe("repository Markdown", () => {
       "text/markdown; charset=utf-8",
     );
     expect(response.headers.get("link")).toBe(
-      '<https://gitdiagram.com/acme/demo>; rel="canonical"',
+      `<${siteUrl("/acme/demo")}>; rel="canonical"`,
     );
     expect(response.headers.get("vary")).toBe("Accept");
     const body = await response.text();
@@ -92,7 +94,7 @@ describe("repository Markdown", () => {
     expect(body).toContain(
       "[App](https://github.com/acme/demo/blob/HEAD/app.py)",
     );
-    expect(body).toContain("https://gitdiagram.com/acme/demo/video");
+    expect(body).toContain(siteUrl("/acme/demo/video"));
   });
 
   it("reads only the public artifact, through the page's cache and tags", async () => {
@@ -125,7 +127,7 @@ describe("repository Markdown", () => {
     expect(response.status).toBe(404);
     expect(response.headers.get("x-robots-tag")).toBe("noindex");
     expect(await response.text()).toContain(
-      "open https://gitdiagram.com/acme/new in a browser",
+      `open ${siteUrl("/acme/new")} in a browser`,
     );
   });
 
@@ -152,7 +154,7 @@ describe("repository Markdown", () => {
     const redirect = await call("Acme", "Demo");
     expect(redirect.status).toBe(308);
     expect(redirect.headers.get("location")).toBe(
-      "https://gitdiagram.com/acme/demo.md",
+      siteUrl("/acme/demo.md"),
     );
 
     expect((await call("acme", "..")).status).toBe(404);

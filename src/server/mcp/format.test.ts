@@ -12,6 +12,8 @@ import {
   parseRepositoryInput,
 } from "./format";
 
+import { siteUrl } from "~/test-support/site";
+
 describe("parseRepositoryInput", () => {
   it.each([
     ["fastapi/fastapi", "fastapi", "fastapi"],
@@ -29,8 +31,8 @@ describe("parseRepositoryInput", () => {
     ["www.github.com/a/b?tab=readme", "a", "b"],
     ["git@github.com:facebook/react.git", "facebook", "react"],
     // A URL on this deployment's own site carries the same owner/repo.
-    [`${SITE_URL}/fastapi/fastapi`, "fastapi", "fastapi"],
-    [`${SITE_URL}/fastapi/fastapi/video`, "fastapi", "fastapi"],
+    [siteUrl("/fastapi/fastapi"), "fastapi", "fastapi"],
+    [siteUrl("/fastapi/fastapi/video"), "fastapi", "fastapi"],
   ])("reads %s", (input, username, repo) => {
     expect(parseRepositoryInput(input)).toEqual({ username, repo });
   });
@@ -106,11 +108,9 @@ describe("formatDiagram", () => {
       },
       { hasVideo: true },
     );
+    expect(text).toContain(`Interactive diagram: ${siteUrl("/owner/repo")}`);
     expect(text).toContain(
-      "Interactive diagram: https://gitdiagram.com/owner/repo",
-    );
-    expect(text).toContain(
-      "Narrated explainer video: https://gitdiagram.com/owner/repo/video",
+      `Narrated explainer video: ${siteUrl("/owner/repo/video")}`,
     );
     expect(text).toContain("★ 1,234 · diagram generated 2026-09-01");
     expect(text).toContain(
@@ -152,7 +152,7 @@ describe("formatVideo", () => {
       },
     } as unknown as VideoArtifact;
     const text = formatVideo(video);
-    expect(text).toContain("Watch: https://gitdiagram.com/owner/repo/video");
+    expect(text).toContain(`Watch: ${siteUrl("/owner/repo/video")}`);
     expect(text).toContain("Length: 1:35 · made 2026-09-25");
     expect(text).toContain("Repo is a tool.\nIt runs fast.");
   });

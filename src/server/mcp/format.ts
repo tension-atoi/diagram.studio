@@ -29,9 +29,11 @@ export function parseRepositoryInput(input: string): RepositoryRef | null {
   // GitHub URL does, so both hostnames are accepted here and the site one is
   // rewritten to GitHub before parsing. The host comes from the environment, so
   // the two are never out of step.
+  // `host`, not `hostname`: a local origin carries its port
+  // (127.0.0.1:3000), and dropping it would stop matching the site's own URLs.
   const siteHost = (() => {
     try {
-      return new URL(SITE_URL).hostname.toLowerCase();
+      return new URL(SITE_URL).host.toLowerCase();
     } catch {
       return null;
     }

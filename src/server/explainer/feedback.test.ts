@@ -5,7 +5,9 @@ vi.mock("server-only", () => ({}));
 
 import { feedbackEmail } from "./feedback";
 
-const request = new Request("https://gitdiagram.com/api/video/feedback", {
+import { siteUrl } from "~/test-support/site";
+
+const request = new Request(siteUrl("/api/video/feedback"), {
   headers: {
     "x-vercel-ip-city": "San%20Francisco",
     "x-vercel-ip-country-region": "CA",
@@ -37,7 +39,7 @@ describe("feedbackEmail", () => {
       "The diagram scene was the best part.",
       "",
       "—",
-      "Video: https://gitdiagram.com/acme/widgets/video",
+      `Video: ${siteUrl("/acme/widgets/video")}`,
       "Made 2026-09-25T12:00:00.000Z with Claude Opus 5.5",
       "Sent at 0:42 of 1:04",
       "From: San Francisco, CA, US · desktop",
@@ -48,7 +50,7 @@ describe("feedbackEmail", () => {
   it("shortens a long subject and says when there is no reply address", () => {
     const { subject, text } = feedbackEmail(
       { ...feedback, message: "x".repeat(200) },
-      new Request("https://gitdiagram.com/"),
+      new Request(siteUrl("/")),
     );
     expect(subject).toBe(`Video feedback on acme/widgets: ${"x".repeat(60)}…`);
     expect(text).toContain("Length 1:04");

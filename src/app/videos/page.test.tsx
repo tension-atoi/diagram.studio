@@ -22,6 +22,8 @@ vi.mock("~/components/explainer/video-catalog", () => ({
 
 import VideosIndexPage, { metadata } from "./page";
 
+import { siteUrl } from "~/test-support/site";
+
 /** The props the page hands the gallery. */
 function catalogProps(element: unknown): Record<string, unknown> {
   const found: Array<Record<string, unknown>> = [];
@@ -51,7 +53,7 @@ describe("/videos", () => {
   it("has its own link preview instead of the homepage's", () => {
     expect(metadata.openGraph).toMatchObject({
       title: metadata.title,
-      url: "https://gitdiagram.com/videos",
+      url: siteUrl("/videos"),
       images: [expect.objectContaining({ url: "/opengraph-image.png" })],
     });
     expect(metadata.twitter).toMatchObject({

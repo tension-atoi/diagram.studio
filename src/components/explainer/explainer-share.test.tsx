@@ -12,6 +12,8 @@ import { ExplainerShare } from "~/components/explainer/explainer-share";
 import type * as ExplainerApi from "~/features/explainer/api";
 import type { VideoArtifact } from "~/features/explainer/types";
 
+import { siteUrl } from "~/test-support/site";
+
 const api = vi.hoisted(() => ({
   streamExplainerRender: vi.fn(),
   capture: vi.fn(),
@@ -138,12 +140,12 @@ describe("ExplainerShare links", () => {
         fireEvent.click(screen.getByRole("button", { name: "README picture" })),
       );
       expect(writeText.mock.calls).toEqual([
-        ["https://gitdiagram.com/acme/tiny/video"],
+        [siteUrl("/acme/tiny/video")],
         [
-          "[![Watch a one-minute video tour of tiny](https://gitdiagram.com/video-badge.svg)](https://gitdiagram.com/acme/tiny/video)",
+          `[![Watch a one-minute video tour of tiny](${siteUrl("/video-badge.svg")})](${siteUrl("/acme/tiny/video")})`,
         ],
         [
-          "[![acme/tiny, explained in a one-minute video](https://gitdiagram.com/api/video/file?username=acme&repo=tiny&format=poster)](https://gitdiagram.com/acme/tiny/video)",
+          `[![acme/tiny, explained in a one-minute video](${siteUrl("/api/video/file")}?username=acme&repo=tiny&format=poster)](${siteUrl("/acme/tiny/video")})`,
         ],
       ]);
       expect(api.capture.mock.calls).toEqual(

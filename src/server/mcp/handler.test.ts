@@ -39,6 +39,8 @@ vi.mock("~/server/admin/live-events", () => ({
 
 import { describeClient, handleMcpRequest } from "./handler";
 
+import { siteUrl } from "~/test-support/site";
+
 const ARTIFACT = {
   username: "fastapi",
   repo: "fastapi",
@@ -70,7 +72,7 @@ async function connect(mode: "legacy" | "auto" = "legacy") {
     { versionNegotiation: { mode } },
   );
   const transport = new StreamableHTTPClientTransport(
-    new URL("https://gitdiagram.com/mcp"),
+    new URL(siteUrl("/mcp")),
     {
       fetch: (input, init) => {
         const request = new Request(input, init);
@@ -139,7 +141,7 @@ describe("MCP endpoint", () => {
     );
     const text = textOf(result);
     expect(result.isError).toBeFalsy();
-    expect(text).toContain("https://gitdiagram.com/fastapi/fastapi");
+    expect(text).toContain(siteUrl("/fastapi/fastapi"));
     expect(text).toContain("FastAPI is a Python ASGI framework.");
     expect(text).toContain("**FastAPI app** `fastapi/applications.py`");
     expect(text).toContain("```mermaid");
@@ -185,11 +187,11 @@ describe("MCP endpoint", () => {
     }>;
     expect(view?.mimeType).toBe("text/html;profile=mcp-app");
     expect(view?.text).toContain(
-      '<script type="module" src="https://gitdiagram.com/mcp-app/diagram-view.js"></script>',
+      `<script type="module" src="${siteUrl("/mcp-app/diagram-view.js")}"></script>`,
     );
     expect(view?._meta.ui).toMatchObject({
-      csp: { resourceDomains: ["https://gitdiagram.com"], connectDomains: [] },
-      domain: "https://gitdiagram.com",
+      csp: { resourceDomains: [siteUrl()], connectDomains: [] },
+      domain: siteUrl(),
     });
     await client.close();
   });
@@ -204,7 +206,7 @@ describe("MCP endpoint", () => {
     expect(result._meta?.["com.gnu.in.labs/diagram"]).toEqual({
       status: "found",
       repository: "fastapi/fastapi",
-      diagramUrl: "https://gitdiagram.com/fastapi/fastapi",
+      diagramUrl: siteUrl("/fastapi/fastapi"),
       githubUrl: "https://github.com/fastapi/fastapi",
       stars: 102536,
       mermaid: ARTIFACT.diagram,
@@ -233,12 +235,12 @@ describe("MCP endpoint", () => {
     });
     const text = textOf(result);
     expect(text).toContain("no diagram of someone/fastapi yet");
-    expect(text).toContain("https://gitdiagram.com/someone/fastapi");
+    expect(text).toContain(siteUrl("/someone/fastapi"));
     expect(text).toContain("tiangolo/fastapi-utils");
     expect(result._meta?.["com.gnu.in.labs/diagram"]).toEqual({
       status: "missing",
       repository: "someone/fastapi",
-      diagramUrl: "https://gitdiagram.com/someone/fastapi",
+      diagramUrl: siteUrl("/someone/fastapi"),
       githubUrl: "https://github.com/someone/fastapi",
       stars: null,
       mermaid: null,
@@ -342,7 +344,7 @@ describe("MCP endpoint", () => {
     });
     const text = textOf(result);
     expect(text).toContain("3 of 42");
-    expect(text).toContain("https://gitdiagram.com/vercel/repo-2");
+    expect(text).toContain(siteUrl("/vercel/repo-2"));
     expect(text).not.toContain("repo-3");
     await client.close();
   });
@@ -363,7 +365,7 @@ describe("MCP endpoint", () => {
 describe("plain HTTP", () => {
   it("answers CORS preflights", async () => {
     const response = await handleMcpRequest(
-      new Request("https://gitdiagram.com/mcp", {
+      new Request(siteUrl("/mcp"), {
         method: "OPTIONS",
         headers: { Origin: "https://example.com" },
       }),
@@ -374,7 +376,7 @@ describe("plain HTTP", () => {
 
   it("tells a person opening the URL how to connect", async () => {
     const response = await handleMcpRequest(
-      new Request("https://gitdiagram.com/mcp", {
+      new Request(siteUrl("/mcp"), {
         headers: { Accept: "text/html" },
       }),
     );
@@ -384,7 +386,7 @@ describe("plain HTTP", () => {
 
   it("refuses 2025-era session streams (stateless server)", async () => {
     const response = await handleMcpRequest(
-      new Request("https://gitdiagram.com/mcp", {
+      new Request(siteUrl("/mcp"), {
         headers: { Accept: "text/event-stream" },
       }),
     );

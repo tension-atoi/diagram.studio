@@ -37,6 +37,8 @@ vi.mock("~/server/storage/artifact-store", () => ({
 
 import { persistGenerationResult } from "~/server/storage/generation-persistence";
 
+import { siteUrl } from "~/test-support/site";
+
 const audit = {
   sessionId: "session-1",
   status: "succeeded" as const,
@@ -137,7 +139,7 @@ describe("persistGenerationResult", () => {
     // Search engines hear about the page once, at its canonical address.
     expect(mocks.notifyIndexNow).toHaveBeenCalledTimes(1);
     expect(mocks.notifyIndexNow).toHaveBeenCalledWith([
-      "https://gitdiagram.com/acme/demo",
+      siteUrl("/acme/demo"),
     ]);
   });
 

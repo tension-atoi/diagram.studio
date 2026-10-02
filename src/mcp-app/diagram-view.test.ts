@@ -6,6 +6,8 @@ import { DIAGRAM_META_KEY } from "~/features/mcp-app/diagram-payload";
 // a host does (a tool result, then clicks) with Mermaid and the host bridge
 // replaced, and check the safety layers between the two.
 
+import { siteUrl } from "~/test-support/site";
+
 const mocks = vi.hoisted(() => ({
   render: vi.fn(),
   initialize: vi.fn(),
@@ -43,7 +45,7 @@ vi.mock("@modelcontextprotocol/ext-apps", () => ({
 const PAYLOAD = {
   status: "found",
   repository: "fastapi/fastapi",
-  diagramUrl: "https://gitdiagram.com/fastapi/fastapi",
+  diagramUrl: siteUrl("/fastapi/fastapi"),
   githubUrl: "https://github.com/fastapi/fastapi",
   stars: 102536,
   mermaid:
@@ -136,7 +138,7 @@ describe("the diagram view", () => {
       .find((button) => button.textContent === "Open in the studio")!
       .click();
     expect(mocks.openLink).toHaveBeenCalledWith({
-      url: "https://gitdiagram.com/fastapi/fastapi",
+      url: siteUrl("/fastapi/fastapi"),
     });
     buttons.find((button) => button.textContent === "Expand")!.click();
     expect(mocks.requestDisplayMode).toHaveBeenCalledWith({
@@ -155,7 +157,7 @@ describe("the diagram view", () => {
     expect(view().textContent).toContain("no diagram of fastapi/fastapi yet");
     view().querySelector("button")!.click();
     expect(mocks.openLink).toHaveBeenCalledWith({
-      url: "https://gitdiagram.com/fastapi/fastapi",
+      url: siteUrl("/fastapi/fastapi"),
     });
   });
 

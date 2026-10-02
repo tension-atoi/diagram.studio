@@ -37,6 +37,8 @@ function campaign(
 
 // Occupancy only changes when a campaign starts, so checking each start is
 // enough.
+
+import { siteUrl } from "~/test-support/site";
 function scheduleProblems(campaigns: readonly SponsorCampaign[]) {
   return campaigns.flatMap(({ startsAt }) => {
     const active = activeSponsorCampaigns(Date.parse(startsAt), campaigns);
@@ -141,7 +143,7 @@ describe("paid sponsor schedule", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-09-24T12:00:00Z"));
     vi.stubEnv("SPONSOR_PREVIEW_CAMPAIGN", coderabbitCampaign.id);
-    const response = GET(new Request("https://gitdiagram.com/api/sponsor"));
+    const response = GET(new Request(siteUrl("/api/sponsor")));
     expect(response.headers.get("cache-control")).toContain("no-store");
     expect(await response.json()).toMatchObject({
       campaignIds: [sentCampaign.id],
@@ -162,7 +164,7 @@ describe("paid sponsor schedule", () => {
     });
     vi.setSystemTime(new Date(coderabbitCampaign.startsAt));
     expect(
-      await GET(new Request("https://gitdiagram.com/api/sponsor")).json(),
+      await GET(new Request(siteUrl("/api/sponsor"))).json(),
     ).toMatchObject({ campaignIds: [coderabbitCampaign.id] });
   });
 

@@ -1,6 +1,8 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DiagramExport } from "./diagram-export";
+
+import { siteUrl } from "~/test-support/site";
 const { exportPng, capture } = vi.hoisted(() => ({
   exportPng: vi.fn(),
   capture: vi.fn(),
@@ -114,12 +116,12 @@ describe("diagram export", () => {
     [
       "README picture",
       "readme_picture",
-      "[![Architecture diagram of acme/demo](https://gitdiagram.com/acme/demo/diagram.png)](https://gitdiagram.com/acme/demo?utm_source=readme&utm_medium=picture)",
+      `[![Architecture diagram of acme/demo](${siteUrl("/acme/demo/diagram.png")})](${siteUrl("/acme/demo")}?utm_source=readme&utm_medium=picture)`,
     ],
     [
       "README badge",
       "readme_badge",
-      "[![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/acme/demo?utm_source=readme&utm_medium=badge)",
+      `[![Architecture diagram](${siteUrl("/diagram-badge.svg")})](${siteUrl("/acme/demo")}?utm_source=readme&utm_medium=badge)`,
     ],
   ])(
     "copies the %s Markdown and counts it",

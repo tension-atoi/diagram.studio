@@ -29,6 +29,8 @@ vi.mock("./video-watch-page-client", () => ({ default: () => null }));
 
 import VideoWatchPage, { generateMetadata } from "./page";
 
+import { siteUrl } from "~/test-support/site";
+
 const params = Promise.resolve({ username: "acme", repo: "demo" });
 
 const artifact = {
@@ -85,12 +87,12 @@ describe("video watch page with a video", () => {
       type: "video.other",
       images: [
         {
-          url: "https://gitdiagram.com/api/video/file?username=acme&repo=demo&format=poster&v=2026-09-24T00%3A00%3A00.000Z&p=1234",
+          url: `${siteUrl("/api/video/file")}?username=acme&repo=demo&format=poster&v=2026-09-24T00%3A00%3A00.000Z&p=1234`,
         },
       ],
       videos: [
         {
-          url: "https://gitdiagram.com/api/video/file?username=acme&repo=demo&format=landscape&v=2026-09-24T00%3A00%3A00.000Z",
+          url: `${siteUrl("/api/video/file")}?username=acme&repo=demo&format=landscape&v=2026-09-24T00%3A00%3A00.000Z`,
         },
       ],
     });
@@ -111,7 +113,7 @@ describe("video watch page with a video", () => {
       "@type": "VideoObject",
       uploadDate: "2026-09-24T00:00:00.000Z",
       duration: "PT62S",
-      url: "https://gitdiagram.com/acme/demo/video",
+      url: siteUrl("/acme/demo/video"),
       contentUrl: expect.stringContaining("format=landscape"),
       thumbnailUrl: [expect.stringContaining("format=poster")],
     });

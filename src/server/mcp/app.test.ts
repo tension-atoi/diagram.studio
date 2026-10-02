@@ -9,6 +9,8 @@ import {
   mcpAppOrigin,
 } from "./app";
 
+import { siteUrl } from "~/test-support/site";
+
 describe("the diagram view resource", () => {
   it("is versioned in its URI", () => {
     expect(DIAGRAM_VIEW_URI).toMatch(/^ui:\/\/gitdiagram\/.+-v\d+\.html$/);
@@ -33,8 +35,8 @@ describe("the diagram view resource", () => {
 
 describe("mcpAppOrigin", () => {
   it("defaults to the site", () => {
-    expect(mcpAppOrigin("")).toBe("https://gitdiagram.com");
-    expect(mcpAppOrigin(undefined)).toBe("https://gitdiagram.com");
+    expect(mcpAppOrigin("")).toBe(siteUrl());
+    expect(mcpAppOrigin(undefined)).toBe(siteUrl());
   });
 
   it("accepts an https origin, or http on localhost", () => {
@@ -45,8 +47,8 @@ describe("mcpAppOrigin", () => {
   });
 
   it("refuses anything else", () => {
-    expect(mcpAppOrigin("http://example.com")).toBe("https://gitdiagram.com");
-    expect(mcpAppOrigin("javascript:alert(1)")).toBe("https://gitdiagram.com");
-    expect(mcpAppOrigin("not a url")).toBe("https://gitdiagram.com");
+    expect(mcpAppOrigin("http://example.com")).toBe(siteUrl());
+    expect(mcpAppOrigin("javascript:alert(1)")).toBe(siteUrl());
+    expect(mcpAppOrigin("not a url")).toBe(siteUrl());
   });
 });

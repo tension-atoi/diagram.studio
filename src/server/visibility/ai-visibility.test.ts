@@ -29,12 +29,14 @@ import {
   runAiVisibility,
 } from "./ai-visibility";
 
+import { siteUrl } from "~/test-support/site";
+
 const FIRST = AI_VISIBILITY_PROMPTS[0]!.text;
 
 function fakeAsk(provider: AiProvider, prompt: string, mode: AiMode) {
   const names =
     provider === "openai" && mode === "search" && prompt === FIRST
-      ? "- **GitDiagram** turns a repo into a diagram (https://gitdiagram.com).\n- **Madge**"
+      ? `- **the studio** turns a repo into a diagram (${siteUrl()}).\n- **Madge**"
       : provider === "anthropic" && prompt === FIRST
         ? "- **Madge**\n- **GitDiagram**"
         : "Use Madge or Graphviz.";

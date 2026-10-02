@@ -132,6 +132,14 @@ bun run build
 bun run start
 ```
 
+## Decisions
+
+Architecture decisions are recorded as they are taken, with the alternatives
+that were rejected:
+
+- [docs/decisions/embedded-local-engine.md](docs/decisions/embedded-local-engine.md)
+  — a packaged local model engine, supervised by the app
+
 ## Package and run the desktop app
 
 ```bash

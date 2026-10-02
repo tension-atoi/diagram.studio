@@ -136,10 +136,16 @@ export function lastBookedSponsorCampaign(
 }
 
 /** True when the hostname is this deployment's own site. */
+/**
+ * True when the request came from this deployment's own site.
+ *
+ * The argument is a hostname (no port), as Next and `new URL().hostname` both
+ * report it, so the comparison drops the site's port too. Ports differ by
+ * deployment; the host does not.
+ */
 export function isProductionSponsorHost(hostname: string) {
   try {
-    const site = new URL(SITE_URL);
-    const self = site.hostname.toLowerCase();
+    const self = new URL(SITE_URL).hostname.toLowerCase();
     const host = hostname.toLowerCase();
     return host === self || host === `www.${self}`;
   } catch {

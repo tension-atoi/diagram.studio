@@ -3,6 +3,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { siteUrl } from "~/test-support/site";
+
 const mocks = vi.hoisted(() => ({
   calls: [] as string[],
   keys: [] as string[],
@@ -148,7 +150,7 @@ describe("explainer video storage", () => {
       `put ${root}/artifact.json`,
       "index",
       "purge",
-      "indexnow https://gitdiagram.com/acme/widget/video",
+      `indexnow ${siteUrl("/acme/widget/video")}`,
       "list",
       `delete ${root}/1780000000000/beat-00.mp3`,
     ]);

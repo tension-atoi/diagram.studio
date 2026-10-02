@@ -34,6 +34,8 @@ import RepoPageClient from "./repo-page-client";
 import Repo, { generateMetadata } from "./page";
 import { PlaceholderRepo } from "./placeholder-repo";
 
+import { siteUrl } from "~/test-support/site";
+
 type ClientProps = {
   initialState: unknown;
   initialStateIsAuthoritative: boolean;
@@ -115,7 +117,7 @@ describe("repository page", () => {
     expect(metadata.openGraph?.images).toEqual(metadata.twitter?.images);
     expect(metadata.openGraph?.images).toEqual([
       expect.objectContaining({
-        url: "https://gitdiagram.com/acme/demo/opengraph-image",
+        url: siteUrl("/acme/demo/opengraph-image"),
         width: 1200,
         height: 630,
       }),
@@ -224,9 +226,9 @@ describe("repository page", () => {
       "BreadcrumbList",
     ]);
     expect(graph[0]).toMatchObject({
-      url: "https://gitdiagram.com/acme/demo",
+      url: siteUrl("/acme/demo"),
       dateModified: "2026-09-19T00:00:00Z",
-      about: { "@id": "https://gitdiagram.com/acme/demo#repository" },
+      about: { "@id": `${siteUrl("/acme/demo")}#repository` },
     });
     expect(graph[1]).toMatchObject({
       codeRepository: "https://github.com/acme/demo",

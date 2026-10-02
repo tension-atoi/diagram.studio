@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { missingDiagramMarkdown, repositoryMarkdown } from "./markdown";
 import type { DiagramReadout } from "./readout";
 
+import { siteUrl } from "~/test-support/site";
+
 const readout: DiagramReadout = {
   explanation: "## Overview\nDemo serves an API.",
   groups: [
@@ -49,17 +51,17 @@ describe("repositoryMarkdown", () => {
       repo: "demo",
       diagram: "flowchart TD\n  A --> B",
       readout,
-      videoUrl: "https://gitdiagram.com/acme/demo/video",
+      videoUrl: siteUrl("/acme/demo/video"),
     });
 
     expect(markdown).toContain("# acme/demo architecture");
     expect(markdown).toContain("(last updated 2026-09-19)");
     expect(markdown).toContain(
-      "- Interactive diagram: https://gitdiagram.com/acme/demo",
+      `- Interactive diagram: ${siteUrl("/acme/demo")}`,
     );
     expect(markdown).toContain("- Repository: https://github.com/acme/demo");
     expect(markdown).toContain(
-      "- Video tour (about a minute): https://gitdiagram.com/acme/demo/video",
+      `- Video tour (about a minute): ${siteUrl("/acme/demo/video")}`,
     );
     expect(markdown).toContain(
       "## Overview\n\n#### Overview\nDemo serves an API.",
@@ -91,6 +93,6 @@ describe("missingDiagramMarkdown", () => {
   it("tells the agent how to make one", () => {
     const markdown = missingDiagramMarkdown("acme", "demo");
     expect(markdown).toContain("no stored diagram of acme/demo yet");
-    expect(markdown).toContain("open https://gitdiagram.com/acme/demo");
+    expect(markdown).toContain(`open ${siteUrl("/acme/demo")}`);
   });
 });

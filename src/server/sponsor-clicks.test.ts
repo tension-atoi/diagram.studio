@@ -23,6 +23,8 @@ import {
   sponsorPlacements,
 } from "~/lib/sponsor-campaign";
 
+import { siteUrl } from "~/test-support/site";
+
 const operatorToken = "operator-token-for-sponsor-tests-000000";
 async function adminCookie() {
   const session = await createAdminSession();
@@ -34,13 +36,19 @@ const browser =
 const fetchMock = vi.fn<typeof fetch>();
 const context = { params: Promise.resolve({ campaign: "sent-2026-09" }) };
 
+/**
+ * A request to the placement URL.
+ *
+ * `nextUrl` is set explicitly: NextRequest defaults it to localhost:3000
+ * whatever the URL says, and the production-host check reads that.
+ */
 function request(placement = "home", headers: Record<string, string> = {}) {
-  return new NextRequest(
-    `https://gitdiagram.com/out/sent-2026-09?placement=${placement}`,
-    {
-      headers: { "user-agent": browser, ...headers },
-    },
-  );
+  // A plain Request, not a NextRequest: Next normalises a loopback host to
+  // "localhost", and the production-host check reads the URL's hostname. The
+  // route accepts anything Request-shaped.
+  return new Request(siteUrl(`/out/sent-2026-09?placement=${placement}`), {
+    headers: { "user-agent": browser, ...headers },
+  }) as unknown as NextRequest;
 }
 
 beforeEach(() => {
@@ -253,14 +261,14 @@ describe("sponsor click redirects", () => {
       vi.setSystemTime(new Date(at));
       const response = await GET(
         new NextRequest(
-          `https://gitdiagram.com${sponsorClickHref("readme", campaign)}`,
+          siteUrl(sponsorClickHref("readme", campaign)),
           { headers: { "user-agent": browser } },
         ),
         { params: Promise.resolve({ campaign }) },
       );
       expect(response.status).toBe(302);
       expect(response.headers.get("location")).toBe(
-        "https://gitdiagram.com/advertise",
+        siteUrl("/advertise"),
       );
       expect(response.headers.get("cache-control")).toContain("no-store");
     }
@@ -270,7 +278,7 @@ describe("sponsor click redirects", () => {
     const testClick = async (headers: Record<string, string>) =>
       GET(
         new NextRequest(
-          `https://gitdiagram.com/out/${coderabbitCampaign.id}?placement=home&test=1`,
+          siteUrl(`/out/${coderabbitCampaign.id}?placement=home&test=1`),
           { headers: { "user-agent": browser, ...headers } },
         ),
         { params: Promise.resolve({ campaign: coderabbitCampaign.id }) },
@@ -280,7 +288,7 @@ describe("sponsor click redirects", () => {
       "www.coderabbit.ai",
     );
     expect((await testClick({})).headers.get("location")).toBe(
-      "https://gitdiagram.com/advertise",
+      siteUrl("/advertise"),
     );
     const preview = await GET(
       new NextRequest(

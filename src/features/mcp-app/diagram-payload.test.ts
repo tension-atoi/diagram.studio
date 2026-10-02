@@ -7,10 +7,12 @@ import {
   readDiagramPayload,
 } from "./diagram-payload";
 
+import { siteUrl } from "~/test-support/site";
+
 const FOUND = {
   status: "found",
   repository: "fastapi/fastapi",
-  diagramUrl: "https://gitdiagram.com/fastapi/fastapi",
+  diagramUrl: siteUrl("/fastapi/fastapi"),
   githubUrl: "https://github.com/fastapi/fastapi",
   stars: 102536,
   mermaid: 'flowchart TD\n  a["App"]',

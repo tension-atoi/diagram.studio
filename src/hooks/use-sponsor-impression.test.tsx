@@ -8,6 +8,8 @@ import {
   useSponsorImpression,
 } from "./use-sponsor-impression";
 
+import { ORIGIN } from "~/test-support/site";
+
 const capture = vi.fn<typeof fetch>();
 const body = (call: number) =>
   JSON.parse(capture.mock.calls[call]![1]!.body as string) as {
@@ -18,7 +20,7 @@ const body = (call: number) =>
 beforeEach(() => {
   capture.mockReset().mockResolvedValue(new Response(null, { status: 204 }));
   vi.stubGlobal("fetch", capture);
-  vi.stubGlobal("location", { hostname: "gitdiagram.com" });
+  vi.stubGlobal("location", { hostname: new URL(ORIGIN).hostname });
   // Every test starts on a fresh page view.
   trackSponsorPageView("about:blank");
   route.pathname = "/";

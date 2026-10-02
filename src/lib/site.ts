@@ -14,8 +14,14 @@ function originFromEnv(value: string | undefined): string | undefined {
   return trimmed ? trimmed.replace(/\/+$/, "") : undefined;
 }
 
+/**
+ * With nothing configured, the studio considers itself to be the local service
+ * it is: the same address the desktop app hands its server. A deployment
+ * reachable by others sets SITE_URL.
+ */
 export const SITE_URL =
-  originFromEnv(process.env.SITE_URL) ?? "https://gitdiagram.com";
+  originFromEnv(process.env.SITE_URL) ??
+  `http://127.0.0.1:${process.env.PORT?.trim() || "3000"}`;
 
 export const GITHUB_REPO_URL = "https://github.com/tension-atoi/diagram.studio";
 

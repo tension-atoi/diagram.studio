@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { siteUrl } from "~/test-support/site";
 import type * as Sitemaps from "~/lib/sitemaps";
 
 const store = vi.hoisted(() => ({
@@ -94,8 +96,8 @@ describe("robots.txt", () => {
     const shards = await generateSitemaps();
     expect(shards).toHaveLength(2);
     expect((await robots()).sitemap).toEqual([
-      "https://gitdiagram.com/sitemap/0.xml",
-      "https://gitdiagram.com/sitemap/1.xml",
+      siteUrl("/sitemap/0.xml"),
+      siteUrl("/sitemap/1.xml"),
     ]);
   });
 
@@ -114,13 +116,13 @@ describe("sitemap", () => {
     const urls = (await sitemap({ id: Promise.resolve("0") })).map(
       (route) => route.url,
     );
-    expect(urls).toContain("https://gitdiagram.com/videos");
-    expect(urls).toContain("https://gitdiagram.com/visualize-codebase");
+    expect(urls).toContain(siteUrl("/videos"));
+    expect(urls).toContain(siteUrl("/visualize-codebase"));
 
     store.videosOn = false;
     const without = (await sitemap({ id: Promise.resolve("0") })).map(
       (route) => route.url,
     );
-    expect(without).not.toContain("https://gitdiagram.com/videos");
+    expect(without).not.toContain(siteUrl("/videos"));
   });
 });

@@ -147,7 +147,7 @@
     for (var size = 124; size > 64 && title.scrollWidth > title.clientWidth; size -= 4) title.style.fontSize = size + "px";
     el("div", "vsub", top, "explained in about a minute");
     var captionHost = el("div", "vcaptions");
-    el("div", "vfoot", null, "gitdiagram.com/" + (meta.owner || "") + "/" + (meta.repo || ""));
+    el("div", "vfoot", null, (meta.owner || "") + "/" + (meta.repo || ""));
     return captionHost;
   }
 
@@ -185,7 +185,7 @@
     head.style.top = top + "px";
     var tag = el("div", "feed-tag", head);
     el("span", "feed-glyph", tag).innerHTML = GLYPH;
-    el("span", "", tag, "gitdiagram.com/" + (meta.owner || "") + "/" + (meta.repo || ""));
+    el("span", "", tag, (meta.owner || "") + "/" + (meta.repo || ""));
     var line = el("div", "feed-headline", head);
     line.style.height = FEED_HEADLINE_H + "px";
     line.innerHTML = window.ShotKit.accentHtml(feedHeadline(window.SPEC || {}, meta));
