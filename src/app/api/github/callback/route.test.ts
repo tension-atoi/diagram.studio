@@ -105,7 +105,7 @@ beforeEach(() => {
   vi.stubEnv("CACHE_KEY_SECRET", "test-cache-key-secret");
   vi.stubEnv("GITHUB_CONNECT_CLIENT_ID", "Iv-test");
   vi.stubEnv("GITHUB_CONNECT_CLIENT_SECRET", "test-secret");
-  vi.stubEnv("GITHUB_CONNECT_APP_SLUG", "gitdiagram-private-repos");
+  vi.stubEnv("GITHUB_CONNECT_APP_SLUG", "diagram-studio-private-repos");
   vi.spyOn(console, "info").mockImplementation(() => undefined);
 });
 
@@ -187,7 +187,7 @@ describe("GET /api/github/connect", () => {
     );
 
     expect(response.headers.get("location")).toBe(
-      "https://github.com/apps/gitdiagram-private-repos/installations/new/permissions?suggested_target_id=777&target_id=777",
+      "https://github.com/apps/diagram-studio-private-repos/installations/new/permissions?suggested_target_id=777&target_id=777",
     );
     expect(
       readConnectFlow(cookieReader(setCookies(response)))?.installOffered,
@@ -303,7 +303,7 @@ describe("GET /api/github/callback", () => {
     );
 
     expect(response.headers.get("location")).toBe(
-      "https://github.com/apps/gitdiagram-private-repos/installations/new/permissions?suggested_target_id=777&target_id=777",
+      "https://github.com/apps/diagram-studio-private-repos/installations/new/permissions?suggested_target_id=777&target_id=777",
     );
     const cookies = setCookies(response);
     expect(readGitHubConnection(cookieReader(cookies))?.uid).toBe(42);

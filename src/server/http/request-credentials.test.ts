@@ -204,7 +204,7 @@ describe("request credentials", () => {
       vi.stubEnv("CACHE_KEY_SECRET", "test-cache-key-secret");
       vi.stubEnv("GITHUB_CONNECT_CLIENT_ID", "Iv-test");
       vi.stubEnv("GITHUB_CONNECT_CLIENT_SECRET", "test-secret");
-      vi.stubEnv("GITHUB_CONNECT_APP_SLUG", "gitdiagram-private-repos");
+      vi.stubEnv("GITHUB_CONNECT_APP_SLUG", "diagram-studio-private-repos");
       resetGitHubConnectionRefreshesForTests();
     });
 

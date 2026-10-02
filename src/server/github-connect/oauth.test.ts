@@ -18,7 +18,7 @@ import {
 const config = {
   clientId: "Iv-test",
   clientSecret: "test-secret",
-  appSlug: "gitdiagram-private-repos",
+  appSlug: "diagram-studio-private-repos",
 };
 
 afterEach(() => {
@@ -60,12 +60,14 @@ describe("GitHub connect OAuth helpers", () => {
   });
 
   it("targets the install page at the repository owner when known", () => {
-    expect(buildInstallUrl("gitdiagram-private-repos")).toBe(
-      "https://github.com/apps/gitdiagram-private-repos/installations/new",
+    expect(buildInstallUrl("diagram-studio-private-repos")).toBe(
+      "https://github.com/apps/diagram-studio-private-repos/installations/new",
     );
-    const targeted = new URL(buildInstallUrl("gitdiagram-private-repos", 9));
+    const targeted = new URL(
+      buildInstallUrl("diagram-studio-private-repos", 9),
+    );
     expect(targeted.pathname).toBe(
-      "/apps/gitdiagram-private-repos/installations/new/permissions",
+      "/apps/diagram-studio-private-repos/installations/new/permissions",
     );
     expect(targeted.searchParams.get("target_id")).toBe("9");
     expect(targeted.searchParams.get("suggested_target_id")).toBe("9");

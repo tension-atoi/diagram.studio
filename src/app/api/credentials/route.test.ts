@@ -121,7 +121,7 @@ describe("POST /api/credentials", () => {
   it("disconnects a GitHub sign-in and revokes its token", async () => {
     vi.stubEnv("GITHUB_CONNECT_CLIENT_ID", "Iv-test");
     vi.stubEnv("GITHUB_CONNECT_CLIENT_SECRET", "test-secret");
-    vi.stubEnv("GITHUB_CONNECT_APP_SLUG", "gitdiagram-private-repos");
+    vi.stubEnv("GITHUB_CONNECT_APP_SLUG", "diagram-studio-private-repos");
     mocks.readGitHubConnectionToken.mockResolvedValue("ghu_current");
 
     const response = await POST(

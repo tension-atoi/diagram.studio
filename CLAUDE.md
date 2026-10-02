@@ -83,7 +83,7 @@ pulled; the status bar shows that verdict rather than asserting one.
 ### Storage
 
 Diagrams live on disk: `~/.cache/gnu-in-labs-diagram-studio/<owner>/<repo>.json`
-(`storage/local-disk.ts`, `CACHE_ROOT`, overridable with `GITDIAGRAM_CACHE_DIR`).
+(`storage/local-disk.ts`, `CACHE_ROOT`, overridable with `DIAGRAM_STUDIO_CACHE_DIR`).
 The app never writes next to its bundle, which is read-only.
 
 `storage/` also holds the R2 artifact store and the Upstash Redis client. Both

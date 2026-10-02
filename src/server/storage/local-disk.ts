@@ -5,9 +5,7 @@ import os from "node:os";
 
 /** Exported so the test global-setup wipes the same directory it writes to. */
 export const CACHE_ROOT =
-  // Kept under its old name so existing setups keep working; it is a
-  // public configuration key, not branding.
-  process.env.GITDIAGRAM_CACHE_DIR ||
+  process.env.DIAGRAM_STUDIO_CACHE_DIR ||
   (process.env.NODE_ENV === "test"
     ? path.join(os.tmpdir(), "gnu-in-labs-diagram-studio-test-cache")
     : path.join(os.homedir(), ".cache", "gnu-in-labs-diagram-studio"));
