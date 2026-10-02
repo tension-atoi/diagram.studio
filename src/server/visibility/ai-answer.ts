@@ -59,11 +59,17 @@ export const AI_VISIBILITY_PROMPTS: ReadonlyArray<{
   },
 ];
 
-const GITDIAGRAM = /\bgit[ -]?diagram(?:\.com)?\b/i;
+/**
+ * The product as assistants may name it. It answers to its old name too: a
+ * model trained before the rename will still say it, and that mention is still
+ * a mention.
+ */
+const STUDIO =
+  /\b(?:gnu\.in\.labs[ /]diagram studio|diagram studio|git[ -]?diagram(?:\.com)?)\b/i;
 
 // Tools an answer may name, matched by these patterns (first is the display name).
 const KNOWN_TOOLS: Array<[name: string, pattern: RegExp]> = [
-  ["GitDiagram", GITDIAGRAM],
+  ["diagram studio", STUDIO],
   ["DeepWiki", /\bdeep ?wiki\b/i],
   ["Sourcegraph", /\bsourcegraph\b/i],
   ["CodeSee", /\bcodesee\b/i],
@@ -205,7 +211,7 @@ export interface AnswerReading {
 }
 
 /**
- * What an answer says about GitDiagram. `citations` are the URLs the answer
+ * What an answer says about the studio. `citations` are the URLs the answer
  * cites; `sources` every page its search returned.
  */
 export function readAnswer(
@@ -214,11 +220,11 @@ export function readAnswer(
   sources: string[] = [],
 ): AnswerReading {
   const tools = toolsNamed(text);
-  const index = tools.indexOf("GitDiagram");
+  const index = tools.indexOf("diagram studio");
   const linked = [...citations, ...(text.match(URL_IN_TEXT) ?? [])];
   const cited = linked.some(isStudioSite);
   return {
-    mentioned: index >= 0 || cited || GITDIAGRAM.test(text),
+    mentioned: index >= 0 || cited || STUDIO.test(text),
     cited,
     inSources: [...sources, ...citations].some(isStudioSite),
     position: index >= 0 ? index + 1 : null,

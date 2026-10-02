@@ -1,38 +1,40 @@
 import { describe, expect, it } from "vitest";
 
+import { siteUrl } from "~/test-support/site";
+
 import { AI_VISIBILITY_PROMPTS, readAnswer, toolsNamed } from "./ai-answer";
 
 describe("reading an assistant's answer", () => {
-  it("finds GitDiagram, its place among the tools, and a link to it", () => {
+  it("finds the studio, its place among the tools, and a link to it", () => {
     const text = [
       "Several tools do this:",
       "",
       "- **Swark** is a VS Code extension that draws diagrams with an LLM.",
-      "- **GitDiagram** (gitdiagram.com): swap github.com for gitdiagram.com in a repo URL.",
+      "- **diagram studio**: open /owner/repo to see a repository's architecture.",
       "- **Mermaid** or PlantUML with an LLM.",
     ].join("\n");
-    expect(readAnswer(text, ["https://gitdiagram.com/"], [])).toEqual({
+    expect(readAnswer(text, [siteUrl("/")], [])).toEqual({
       mentioned: true,
       cited: true,
       inSources: true,
       position: 2,
-      tools: ["Swark", "GitDiagram", "Mermaid", "PlantUML"],
+      tools: ["Swark", "diagram studio", "Mermaid", "PlantUML"],
     });
   });
 
-  it("counts a written gitdiagram.com link as a citation", () => {
+  it("counts a written link to this site as a citation", () => {
     const reading = readAnswer(
-      "Try [GitDiagram](https://www.gitdiagram.com/owner/repo) for a quick map.",
+      `Try [diagram studio](${siteUrl("/owner/repo")}) for a quick map.`,
     );
     expect(reading.cited).toBe(true);
     expect(reading.position).toBe(1);
   });
 
-  it("does not take Eraser's Git Diagrammer or unrelated hosts for GitDiagram", () => {
+  it("does not take an unrelated tool or host for the studio", () => {
     const reading = readAnswer(
-      "Eraser's Git Diagrammer draws repos. See https://notgitdiagram.com.evil.io/x",
+      "Eraser's Git Diagrammer draws repos. See https://not-the-studio.evil.io/x",
       ["https://example.com/gitdiagram"],
-      ["https://gitdiagram.com.evil.io/"],
+      [`${siteUrl()}.evil.io/`],
     );
     expect(reading).toMatchObject({
       mentioned: false,
@@ -43,10 +45,11 @@ describe("reading an assistant's answer", () => {
     expect(reading.tools).toEqual(["Eraser"]);
   });
 
-  it("notices GitDiagram only among the pages a search returned", () => {
-    expect(
-      readAnswer("Use Madge.", [], ["https://gitdiagram.com/"]),
-    ).toMatchObject({ mentioned: false, inSources: true });
+  it("notices the studio only among the pages a search returned", () => {
+    expect(readAnswer("Use Madge.", [], [siteUrl("/")])).toMatchObject({
+      mentioned: false,
+      inSources: true,
+    });
   });
 
   it("names unknown tools from bolded list items, not labels or headings", () => {

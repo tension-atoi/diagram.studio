@@ -36,7 +36,7 @@ const FIRST = AI_VISIBILITY_PROMPTS[0]!.text;
 function fakeAsk(provider: AiProvider, prompt: string, mode: AiMode) {
   const names =
     provider === "openai" && mode === "search" && prompt === FIRST
-      ? `- **the studio** turns a repo into a diagram (${siteUrl()}).\n- **Madge**"
+      ? `- **diagram studio** turns a repo into a diagram (${siteUrl()}).\n- **Madge**`
       : provider === "anthropic" && prompt === FIRST
         ? "- **Madge**\n- **GitDiagram**"
         : "Use Madge or Graphviz.";

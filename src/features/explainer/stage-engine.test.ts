@@ -1133,9 +1133,7 @@ describe("feed cut (the vertical MP4)", () => {
       expect(stage.opacity(stage.node(id))).toBeGreaterThan(0.95);
     // Later beats still come in on their words.
     expect(stage.opacity(stage.node("handler"))).toBe(0);
-    expect(document.getElementById("feed-tag")?.textContent).toBe(
-      "acme/demo",
-    );
+    expect(document.getElementById("feed-tag")?.textContent).toBe("acme/demo");
     expect(document.getElementById("feed-headline")?.textContent).toBe("Demo");
     // The scene is laid out below the header.
     const kit = (

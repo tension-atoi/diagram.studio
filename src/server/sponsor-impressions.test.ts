@@ -35,7 +35,9 @@ function request(
     {
       method: "POST",
       headers: {
-        origin: siteUrl(),
+        // Next rewrites a loopback host in request.url to "localhost", and the
+        // same-origin guard compares against that, so the header has to agree.
+        origin: "http://localhost:3000",
         "content-type": "application/json",
         "user-agent": "Mozilla/5.0 Chrome/145.0.0.0 Safari/537.36",
         ...headers,
@@ -88,15 +90,12 @@ it("records loaded ad impressions independently with the same browser identity a
     },
   });
   const click = await GET(
-    new NextRequest(
-      siteUrl(`/out/${coderabbitCampaign.id}?placement=home`),
-      {
-        headers: {
-          "user-agent": "Mozilla/5.0",
-          cookie: `gd_sponsor_visitor=${cookieValue}`,
-        },
+    new NextRequest(siteUrl(`/out/${coderabbitCampaign.id}?placement=home`), {
+      headers: {
+        "user-agent": "Mozilla/5.0",
+        cookie: `gd_sponsor_visitor=${cookieValue}`,
       },
-    ),
+    }),
     context,
   );
   expect(click.headers.get("location")).toBe(

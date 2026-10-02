@@ -153,9 +153,7 @@ describe("repository Markdown", () => {
   it("redirects mixed case and refuses names GitHub cannot have", async () => {
     const redirect = await call("Acme", "Demo");
     expect(redirect.status).toBe(308);
-    expect(redirect.headers.get("location")).toBe(
-      siteUrl("/acme/demo.md"),
-    );
+    expect(redirect.headers.get("location")).toBe(siteUrl("/acme/demo.md"));
 
     expect((await call("acme", "..")).status).toBe(404);
     expect((await call("a b", "demo")).status).toBe(404);

@@ -139,19 +139,24 @@ export function lastBookedSponsorCampaign(
 /**
  * True when the request came from this deployment's own site.
  *
- * The argument is a hostname (no port), as Next and `new URL().hostname` both
- * report it, so the comparison drops the site's port too. Ports differ by
- * deployment; the host does not.
+ * The argument is a hostname, as `new URL().hostname` reports it, so the site's
+ * own port is dropped from the comparison — ports differ by deployment. The
+ * loopback aliases all count as the local site: Next rewrites a loopback host
+ * to `localhost` in `request.url` regardless of what was asked for, and
+ * 127.0.0.1, ::1 and localhost are the same machine.
  */
 export function isProductionSponsorHost(hostname: string) {
+  const host = hostname.toLowerCase();
+  if (LOOPBACK_HOSTS.has(host)) return true;
   try {
     const self = new URL(SITE_URL).hostname.toLowerCase();
-    const host = hostname.toLowerCase();
     return host === self || host === `www.${self}`;
   } catch {
     return false;
   }
 }
+
+const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
 
 export function sponsorClickHref(
   placement: SponsorPlacement,

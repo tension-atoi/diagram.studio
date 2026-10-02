@@ -138,9 +138,7 @@ describe("persistGenerationResult", () => {
     );
     // Search engines hear about the page once, at its canonical address.
     expect(mocks.notifyIndexNow).toHaveBeenCalledTimes(1);
-    expect(mocks.notifyIndexNow).toHaveBeenCalledWith([
-      siteUrl("/acme/demo"),
-    ]);
+    expect(mocks.notifyIndexNow).toHaveBeenCalledWith([siteUrl("/acme/demo")]);
   });
 
   it("revalidates each route once when the request was already normalized", async () => {

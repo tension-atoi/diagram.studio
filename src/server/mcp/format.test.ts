@@ -1,5 +1,3 @@
-import { SITE_URL } from "~/lib/site";
-
 import { describe, expect, it } from "vitest";
 
 import type { VideoArtifact } from "~/features/explainer/types";

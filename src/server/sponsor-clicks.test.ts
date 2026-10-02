@@ -39,16 +39,15 @@ const context = { params: Promise.resolve({ campaign: "sent-2026-09" }) };
 /**
  * A request to the placement URL.
  *
- * `nextUrl` is set explicitly: NextRequest defaults it to localhost:3000
- * whatever the URL says, and the production-host check reads that.
+ * NextRequest is required — the route reads `nextUrl` — and it rewrites a
+ * loopback host to "localhost" in `request.url` whatever was asked for. That is
+ * correct behaviour, and `isProductionSponsorHost` treats the loopback aliases
+ * as the local site for exactly this reason.
  */
 function request(placement = "home", headers: Record<string, string> = {}) {
-  // A plain Request, not a NextRequest: Next normalises a loopback host to
-  // "localhost", and the production-host check reads the URL's hostname. The
-  // route accepts anything Request-shaped.
-  return new Request(siteUrl(`/out/sent-2026-09?placement=${placement}`), {
+  return new NextRequest(siteUrl(`/out/sent-2026-09?placement=${placement}`), {
     headers: { "user-agent": browser, ...headers },
-  }) as unknown as NextRequest;
+  });
 }
 
 beforeEach(() => {
@@ -168,11 +167,13 @@ describe("sponsor click redirects", () => {
     },
   );
 
-  it("does not count HEAD requests, previews, localhost, or missing analytics configuration", async () => {
+  it("does not count HEAD requests, foreign hosts, or missing analytics configuration", async () => {
     expect((await HEAD(request(), context)).status).toBe(302);
+    // The loopback aliases count as this deployment's own site — it is a local
+    // app — so a foreign host is what has to be excluded.
     for (const origin of [
-      "http://localhost:3000",
-      "https://preview.vercel.app",
+      "https://preview.example.com",
+      "https://elsewhere.io",
     ]) {
       expect(
         (
@@ -260,15 +261,16 @@ describe("sponsor click redirects", () => {
     ] as const) {
       vi.setSystemTime(new Date(at));
       const response = await GET(
-        new NextRequest(
-          siteUrl(sponsorClickHref("readme", campaign)),
-          { headers: { "user-agent": browser } },
-        ),
+        new NextRequest(siteUrl(sponsorClickHref("readme", campaign)), {
+          headers: { "user-agent": browser },
+        }),
         { params: Promise.resolve({ campaign }) },
       );
       expect(response.status).toBe(302);
+      // The redirect is built from request.url, which Next rewrites to
+      // "localhost" for a loopback host.
       expect(response.headers.get("location")).toBe(
-        siteUrl("/advertise"),
+        "http://localhost:3000/advertise",
       );
       expect(response.headers.get("cache-control")).toContain("no-store");
     }
@@ -288,7 +290,7 @@ describe("sponsor click redirects", () => {
       "www.coderabbit.ai",
     );
     expect((await testClick({})).headers.get("location")).toBe(
-      siteUrl("/advertise"),
+      "http://localhost:3000/advertise",
     );
     const preview = await GET(
       new NextRequest(

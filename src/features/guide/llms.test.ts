@@ -24,7 +24,10 @@ describe("llms.txt", () => {
     // Every list item in a section is a Markdown link.
     const items = lines.filter((line) => line.startsWith("- "));
     expect(items.length).toBeGreaterThan(8);
-    for (const item of items) expect(item).toMatch(/^- \[[^\]]+\]\(https:\/\//);
+    // llms.txt asks for absolute links; a local studio is served over http, so
+    // the scheme is not asserted — the URL is, and it comes from SITE_URL.
+    for (const item of items)
+      expect(item).toMatch(/^- \[[^\]]+\]\(https?:\/\//);
   });
 
   it("names the agent surfaces: Markdown twin, MCP and the guide", () => {
