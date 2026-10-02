@@ -61,3 +61,72 @@ export function saveLocalDiagram(
     return false;
   }
 }
+
+/** One entry of the local library: enough to list it, not to render it. */
+export interface LocalDiagramEntry {
+  username: string;
+  repo: string;
+  /** When the stored diagram was made, from the file itself. */
+  lastSuccessfulAt: string | null;
+  visibility: "public" | "private" | null;
+}
+
+/**
+ * Every diagram this machine has stored, newest first.
+ *
+ * The directory is the only index there is: there is no database and no remote
+ * catalogue, so a name that cannot be a GitHub path is skipped rather than
+ * guessed at. A file that cannot be read is left out of the listing entirely.
+ */
+export function listLocalDiagrams(): LocalDiagramEntry[] {
+  const entries: LocalDiagramEntry[] = [];
+  let owners: string[];
+  try {
+    if (!fs.existsSync(CACHE_ROOT)) return [];
+    owners = fs.readdirSync(CACHE_ROOT);
+  } catch (err) {
+    console.warn("Failed to list the local diagram cache:", err);
+    return [];
+  }
+
+  for (const owner of owners) {
+    if (!/^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$/.test(owner)) continue;
+    const ownerPath = path.join(CACHE_ROOT, owner);
+    try {
+      if (!fs.statSync(ownerPath).isDirectory()) continue;
+      for (const file of fs.readdirSync(ownerPath)) {
+        if (!file.endsWith(".json")) continue;
+        const repo = file.slice(0, -".json".length);
+        if (!/^[a-z0-9._-]{1,100}$/.test(repo)) continue;
+        const fullPath = path.join(ownerPath, file);
+        // A directory called `something.json` is not a diagram.
+        if (!fs.statSync(fullPath).isFile()) continue;
+        entries.push({
+          username: owner,
+          repo,
+          lastSuccessfulAt: fs.statSync(fullPath).mtime.toISOString(),
+          visibility: readVisibility(fullPath),
+        });
+      }
+    } catch (err) {
+      console.warn(`Failed to read the local diagram cache for ${owner}:`, err);
+    }
+  }
+
+  return entries.sort((a, b) =>
+    (b.lastSuccessfulAt ?? "").localeCompare(a.lastSuccessfulAt ?? ""),
+  );
+}
+
+function readVisibility(file: string): LocalDiagramEntry["visibility"] {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(file, "utf-8")) as {
+      visibility?: unknown;
+    };
+    return parsed.visibility === "public" || parsed.visibility === "private"
+      ? parsed.visibility
+      : null;
+  } catch {
+    return null;
+  }
+}

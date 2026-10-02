@@ -35,7 +35,7 @@ export function guideSections(): GuideSection[] {
       heading: "Get a diagram in one step",
       paragraphs: [
         "A diagram lives at `/{owner}/{repo}`: [fastapi/fastapi](/fastapi/fastapi). You can also paste a GitHub URL, or just `owner/repo`, on the [home page](/). File, branch, issue and pull request URLs work too; they open the repository's diagram.",
-        "If the repository has been diagrammed before, the stored diagram opens at once. Otherwise the studio makes one, usually in about a minute, and keeps it on your disk. Some to try: [FastAPI](/fastapi/fastapi), [Flask](/pallets/flask), [React](/facebook/react) and [Next.js](/vercel/next.js). [Browse](/browse) lists every stored diagram.",
+        "If the repository has been diagrammed before, the stored diagram opens at once. Otherwise the studio makes one, usually in about a minute, and keeps it on your disk. Some to try: [FastAPI](/fastapi/fastapi), [Flask](/pallets/flask), [React](/facebook/react) and [Next.js](/vercel/next.js). [Your library](/library) lists every diagram this machine has drawn.",
       ],
     },
     {

@@ -84,14 +84,14 @@ export function CommandPalette({
       },
     },
     {
-      id: "nav-browse",
+      id: "nav-library",
       category: "Navigation",
-      label: "Cached Repositories Catalog",
-      description: "Browse locally cached architecture diagrams",
-      shortcut: "G B",
+      label: "Library",
+      description: "Every diagram stored on this machine",
+      shortcut: "G L",
       icon: Layers,
       onSelect: () => {
-        router.push("/browse");
+        router.push("/library");
         onClose();
       },
     },

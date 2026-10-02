@@ -48,7 +48,7 @@ export function DesktopTitlebar() {
   };
 
   const isHome = pathname === "/";
-  const isBrowse = pathname.startsWith("/browse");
+  const isLibrary = pathname.startsWith("/library");
 
   return (
     <>
@@ -87,9 +87,9 @@ export function DesktopTitlebar() {
               </Link>
 
               <Link
-                href="/browse"
+                href="/library"
                 className={`flex items-center gap-1.5 rounded px-2.5 py-1 font-mono text-xs transition-colors ${
-                  isBrowse
+                  isLibrary
                     ? "border border-[#3A414B] bg-[#1f242c] font-medium text-white"
                     : "text-[#828c9b] hover:bg-[#181c22] hover:text-white"
                 }`}

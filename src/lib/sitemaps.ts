@@ -1,22 +1,11 @@
-export const SITEMAP_PAGE_SIZE = 45_000;
-
 /**
- * How many sitemap pages hold `routeCount` listed pages (repositories and
- * video watch pages) plus the `fixedRouteCount` fixed ones at the top of the
- * first page (/, /browse, /advertise, and /videos while videos are on). The
- * sitemap's generateSitemaps is the one caller; robots.txt lists what it
- * returns.
+ * The sitemap is one file with the two pages worth indexing.
+ *
+ * It used to shard, because it paged through a catalogue of every diagram on
+ * the internet. There is no catalogue now: a repository's URL is discovered
+ * through its README badge, not by crawling, and the library is machine-local
+ * and marked noindex.
  */
-export function getSitemapCount(routeCount: number, fixedRouteCount: number) {
-  return Math.max(
-    1,
-    Math.ceil((routeCount + fixedRouteCount) / SITEMAP_PAGE_SIZE),
-  );
-}
-
-export function getSitemapUrls(siteUrl: string, sitemapCount: number) {
-  return Array.from(
-    { length: sitemapCount },
-    (_, id) => `${siteUrl}/sitemap/${id}.xml`,
-  );
+export function getSitemapUrls(siteUrl: string): string[] {
+  return [`${siteUrl}/sitemap/0.xml`];
 }

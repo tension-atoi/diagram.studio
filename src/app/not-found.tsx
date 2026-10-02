@@ -28,10 +28,10 @@ export default function NotFound() {
             Make a diagram
           </Link>
           <Link
-            href="/browse"
+            href="/library"
             className="neo-button-muted inline-flex min-h-[44px] items-center rounded-md px-4 py-2 text-sm font-semibold"
           >
-            Browse diagrams
+            Your library
           </Link>
         </div>
       </div>

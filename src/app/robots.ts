@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "~/lib/site";
 import { getSitemapUrls } from "~/lib/sitemaps";
-import { generateSitemaps } from "./sitemap";
 
 // The crawlers behind ChatGPT, Claude, Perplexity, Gemini, Apple and Bing.
 const AI_CRAWLERS = [
@@ -19,9 +18,6 @@ const AI_CRAWLERS = [
 ];
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
-  // The same pages the sitemap splits into, so every shard is listed.
-  const sitemaps = await generateSitemaps();
-
   return {
     rules: [
       {
@@ -44,6 +40,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         disallow: ["/api/", "/*/*"],
       },
     ],
-    sitemap: getSitemapUrls(SITE_URL, sitemaps.length),
+    sitemap: getSitemapUrls(SITE_URL),
   };
 }
