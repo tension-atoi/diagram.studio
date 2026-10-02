@@ -28,7 +28,7 @@ import { createViewport, type Viewport } from "./viewport";
 // source sanitizing, Mermaid's antiscript level with SVG-only labels,
 // DOMPurify, then the GitHub-only link allowlist. Links open through the host.
 
-const root = document.getElementById("gitdiagram-view");
+const root = document.getElementById("studio-view");
 
 const app = new App(
   { name: "GitDiagram diagram view", version: "1.0.0" },
@@ -170,7 +170,7 @@ async function renderDiagram(current: DiagramViewPayload) {
       })
     : null;
   if (expandButton) actions.append(expandButton);
-  const open = button("Open in GitDiagram", "Open on gitdiagram.com", () =>
+  const open = button("Open in the studio", "Open in the diagram studio", () =>
     openLink(current.diagramUrl),
   );
   open.classList.add("gd-primary");
@@ -193,7 +193,7 @@ async function renderDiagram(current: DiagramViewPayload) {
   try {
     const { svg } = await withDomNodesSerializingSafely(() =>
       mermaid.render(
-        `gitdiagram-${render}`,
+        `studio-${render}`,
         sanitizeMermaidSourceForRender(current.mermaid ?? ""),
         target,
       ),

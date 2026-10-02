@@ -57,7 +57,7 @@ const SVG = `<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
   <g onclick="window.pwned = true"><text>Handler</text></g>
 </svg>`;
 
-const view = () => document.getElementById("gitdiagram-view")!;
+const view = () => document.getElementById("studio-view")!;
 
 async function showResult(result: unknown) {
   mocks.app?.ontoolresult?.(result);
@@ -67,7 +67,7 @@ async function showResult(result: unknown) {
 }
 
 beforeAll(async () => {
-  document.body.innerHTML = '<main id="gitdiagram-view"></main>';
+  document.body.innerHTML = '<main id="studio-view"></main>';
   await import("./diagram-view");
 });
 
@@ -82,7 +82,7 @@ describe("the diagram view", () => {
     await showResult({ content: [], _meta: { [DIAGRAM_META_KEY]: PAYLOAD } });
 
     expect(mocks.render).toHaveBeenCalledWith(
-      expect.stringMatching(/^gitdiagram-\d+$/),
+      expect.stringMatching(/^studio-\d+$/),
       PAYLOAD.mermaid,
       expect.any(HTMLElement),
     );
@@ -129,11 +129,11 @@ describe("the diagram view", () => {
     expect(mocks.openLink).toHaveBeenCalledTimes(1);
   });
 
-  it("opens the diagram on GitDiagram and asks for full screen", async () => {
+  it("opens the diagram in the studio and asks for full screen", async () => {
     await showResult({ content: [], _meta: { [DIAGRAM_META_KEY]: PAYLOAD } });
     const buttons = Array.from(view().querySelectorAll("button"));
     buttons
-      .find((button) => button.textContent === "Open in GitDiagram")!
+      .find((button) => button.textContent === "Open in the studio")!
       .click();
     expect(mocks.openLink).toHaveBeenCalledWith({
       url: "https://gitdiagram.com/fastapi/fastapi",

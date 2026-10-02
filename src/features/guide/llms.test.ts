@@ -1,3 +1,5 @@
+import { SITE_URL } from "~/lib/site";
+
 import { describe, expect, it } from "vitest";
 import { GUIDE_QUESTIONS, guideSections } from "./content";
 import { llmsFullText, llmsText } from "./llms";
@@ -7,10 +9,10 @@ describe("llms.txt", () => {
     const text = llmsText({ videos: true });
     const lines = text.split("\n");
 
-    expect(lines[0]).toBe("# GitDiagram");
+    expect(lines[0]).toBe("# gnu.in.labs / diagram studio");
     expect(lines[2]!.startsWith("> ")).toBe(true);
     expect(text).toContain(
-      "https://github.com/{owner}/{repo} becomes https://gitdiagram.com/{owner}/{repo}",
+      `https://github.com/{owner}/{repo} becomes ${SITE_URL}/{owner}/{repo}`,
     );
     for (const heading of [
       "## For agents",
@@ -27,10 +29,10 @@ describe("llms.txt", () => {
 
   it("names the agent surfaces: Markdown twin, MCP and the guide", () => {
     const text = llmsText({ videos: false });
-    expect(text).toContain("https://gitdiagram.com/{owner}/{repo}.md");
+    expect(text).toContain(`${SITE_URL}/{owner}/{repo}.md`);
     expect(text).toContain("Accept: text/markdown");
-    expect(text).toContain("https://gitdiagram.com/mcp");
-    expect(text).toContain("https://gitdiagram.com/visualize-codebase");
+    expect(text).toContain(`${SITE_URL}/mcp`);
+    expect(text).toContain(`${SITE_URL}/visualize-codebase`);
     expect(text).not.toContain("/videos");
   });
 
@@ -42,7 +44,7 @@ describe("llms.txt", () => {
     for (const { question } of GUIDE_QUESTIONS)
       expect(full).toContain(`#### ${question}`);
     // Site links become absolute for readers outside the site.
-    expect(full).toContain("[FastAPI](https://gitdiagram.com/fastapi/fastapi)");
+    expect(full).toContain(`[FastAPI](${SITE_URL}/fastapi/fastapi)`);
     expect(full).not.toMatch(/\]\(\//);
   });
 });

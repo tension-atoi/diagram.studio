@@ -153,7 +153,7 @@ async function refreshRecentStats() {
 
 async function refreshGitHubStars() {
   const response = await fetch(
-    "https://api.github.com/repos/ahmedkhaleel2004/gitdiagram",
+    `https://api.github.com/repos/tension-atoi/diagram.studio`,
     {
       headers: await getGitHubApiHeaders(),
       cache: "no-store",

@@ -112,7 +112,7 @@ export function diagramViewHtml(origin = mcpAppOrigin()): string {
 <style>${STYLES}</style>
 </head>
 <body>
-<main id="gitdiagram-view" class="gd" aria-live="polite"><p class="gd-status">Loading the diagram…</p></main>
+<main id="studio-view" class="gd" aria-live="polite"><p class="gd-status">Loading the diagram…</p></main>
 <script type="module" src="${origin}/mcp-app/diagram-view.js"></script>
 </body>
 </html>`;

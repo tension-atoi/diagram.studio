@@ -1,16 +1,18 @@
+import { SITE_URL } from "~/lib/site";
+
 // What get_repository_diagram hands its diagram view (the MCP App shown inline
 // in ChatGPT and other MCP Apps hosts, src/mcp-app/). It travels in the tool
 // result's `_meta`, which hosts give the view but never the model: the model
 // already reads the same diagram as text.
 
-export const DIAGRAM_META_KEY = "com.gitdiagram/diagram";
+export const DIAGRAM_META_KEY = "com.gnu.in.labs/diagram";
 
 export interface DiagramViewPayload {
   /** "found": `mermaid` is the stored diagram. "missing": none made yet. */
   status: "found" | "missing";
   /** "owner/repo", as GitHub spells it when a diagram is stored. */
   repository: string;
-  /** The interactive diagram on gitdiagram.com. */
+  /** The interactive diagram, on this deployment's own site. */
   diagramUrl: string;
   githubUrl: string;
   stars: number | null;
@@ -19,16 +21,23 @@ export interface DiagramViewPayload {
 
 const MAX_MERMAID_LENGTH = 200_000;
 
-/** An https link on github.com or gitdiagram.com, the only places the view opens. */
+/**
+ * A link the view is allowed to open: GitHub, or this deployment's own site.
+ * Both are checked from the environment rather than a list, so the view can
+ * never be pointed at a third party's domain.
+ */
 export function isOpenableUrl(value: unknown): value is string {
   if (typeof value !== "string") return false;
   try {
     const url = new URL(value);
+    const site = new URL(SITE_URL);
+    const self = site.hostname.toLowerCase();
     return (
-      url.protocol === "https:" &&
       !url.username &&
       !url.password &&
-      (url.hostname === "github.com" || url.hostname === "gitdiagram.com")
+      (url.hostname === "github.com" ||
+        url.hostname === self ||
+        (url.protocol === site.protocol && url.hostname === self))
     );
   } catch {
     return false;

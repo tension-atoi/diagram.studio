@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    creator: "@ahmedkhaleel2004",
+    creator: "@gnu.in.labs",
     images: [image("/twitter-image.png")],
   },
 };

@@ -11,7 +11,9 @@ describe("/llms.txt and /llms-full.txt", () => {
       expect(response.headers.get("content-type")).toBe(
         "text/markdown; charset=utf-8",
       );
-      expect(await response.text()).toMatch(/^# GitDiagram\n/);
+      expect(await response.text()).toMatch(
+        /^# gnu\.in\.labs \/ diagram studio\n/,
+      );
     }
   });
 

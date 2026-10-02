@@ -7,8 +7,8 @@ import {
 import { sponsorCreatives } from "~/lib/sponsor-creative";
 import type { SponsorStats } from "~/server/sponsor-stats";
 
-export const SPONSOR_EMAIL_ADDRESS = "ahmed@gitdiagram.com";
-export const SPONSOR_EMAIL = `mailto:${SPONSOR_EMAIL_ADDRESS}?subject=Advertising%20on%20GitDiagram`;
+export const SPONSOR_EMAIL_ADDRESS = "labs@gnu.in.labs";
+export const SPONSOR_EMAIL = `mailto:${SPONSOR_EMAIL_ADDRESS}?subject=Advertising%20on%20diagram.studio`;
 export const SPONSOR_PRICE = "$999";
 export const SPONSOR_EXCLUSIVE_PRICE = "$3,499";
 export const sponsorFits = [

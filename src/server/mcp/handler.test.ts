@@ -201,7 +201,7 @@ describe("MCP endpoint", () => {
       name: "get_repository_diagram",
       arguments: { repository: "FastAPI/fastapi" },
     });
-    expect(result._meta?.["com.gitdiagram/diagram"]).toEqual({
+    expect(result._meta?.["com.gnu.in.labs/diagram"]).toEqual({
       status: "found",
       repository: "fastapi/fastapi",
       diagramUrl: "https://gitdiagram.com/fastapi/fastapi",
@@ -235,7 +235,7 @@ describe("MCP endpoint", () => {
     expect(text).toContain("no diagram of someone/fastapi yet");
     expect(text).toContain("https://gitdiagram.com/someone/fastapi");
     expect(text).toContain("tiangolo/fastapi-utils");
-    expect(result._meta?.["com.gitdiagram/diagram"]).toEqual({
+    expect(result._meta?.["com.gnu.in.labs/diagram"]).toEqual({
       status: "missing",
       repository: "someone/fastapi",
       diagramUrl: "https://gitdiagram.com/someone/fastapi",

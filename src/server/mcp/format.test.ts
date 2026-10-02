@@ -1,3 +1,5 @@
+import { SITE_URL } from "~/lib/site";
+
 import { describe, expect, it } from "vitest";
 
 import type { VideoArtifact } from "~/features/explainer/types";
@@ -26,8 +28,9 @@ describe("parseRepositoryInput", () => {
     ],
     ["www.github.com/a/b?tab=readme", "a", "b"],
     ["git@github.com:facebook/react.git", "facebook", "react"],
-    ["https://gitdiagram.com/fastapi/fastapi", "fastapi", "fastapi"],
-    ["gitdiagram.com/fastapi/fastapi/video", "fastapi", "fastapi"],
+    // A URL on this deployment's own site carries the same owner/repo.
+    [`${SITE_URL}/fastapi/fastapi`, "fastapi", "fastapi"],
+    [`${SITE_URL}/fastapi/fastapi/video`, "fastapi", "fastapi"],
   ])("reads %s", (input, username, repo) => {
     expect(parseRepositoryInput(input)).toEqual({ username, repo });
   });

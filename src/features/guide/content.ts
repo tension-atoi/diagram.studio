@@ -34,8 +34,8 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
       id: "one-step",
       heading: "Get a diagram in one step",
       paragraphs: [
-        "Replace `hub` with `diagram` in the repository's GitHub URL: `https://github.com/fastapi/fastapi` becomes [gitdiagram.com/fastapi/fastapi](/fastapi/fastapi). You can also paste a GitHub URL, or just `owner/repo`, on the [home page](/). File, branch, issue and pull request URLs work too; they open the repository's diagram.",
-        "If the repository has been diagrammed before, the stored diagram opens at once. Otherwise GitDiagram makes one, usually in about a minute, and keeps it so the next person gets it instantly. Some to try: [FastAPI](/fastapi/fastapi), [Flask](/pallets/flask), [React](/facebook/react) and [Next.js](/vercel/next.js). [Browse](/browse) lists every stored diagram.",
+        "A diagram lives at `/{owner}/{repo}`: [fastapi/fastapi](/fastapi/fastapi). You can also paste a GitHub URL, or just `owner/repo`, on the [home page](/). File, branch, issue and pull request URLs work too; they open the repository's diagram.",
+        "If the repository has been diagrammed before, the stored diagram opens at once. Otherwise the studio makes one, usually in about a minute, and keeps it on your disk. Some to try: [FastAPI](/fastapi/fastapi), [Flask](/pallets/flask), [React](/facebook/react) and [Next.js](/vercel/next.js). [Browse](/browse) lists every stored diagram.",
       ],
     },
     {
@@ -70,9 +70,9 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
       id: "ai-agents",
       heading: "Use it from AI agents",
       paragraphs: [
-        "Every stored diagram has a Markdown version for agents: add `.md` to the page URL, as in [gitdiagram.com/fastapi/fastapi.md](/fastapi/fastapi.md), or request the page with the header `Accept: text/markdown`. It holds the overview, the Mermaid source, every component with its GitHub link, and the connections. For a repository without a diagram yet, it says how to make one.",
-        "Agents that speak the Model Context Protocol can connect to the read-only server at `https://gitdiagram.com/mcp` (streamable HTTP), for example to call `get_repository_diagram` with a repository such as `fastapi/fastapi`, or `find_repository_diagrams` to search the diagrams that already exist. In Claude Code: `claude mcp add --transport http gitdiagram https://gitdiagram.com/mcp`.",
-        "[llms.txt](/llms.txt) sums this up for language models, and [llms-full.txt](/llms-full.txt) holds this whole guide. An agent helping someone understand a repository can read the `.md` version itself and give the person the interactive link, `https://gitdiagram.com/{owner}/{repo}`.",
+        "Every stored diagram has a Markdown version for agents: add `.md` to the page URL, as in [/fastapi/fastapi.md](/fastapi/fastapi.md), or request the page with the header `Accept: text/markdown`. It holds the overview, the Mermaid source, every component with its GitHub link, and the connections. For a repository without a diagram yet, it says how to make one.",
+        "Agents that speak the Model Context Protocol can connect to the read-only server the studio runs on its local port (streamable HTTP), for example to call `get_repository_diagram` with a repository such as `fastapi/fastapi`, or `find_repository_diagrams` to search the diagrams that already exist. The address is the one confirmed at first launch, `http://127.0.0.1:7421/mcp` by default. In Claude Code: `claude mcp add --transport http diagram-studio http://127.0.0.1:7421/mcp`.",
+        "[llms.txt](/llms.txt) sums this up for language models, and [llms-full.txt](/llms-full.txt) holds this whole guide. An agent helping someone understand a repository can read the `.md` version itself and give the person the interactive link, `/{owner}/{repo}`.",
       ],
     },
     {
@@ -111,7 +111,7 @@ export const GUIDE_QUESTIONS: GuideQuestion[] = [
   {
     question: "How do I get an architecture diagram of a GitHub repository?",
     answer:
-      "Replace `hub` with `diagram` in its URL, for example `https://gitdiagram.com/pallets/flask`. The diagram opens in your browser, with nothing to install.",
+      "Open `/{owner}/{repo}` in the studio, for example `/pallets/flask`. The diagram opens in the app, with nothing else to install.",
   },
   {
     question: "Is GitDiagram free?",
@@ -133,9 +133,9 @@ export const GUIDE_QUESTIONS: GuideQuestion[] = [
       "Yes. Export a PNG, or copy the Mermaid code: GitHub renders Mermaid in Markdown files.",
   },
   {
-    question: "Can AI assistants use GitDiagram?",
+    question: "Can AI assistants use this studio?",
     answer:
-      "Yes. They can read `https://gitdiagram.com/{owner}/{repo}.md`, or connect to the MCP server at `https://gitdiagram.com/mcp`.",
+      "Yes. They can read `/{owner}/{repo}.md`, or connect to the local MCP server on the port the app confirmed at first launch.",
   },
   {
     question: "How is it different from DeepWiki?",

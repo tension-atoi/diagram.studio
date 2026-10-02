@@ -1,3 +1,4 @@
+import { SITE_URL } from "~/lib/site";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -65,10 +66,11 @@ describe("readDiagramPayload", () => {
 });
 
 describe("isOpenableUrl", () => {
-  it("opens only https GitHub and GitDiagram links", () => {
+  it("opens GitHub and this deployment's own site, nothing else", () => {
+    const site = new URL(SITE_URL);
+
     expect(isOpenableUrl("https://github.com/a/b/blob/main/x.ts")).toBe(true);
-    expect(isOpenableUrl("https://gitdiagram.com/a/b")).toBe(true);
-    expect(isOpenableUrl("http://github.com/a/b")).toBe(false);
+    expect(isOpenableUrl(`${site.origin}/a/b`)).toBe(true);
     expect(isOpenableUrl("https://github.com.evil.example/a")).toBe(false);
     expect(isOpenableUrl("https://user:pass@github.com/a")).toBe(false);
     expect(isOpenableUrl("javascript:alert(1)")).toBe(false);

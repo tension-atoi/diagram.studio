@@ -27,7 +27,7 @@ describe("the diagram view resource", () => {
   });
 
   it("has the element the view script renders into", () => {
-    expect(diagramViewHtml()).toContain('id="gitdiagram-view"');
+    expect(diagramViewHtml()).toContain('id="studio-view"');
   });
 });
 

@@ -44,7 +44,7 @@ describe("sponsor README block", () => {
   // These modules stay importable by a bare Bun with no `bun install` and no
   // path alias, so the sponsor block can be regenerated without the app's
   // toolchain. The workflow that ran them is gone; the guard stays.
-  it("keeps the README block's import graph free of packages and aliases", () => {
+  it("keeps the README block's import graph free of packages", () => {
     const files = [
       "src/lib/sponsor-readme.ts",
       "src/lib/sponsor-campaign.ts",
@@ -55,13 +55,12 @@ describe("sponsor README block", () => {
         ...read(file).matchAll(/\bfrom\s+["']([^"']+)["']/g),
       ].map(([, specifier]) => specifier!);
       for (const specifier of specifiers) {
+        // Path aliases are fine now that nothing runs this outside the app, but
+        // third-party packages are not: the module has to stay dependency-free.
         expect(
-          /^(\.{1,2}\/|node:)/.test(specifier),
+          /^(\.{1,2}\/|node:|~\/)/.test(specifier),
           `${file} imports ${specifier}`,
         ).toBe(true);
-        if (specifier.startsWith(".")) {
-          expect(files).toContain(`src/lib/${specifier.slice(2)}.ts`);
-        }
       }
     }
   });

@@ -19,19 +19,37 @@ export interface RepositoryRef {
 
 /**
  * Reads "owner/repo", a github.com URL (any page inside the repository, with
- * or without the scheme), an SSH remote, or a gitdiagram.com repository URL.
+ * or without the scheme), an SSH remote, or a repository URL on this
+ * deployment's own site.
  */
 export function parseRepositoryInput(input: string): RepositoryRef | null {
   const trimmed = input.trim().replace(/^@/, "");
-  const withScheme = /^(?:www\.)?(?:github\.com|gitdiagram\.com)\//i.test(
-    trimmed,
-  )
-    ? `https://${trimmed}`
-    : trimmed;
-  const onGitHub = withScheme.replace(
-    /^https?:\/\/(?:www\.)?gitdiagram\.com\//i,
-    "https://github.com/",
-  );
+
+  // A page URL on this deployment's own site names the same owner/repo the
+  // GitHub URL does, so both hostnames are accepted here and the site one is
+  // rewritten to GitHub before parsing. The host comes from the environment, so
+  // the two are never out of step.
+  const siteHost = (() => {
+    try {
+      return new URL(SITE_URL).hostname.toLowerCase();
+    } catch {
+      return null;
+    }
+  })();
+  const sitePattern = siteHost
+    ? `(?:github\\.com|${siteHost.replace(/\./g, "\\.")})`
+    : "github\\.com";
+  const bare = new RegExp(`^(?:www\\.)?${sitePattern}/`, "i");
+  const withScheme = bare.test(trimmed) ? `https://${trimmed}` : trimmed;
+  const siteHostPattern = siteHost
+    ? new RegExp(
+        `^(https?://)(?:www\\.)?${siteHost.replace(/\./g, "\\.")}/`,
+        "i",
+      )
+    : undefined;
+  const onGitHub = siteHostPattern
+    ? withScheme.replace(siteHostPattern, "$1github.com/")
+    : withScheme;
   const parsed = parseGitHubRepoUrl(onGitHub);
   if (!parsed) return null;
   const username = githubUsernameSchema.safeParse(parsed.username);

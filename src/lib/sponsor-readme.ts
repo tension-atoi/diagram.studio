@@ -1,3 +1,5 @@
+import { SITE_URL } from "~/lib/site";
+
 // Runs in the README workflow without `bun install`: keep this file and its
 // imports free of packages and path aliases (sponsor-readme.test.ts checks).
 import {
@@ -19,10 +21,10 @@ export function updateSponsorReadme(readme: string, now = Date.now()) {
   }
   const campaign = activeReadmeSponsorCampaign(now);
   let block =
-    "> **Ad space** · [Advertise your product here.](https://gitdiagram.com/advertise)";
+    "> **Ad space** · [Advertise your product here.](${SITE_URL}/advertise)";
   if (campaign) {
     const creative = sponsorCreatives[campaign.id];
-    const href = `https://gitdiagram.com${sponsorClickHref("readme", campaign.id)}`;
+    const href = `${SITE_URL}${sponsorClickHref("readme", campaign.id)}`;
     const { logo } = creative;
     const dark = logo.darkSrc
       ? `<source media="(prefers-color-scheme: dark)" srcset="./public${logo.darkSrc}" />`

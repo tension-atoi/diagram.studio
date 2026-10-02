@@ -1,3 +1,5 @@
+import { SITE_URL } from "~/lib/site";
+
 export const websiteSponsorPlacements = ["home", "diagram", "browse"] as const;
 export const sponsorPlacements = [
   ...websiteSponsorPlacements,
@@ -133,8 +135,16 @@ export function lastBookedSponsorCampaign(
     .sort((a, b) => Date.parse(b.endsAt) - Date.parse(a.endsAt))[0];
 }
 
+/** True when the hostname is this deployment's own site. */
 export function isProductionSponsorHost(hostname: string) {
-  return ["gitdiagram.com", "www.gitdiagram.com"].includes(hostname);
+  try {
+    const site = new URL(SITE_URL);
+    const self = site.hostname.toLowerCase();
+    const host = hostname.toLowerCase();
+    return host === self || host === `www.${self}`;
+  } catch {
+    return false;
+  }
 }
 
 export function sponsorClickHref(

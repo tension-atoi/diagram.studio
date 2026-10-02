@@ -28,10 +28,10 @@ describe("/visualize-codebase", () => {
       "/fastapi/fastapi",
     );
     expect(
-      screen.getByRole("link", { name: "gitdiagram.com/fastapi/fastapi.md" }),
+      screen.getByRole("link", { name: "/fastapi/fastapi.md" }),
     ).toHaveAttribute("href", "/fastapi/fastapi.md");
     expect(
-      screen.getAllByText("https://gitdiagram.com/mcp").length,
+      screen.getAllByText(/127\.0\.0\.1:7421\/mcp/).length,
     ).toBeGreaterThan(0);
   });
 

@@ -1,6 +1,8 @@
+import { SITE_URL } from "~/lib/site";
+
 // Reads an assistant's answer for what the AI-visibility run measures: does it
-// name GitDiagram, link to gitdiagram.com, and where does GitDiagram come among
-// the tools it names. Pure functions, so they are tested on real answers.
+// name the studio, link to this deployment's site, and where the studio comes
+// among the tools it names. Pure functions, so they are tested on real answers.
 
 /** The fixed questions, phrased the way people ask them. Ids are stable: history is keyed by them. */
 export const AI_VISIBILITY_PROMPTS: ReadonlyArray<{
@@ -182,10 +184,13 @@ export function toolsNamed(text: string): string[] {
 
 const URL_IN_TEXT = /https?:\/\/[^\s)\]>"'`]+/g;
 
-function isGitDiagramSite(url: string): boolean {
+/** True when the URL points at this deployment's own site. */
+function isStudioSite(url: string): boolean {
   try {
+    const site = new URL(SITE_URL);
     const host = new URL(url).hostname.toLowerCase();
-    return host === "gitdiagram.com" || host.endsWith(".gitdiagram.com");
+    const self = site.hostname.toLowerCase();
+    return host === self || host.endsWith(`.${self}`);
   } catch {
     return false;
   }
@@ -211,11 +216,11 @@ export function readAnswer(
   const tools = toolsNamed(text);
   const index = tools.indexOf("GitDiagram");
   const linked = [...citations, ...(text.match(URL_IN_TEXT) ?? [])];
-  const cited = linked.some(isGitDiagramSite);
+  const cited = linked.some(isStudioSite);
   return {
     mentioned: index >= 0 || cited || GITDIAGRAM.test(text),
     cited,
-    inSources: [...sources, ...citations].some(isGitDiagramSite),
+    inSources: [...sources, ...citations].some(isStudioSite),
     position: index >= 0 ? index + 1 : null,
     tools,
   };

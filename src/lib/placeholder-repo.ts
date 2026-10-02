@@ -1,4 +1,4 @@
-// Words people leave in a copied example URL (`gitdiagram.com/user/repo`)
+// Words people leave in a copied example URL (`site.example/user/repo`)
 // instead of a real repository. A Reddit post in September 2026 sent about
 // 2,000 visitors to /user/repo alone. None of these pairs is a real GitHub
 // repository, so the page explains the URL instead of running a generation.

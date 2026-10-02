@@ -25,10 +25,10 @@ export interface AiVariantStats {
   /** Questions asked, and how many came back with an answer. */
   asked: number;
   answered: number;
-  /** Answers naming GitDiagram, and those linking to gitdiagram.com. */
+  /** Answers naming the studio, and those linking to its site. */
   mentioned: number;
   cited: number;
-  /** Sum of GitDiagram's place among the tools named, over the answers naming it. */
+  /** Sum of the studio's place among the tools named, over the answers naming it. */
   positionSum: number;
 }
 
@@ -54,9 +54,9 @@ export interface AiAnswer {
   prompt: string;
   mentioned: boolean;
   cited: boolean;
-  /** gitdiagram.com was among the pages the search returned. */
+  /** The studio's site was among the pages the search returned. */
   inSources: boolean;
-  /** GitDiagram's place among the tools named, from 1; null when not named. */
+  /** The studio's place among the tools named, from 1; null when not named. */
   position: number | null;
   tools: string[];
   text: string;

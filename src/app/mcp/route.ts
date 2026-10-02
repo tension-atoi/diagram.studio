@@ -1,7 +1,7 @@
 import { handleMcpRequest } from "~/server/mcp/handler";
 
-// GitDiagram's remote MCP server: https://gitdiagram.com/mcp (see
-// src/server/mcp/). Stateless streamable HTTP; public and read-only.
+// The studio's MCP server, served at /mcp on the local port the app listens on
+// (see src/server/mcp/). Stateless streamable HTTP; read-only.
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
