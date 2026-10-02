@@ -1,0 +1,13 @@
+#!/bin/sh
+# GitHub Actions is not this project's test bench — the bench is this machine,
+# and `bun run verify` is it. This hook stays fast on purpose: it runs the
+# checks that most often break a push in a few seconds, so it is not bypassed
+# with --no-verify. Run `bun run verify` before you call work done.
+#
+# `bun install` turns this hook on through the "prepare" script.
+set -e
+
+bun run format:check
+bun run lint
+bun run typecheck
+bun run knip

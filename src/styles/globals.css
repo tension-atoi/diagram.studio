@@ -1,0 +1,758 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@layer base {
+  :root {
+    --gnu-anthracite: #111418;
+    --gnu-orange: #ff6a00;
+    --gnu-beret: #5f7f52;
+    --gnu-beret-300: #8da982;
+    --gnu-beret-700: #455f3d;
+    --gnu-shell: #f7f3ed;
+    --gnu-soft: #f7f8fa;
+    --gnu-bezel: #2b3037;
+
+    --background: 215 15% 8%;
+    --foreground: 0 0% 92%;
+    --popover: 215 15% 10%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 104 22% 41%;
+    --primary-foreground: 0 0% 100%;
+    --muted-foreground: 215 10% 60%;
+    --accent: 215 12% 16%;
+    --accent-foreground: 0 0% 95%;
+    --border: 215 12% 18%;
+    --input: 215 12% 14%;
+    --ring: 104 22% 41%;
+    --radius: 0.375rem;
+
+    --neo-panel: 215 15% 10%;
+    --neo-panel-muted: 215 14% 13%;
+    --neo-button: 104 25% 42%;
+    --neo-button-hover: 104 25% 48%;
+    --neo-subtle: 215 10% 70%;
+    --neo-subtle-muted: 215 10% 50%;
+    --neo-link: 104 35% 55%;
+    --neo-link-hover: 104 40% 65%;
+    --neo-soft-text: 215 10% 65%;
+    --neo-input-bg: 215 15% 11%;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  .dark {
+    --background: 215 15% 8%;
+    --foreground: 0 0% 92%;
+    --popover: 215 15% 10%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 104 22% 41%;
+    --primary-foreground: 0 0% 100%;
+    --muted-foreground: 215 10% 60%;
+    --accent: 215 12% 16%;
+    --accent-foreground: 0 0% 95%;
+    --border: 215 12% 18%;
+    --input: 215 12% 14%;
+    --ring: 104 22% 41%;
+    --neo-panel: 215 15% 10%;
+    --neo-panel-muted: 215 14% 13%;
+    --neo-button: 104 25% 42%;
+    --neo-button-hover: 104 25% 48%;
+    --neo-subtle: 215 10% 70%;
+    --neo-subtle-muted: 215 10% 50%;
+    --neo-link: 104 35% 55%;
+    --neo-link-hover: 104 40% 65%;
+    --neo-soft-text: 215 10% 65%;
+    --neo-input-bg: 215 15% 11%;
+  }
+}
+@layer base {
+  * {
+    border-color: #2a2829;
+  }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+  body {
+    background-color: #111418;
+    color: #e6e1e1;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  body {
+    background-image:
+      radial-gradient(
+        ellipse at 50% 0%,
+        rgba(95, 127, 82, 0.09) 0%,
+        transparent 65%
+      ),
+      radial-gradient(
+        ellipse at 90% 90%,
+        rgba(255, 106, 0, 0.04) 0%,
+        transparent 50%
+      );
+    background-attachment: fixed;
+  }
+}
+
+/* Theme Adaptation */
+[data-theme="light"] body {
+  background-color: #f7f8fa !important;
+  color: #0f172a !important;
+  background-image: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(95, 127, 82, 0.06) 0%,
+    transparent 65%
+  ) !important;
+}
+
+[data-theme="light"] header {
+  background-color: rgba(247, 248, 250, 0.96) !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] footer {
+  background-color: #edf0f3 !important;
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
+}
+
+[data-theme="light"] .neo-panel {
+  border: 1px solid #e2e8f0 !important;
+  background: #ffffff !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] textarea {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+@layer components {
+  .loading-ellipsis {
+    display: inline-block;
+    width: 1ch;
+    overflow: hidden;
+    vertical-align: bottom;
+    white-space: nowrap;
+    animation: loading-ellipsis 1.35s steps(3, end) infinite;
+  }
+
+  .neo-panel {
+    border: 1px solid #2a2829 !important;
+    background: #141313 !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+    color: #e6e1e1;
+    border-radius: 6px;
+  }
+
+  .neo-button {
+    border: 1px solid #3f5e36 !important;
+    background: #5f7f52 !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(95, 127, 82, 0.25) !important;
+    border-radius: 4px;
+    transition:
+      transform 140ms ease,
+      background-color 140ms ease,
+      box-shadow 140ms ease;
+  }
+
+  .neo-button:hover {
+    background: #729663 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(95, 127, 82, 0.35) !important;
+  }
+
+  .neo-button-muted {
+    border: 1px solid #2a2829 !important;
+    background: #1c1b1c !important;
+    color: #e6e1e1 !important;
+    border-radius: 4px;
+    transition:
+      background-color 140ms ease,
+      border-color 140ms ease;
+  }
+
+  .neo-button-muted:hover {
+    background: #252425 !important;
+    border-color: #3f3e40 !important;
+  }
+
+  .browse-muted-button {
+    border: 3px solid #000 !important;
+    background: hsl(var(--background)) !important;
+    color: #000 !important;
+    box-shadow: 4px 4px 0 0 #000 !important;
+    transition:
+      transform 160ms var(--ease-out),
+      background-color 160ms ease;
+  }
+
+  .neo-lift {
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .neo-input {
+    border: 3px solid #000 !important;
+    box-shadow: 4px 4px 0 0 #000 !important;
+    color: hsl(var(--foreground));
+    outline: none !important;
+  }
+
+  .browse-controls .neo-input:focus-visible {
+    background: hsl(var(--neo-panel-muted)) !important;
+  }
+
+  .dark .neo-input {
+    background: hsl(var(--neo-input-bg)) !important;
+  }
+
+  .neo-link {
+    color: hsl(var(--neo-link));
+    transition: color 160ms ease;
+  }
+
+  .dark .neo-panel,
+  .dark .neo-input {
+    border-color: black !important;
+    box-shadow: 8px 8px 0 0 #0d0a19 !important;
+  }
+
+  .dark .neo-button,
+  .dark .neo-button-muted {
+    border-color: #1a0d30 !important;
+    box-shadow: 4px 4px 0 0 #0d0a19 !important;
+    color: #0d0a19 !important;
+  }
+
+  .dark .browse-muted-button {
+    border-color: #1a0d30 !important;
+    background: hsl(var(--neo-panel-muted)) !important;
+    box-shadow: 4px 4px 0 0 #0d0a19 !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .neo-button:hover:not(:disabled) {
+      background: hsl(var(--neo-button-hover)) !important;
+      transform: translate(-2px, -2px);
+    }
+
+    .neo-button-muted:hover:not(:disabled) {
+      background: hsl(var(--neo-subtle)) !important;
+      transform: translate(-2px, -2px);
+    }
+
+    .browse-muted-button:hover:not(:disabled) {
+      background: hsl(var(--neo-panel)) !important;
+      transform: translate(-2px, -2px);
+    }
+
+    .neo-link:hover {
+      color: hsl(var(--neo-link-hover));
+    }
+
+    .dark .browse-muted-button:hover:not(:disabled) {
+      background: hsl(var(--neo-panel)) !important;
+    }
+
+    .neo-lift:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .neo-button:active:not(:disabled),
+  .neo-button-muted:active:not(:disabled),
+  .browse-muted-button:active:not(:disabled) {
+    transform: translate(1px, 1px) scale(0.97);
+    transition-duration: 120ms;
+  }
+
+  /* Scale the hard shadows down with the viewport: 8px/4px offsets are
+     proportionate on desktop but read as bulk on a ~400px screen. */
+  @media (max-width: 39.9375rem) {
+    .neo-panel {
+      box-shadow: 5px 5px 0 0 #000 !important;
+    }
+
+    .neo-input,
+    .neo-button,
+    .neo-button-muted,
+    .browse-muted-button {
+      box-shadow: 3px 3px 0 0 #000 !important;
+    }
+
+    .dark .neo-panel,
+    .dark .neo-input {
+      box-shadow: 5px 5px 0 0 #0d0a19 !important;
+    }
+
+    .dark .neo-button,
+    .dark .neo-button-muted,
+    .dark .browse-muted-button {
+      box-shadow: 3px 3px 0 0 #0d0a19 !important;
+    }
+
+    .neo-panel.home-main-card {
+      border: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .neo-lift:active {
+    transform: translateY(1px) scale(0.97);
+  }
+
+  .mobile-menu-layer {
+    pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0s linear 140ms;
+  }
+
+  .mobile-menu-layer[data-state="open"] {
+    pointer-events: auto;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .mobile-menu-overlay {
+    opacity: 0;
+    transition: opacity 140ms var(--ease-out);
+  }
+
+  .mobile-menu-layer[data-state="open"] .mobile-menu-overlay {
+    opacity: 1;
+    transition-duration: 180ms;
+  }
+
+  .mobile-menu-panel {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+    transform-origin: top right;
+    transition:
+      opacity 140ms var(--ease-out),
+      transform 140ms var(--ease-out);
+  }
+
+  .mobile-menu-layer[data-state="open"] .mobile-menu-panel {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-duration: 200ms;
+  }
+
+  .tooltip-content {
+    opacity: 0;
+    transform: scale(0.97);
+    transform-origin: var(--radix-tooltip-content-transform-origin);
+    transition:
+      opacity 100ms var(--ease-out),
+      transform 100ms var(--ease-out);
+  }
+
+  .tooltip-content[data-state="delayed-open"],
+  .tooltip-content[data-state="instant-open"] {
+    opacity: 1;
+    transform: scale(1);
+    transition-duration: 150ms;
+  }
+
+  .tooltip-content[data-state="instant-open"] {
+    transition-duration: 0ms;
+  }
+
+  .dialog-overlay[data-state="open"] {
+    animation: dialog-fade-in 180ms var(--ease-out) both;
+  }
+
+  .dialog-overlay[data-state="closed"] {
+    animation: dialog-fade-out 140ms var(--ease-out) both;
+  }
+
+  .dialog-content[data-state="open"] {
+    animation: dialog-content-in 220ms var(--ease-out) both;
+  }
+
+  .dialog-content[data-state="closed"] {
+    animation: dialog-content-out 160ms var(--ease-out) both;
+  }
+
+  .status-message {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 180ms var(--ease-out),
+      transform 180ms var(--ease-out);
+  }
+}
+
+@keyframes loading-ellipsis {
+  0% {
+    width: 1ch;
+  }
+  66% {
+    width: 3ch;
+  }
+  100% {
+    width: 3ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-ellipsis {
+    width: 3ch;
+    animation: none;
+  }
+}
+
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-content-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dialog-content-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@starting-style {
+  .tooltip-content[data-state="delayed-open"] {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  .status-message {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.star-reminder-toast [data-button],
+.star-reminder-toast button {
+  background: hsl(var(--neo-button)) !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  cursor: pointer !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .star-reminder-toast [data-button]:hover,
+  .star-reminder-toast button:hover {
+    background: hsl(var(--neo-button-hover)) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-button,
+  .neo-button-muted,
+  .browse-muted-button {
+    transition-property: background-color, color, opacity;
+  }
+
+  .neo-lift {
+    transition-property: opacity;
+  }
+
+  .neo-button:active:not(:disabled),
+  .neo-button-muted:active:not(:disabled),
+  .browse-muted-button:active:not(:disabled) {
+    opacity: 0.82;
+    transform: none;
+  }
+
+  .neo-lift:hover,
+  .neo-lift:active {
+    opacity: 0.82;
+    transform: none;
+  }
+
+  .dialog-content[data-state="open"] {
+    animation: dialog-fade-in 180ms var(--ease-out) both;
+  }
+
+  .dialog-content[data-state="closed"] {
+    animation: dialog-fade-out 120ms var(--ease-out) both;
+  }
+
+  .mobile-menu-panel,
+  .mobile-menu-layer[data-state="open"] .mobile-menu-panel {
+    transform: none;
+  }
+
+  .tooltip-content,
+  .tooltip-content[data-state="delayed-open"],
+  .tooltip-content[data-state="instant-open"],
+  .status-message {
+    filter: none;
+    transform: none;
+  }
+}
+
+/* "NEW" badge for explainer videos: a small ink-bordered pill with a slow shine.
+   The shine is a wide gradient layer that slides across behind the text; only
+   its transform animates, so it runs on the compositor without repainting. */
+@layer components {
+  .new-badge {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    height: 18px;
+    padding: 0 6px;
+    border: 2px solid #000;
+    border-radius: 999px;
+    --new-badge-fill: hsl(var(--neo-button));
+    background-color: var(--new-badge-fill);
+    box-shadow: 2px 2px 0 #000;
+    color: #000;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+  .new-badge::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 260%;
+    height: 100%;
+    background: linear-gradient(
+      110deg,
+      var(--new-badge-fill) 0%,
+      var(--new-badge-fill) 38%,
+      #fbcfe8 48%,
+      #fde68a 52%,
+      var(--new-badge-fill) 62%,
+      var(--new-badge-fill) 100%
+    );
+    pointer-events: none;
+    animation: new-badge-shine 3.2s ease-in-out infinite;
+  }
+  /* Inside a purple button, a lighter purple so the badge never matches it. */
+  .neo-button .new-badge,
+  .new-badge-light {
+    --new-badge-fill: hsl(270 100% 92%);
+  }
+}
+
+/* The same sweep as the old background-position 100% → -60% on a 260% wide
+   background: the layer's left edge travels from -160% to +96% of the badge,
+   which is -61.54% to +36.92% of the layer's own width. */
+@keyframes new-badge-shine {
+  0% {
+    transform: translateX(-61.54%);
+  }
+  60%,
+  100% {
+    transform: translateX(36.92%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .new-badge::before {
+    animation: none;
+  }
+}
+
+/* Homepage video banner: a soft violet-pink-amber glow that breathes behind
+   the pill. Only opacity and transform animate, so it stays on the GPU. */
+@layer components {
+  .promo-banner-glow {
+    position: absolute;
+    inset: -6px -12px -10px -10px;
+    z-index: -1;
+    border-radius: 999px;
+    background: linear-gradient(
+      100deg,
+      #a855f7 0%,
+      #ec4899 45%,
+      #f59e0b 80%,
+      #a855f7 100%
+    );
+    filter: blur(18px);
+    --promo-glow: 0.95;
+    opacity: var(--promo-glow);
+    pointer-events: none;
+    animation: promo-banner-glow 3.2s ease-in-out infinite;
+  }
+
+  .dark .promo-banner-glow {
+    --promo-glow: 0.75;
+  }
+
+  .promo-banner-arrow {
+    display: inline-block;
+    transition: transform 200ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .promo-banner:hover .promo-banner-glow {
+      --promo-glow: 1;
+    }
+
+    .promo-banner:hover .promo-banner-arrow {
+      transform: translateX(3px);
+    }
+  }
+}
+
+@keyframes promo-banner-glow {
+  0%,
+  100% {
+    transform: scale(0.94);
+    opacity: calc(var(--promo-glow) * 0.55);
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: var(--promo-glow);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-banner-glow {
+    animation: none;
+  }
+}
+
+/* Phone hero stars drift slowly. Two durations keep them from moving in step.
+   Only `transform` animates; the placement uses the separate `translate` and
+   `rotate` properties, so the two compose. Each star sits under a letter of
+   "Repository to", so it rests a little low, drifts up and away from the
+   text, and tilts so its inner arm dips instead of rising into the letter. */
+.flank-sparkle-left {
+  animation: flank-float-left 4.2s ease-in-out infinite;
+}
+
+.flank-sparkle-right {
+  animation: flank-float-right 5.2s ease-in-out -1.7s infinite;
+}
+
+@keyframes flank-float-left {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(-3px, -4px) rotate(12deg) scale(1.08);
+  }
+  66% {
+    transform: translate(2px, 2px) rotate(-8deg) scale(0.96);
+  }
+}
+
+@keyframes flank-float-right {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(3px, -4px) rotate(-12deg) scale(1.08);
+  }
+  66% {
+    transform: translate(-2px, 2px) rotate(8deg) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flank-sparkle-left,
+  .flank-sparkle-right {
+    animation: none;
+  }
+}
+
+/* Suppress Next.js dev indicators, dev overlay and portals */
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dialog-overlay],
+[data-next-badge],
+div[data-nextjs-dev-tools-button],
+#nextjs-dev-tools-button {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* -- vendored fonts (scripts/vendor-fonts.mjs) -- */
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-mono-400.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-mono-500.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-mono-600.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-variable.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+/* -- end vendored fonts -- */

@@ -1,0 +1,47 @@
+{
+  "appId": "in.gnu.labs.diagramstudio",
+  "productName": "gnu.in.labs Diagram Studio",
+  "executableName": "gnu-in-labs-diagram-studio",
+  "directories": {
+    "output": "dist-electron",
+    "buildResources": "electron/build"
+  },
+  "files": [
+    "electron/**/*",
+    "package.json",
+    "LICENSE",
+    "!**/node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": ".next/standalone",
+      "to": "app"
+    }
+  ],
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": ["x64"]
+      },
+      {
+        "target": "deb",
+        "arch": ["x64"]
+      },
+      {
+        "target": "tar.gz",
+        "arch": ["x64"]
+      }
+    ],
+    "category": "Development",
+    "maintainer": "gnu.in.labs <tension-atoi@users.noreply.github.com>",
+    "synopsis": "Local deterministic software architecture diagrams and codebase topologies",
+    "description": "gnu.in.labs Diagram Studio with local Ollama engine and TypeSafe Jev System One semantic audit."
+  },
+  "publish": {
+    "provider": "github",
+    "owner": "tension-atoi",
+    "repo": "diagram.studio",
+    "releaseType": "release"
+  }
+}

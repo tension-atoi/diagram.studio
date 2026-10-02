@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    /* The Electron main process is CommonJS, loaded by Electron itself and
+       never bundled, so it is checked on its own terms rather than against the
+       app's ESM/DOM program: no jsx, no DOM lib, node types only. */
+    "target": "es2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "incremental": true
+  },
+  "include": ["**/*.cjs"]
+}
