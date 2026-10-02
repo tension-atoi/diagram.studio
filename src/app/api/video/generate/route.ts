@@ -154,7 +154,7 @@ async function generate(request: Request, visitor: Visitor): Promise<Response> {
   const parsed = await parseSameOriginJsonRequest(request, {
     schema: requestSchema,
     maxBytes: 1024,
-    crossOriginError: "Video generation must come from GitDiagram.",
+    crossOriginError: "Video generation must come from diagram studio.",
   });
   if (!parsed.success) return parsed.response;
   if (!canGenerateVideos())

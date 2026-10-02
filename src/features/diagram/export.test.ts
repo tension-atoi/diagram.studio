@@ -4,7 +4,7 @@ import {
   exportMermaidSvgAsPng,
   getExportFooter,
   getPngExportScale,
-  withGitDiagramCredit,
+  withStudioCredit,
 } from "~/features/diagram/export";
 
 function setup({
@@ -226,9 +226,9 @@ describe("getPngExportScale", () => {
   });
 });
 
-describe("withGitDiagramCredit", () => {
+describe("withStudioCredit", () => {
   it("puts a Mermaid comment line on top", () => {
-    expect(withGitDiagramCredit("flowchart TD\nA-->B", "acme/demo")).toBe(
+    expect(withStudioCredit("flowchart TD\nA-->B", "acme/demo")).toBe(
       "%% Architecture topology: acme/demo\nflowchart TD\nA-->B",
     );
   });

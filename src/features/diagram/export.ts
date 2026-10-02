@@ -195,6 +195,6 @@ export async function exportMermaidSvgAsPng(
 }
 
 /** Clean header for exported Mermaid source without external site branding. */
-export function withGitDiagramCredit(diagram: string, repository: string) {
+export function withStudioCredit(diagram: string, repository: string) {
   return `%% Architecture topology: ${repository}\n${diagram}`;
 }

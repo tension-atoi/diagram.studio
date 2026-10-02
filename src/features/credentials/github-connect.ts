@@ -29,7 +29,7 @@ export function githubConnectUrl(options: {
 export const GITHUB_CONNECT_FAILURES = {
   denied: "GitHub sign-in was cancelled.",
   no_access:
-    "GitDiagram can’t see this repository yet. Pick it on GitHub’s install page. For an organization, an owner may need to approve the request first.",
+    "diagram studio can’t see this repository yet. Pick it on GitHub’s install page. For an organization, an owner may need to approve the request first.",
   expired: "That GitHub sign-in took too long. Please try again.",
   state_mismatch:
     "That GitHub sign-in could not be verified. Please try again.",

@@ -14,7 +14,7 @@ import { upstashEval } from "~/server/storage/upstash";
 // takes a slot from a per-network fixed window (like the generation limiters,
 // failing open when Redis is down, since each call is only a cached read), and
 // is counted per tool in one Redis hash per UTC day, so the operator can see
-// how much agents use GitDiagram. Handshakes are counted by client name
+// how much agents use diagram studio. Handshakes are counted by client name
 // (claude-code, cursor, …) in the same hash.
 
 const DEFAULT_MAX_CALLS = 120;

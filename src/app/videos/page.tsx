@@ -12,7 +12,7 @@ import { getFirstVideoPage } from "~/server/explainer/catalog";
 import { isVideoExplainerEnabled } from "~/server/explainer/config";
 import { errorText, logEvent } from "~/server/log";
 
-const title = "Watch Repos Explained in a Minute | GitDiagram";
+const title = "Watch Repos Explained in a Minute | diagram studio";
 const description =
   "Narrated one-minute video tours of GitHub repositories: what each project does, how its parts fit together, and a few of the decisions inside.";
 
@@ -22,7 +22,7 @@ const image = (path: string) => ({
   url: path,
   width: 1200,
   height: 630,
-  alt: "GitDiagram",
+  alt: "diagram studio",
 });
 
 // Its own link preview, so a shared /videos link does not read as the homepage.
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/videos`,
     title,
     description,
-    siteName: "GitDiagram",
+    siteName: "diagram studio",
     images: [image("/opengraph-image.png")],
   },
   twitter: {

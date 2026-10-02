@@ -8,7 +8,7 @@ import {
 describe("repository page titles", () => {
   it("keeps the full title when it fits about 60 characters", () => {
     expect(repositoryPageTitle("acme", "demo")).toBe(
-      "acme/demo architecture diagram: how it works | GitDiagram",
+      "acme/demo architecture diagram: how it works",
     );
   });
 
@@ -17,7 +17,7 @@ describe("repository page titles", () => {
       "fastapi/fastapi architecture diagram: how it works",
     );
     expect(repositoryPageTitle("tiangolo-labs", "sqlmodel-xyz")).toBe(
-      "tiangolo-labs/sqlmodel-xyz architecture diagram | GitDiagram",
+      "tiangolo-labs/sqlmodel-xyz architecture diagram",
     );
     expect(repositoryPageTitle("langchain-ai", "langchain-community")).toBe(
       "langchain-ai/langchain-community architecture diagram",

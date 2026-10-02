@@ -21,7 +21,7 @@ import { SITE_URL } from "~/lib/site";
 // ignore all of this and read the tool's text.
 
 /** Bump the version with any change old hosts' cached shells can't load. */
-export const DIAGRAM_VIEW_URI = "ui://gitdiagram/diagram-view-v1.html";
+export const DIAGRAM_VIEW_URI = "ui://gnu.in.labs/diagram-view-v1.html";
 
 /**
  * Where the view's script is served from: the site, or MCP_APP_ORIGIN (an
@@ -108,7 +108,7 @@ export function diagramViewHtml(origin = mcpAppOrigin()): string {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GitDiagram</title>
+<title>diagram studio</title>
 <style>${STYLES}</style>
 </head>
 <body>
@@ -134,7 +134,7 @@ export function diagramViewResourceMeta(origin = mcpAppOrigin()) {
 export function registerDiagramView(server: McpServer): void {
   registerAppResource(
     server,
-    "GitDiagram diagram view",
+    "diagram studio diagram view",
     DIAGRAM_VIEW_URI,
     {
       description:

@@ -53,7 +53,7 @@ const answer = (variant: AiAnswer["variant"]): AiAnswer => ({
   cited: variant === "openai:search",
   inSources: false,
   position: variant === "openai:search" ? 1 : null,
-  tools: ["GitDiagram"],
+  tools: ["diagram studio"],
   text: `Answer from ${variant}`,
   citations: [],
   costUsd: 0.04,

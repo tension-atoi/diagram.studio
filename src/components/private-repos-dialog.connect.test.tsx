@@ -118,7 +118,7 @@ describe("private repositories dialog with Continue with GitHub", () => {
     );
 
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "GitDiagram can’t see this repository yet.",
+      "diagram studio can’t see this repository yet.",
     );
     expect(
       screen.getByRole("link", { name: /Choose repositories on GitHub/u }),

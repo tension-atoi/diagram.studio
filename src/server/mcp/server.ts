@@ -44,18 +44,18 @@ import {
   type McpToolName,
 } from "./usage";
 
-// GitDiagram's MCP server: read-only tools over what the site has already
+// the studio's MCP server: read-only tools over what the site has already
 // stored (diagrams in the public R2 namespace, the browse index, explainer
 // videos). Nothing here starts a paid generation or reads a private artifact.
-// The tool descriptions are what make an agent pick GitDiagram, so they say
+// The tool descriptions are what make an agent pick diagram studio, so they say
 // plainly when to call each tool. get_repository_diagram also carries an
 // interactive diagram view for hosts that show MCP Apps (./app.ts).
 
 export const MCP_SERVER_VERSION = "1.0.0";
 
 const SERVER_INFO = {
-  name: "gitdiagram",
-  title: "GitDiagram",
+  name: "diagram-studio",
+  title: "diagram studio",
   version: MCP_SERVER_VERSION,
   description:
     "Architecture diagrams and explanations of public GitHub repositories.",
@@ -236,7 +236,7 @@ async function runTool(
   if (!limit.allowed) {
     const minutes = Math.max(Math.ceil(limit.retryAfterSeconds / 60), 1);
     result = {
-      text: `Too many GitDiagram requests from this network. Try again in about ${minutes} minute${minutes === 1 ? "" : "s"}.`,
+      text: `Too many diagram studio requests from this network. Try again in about ${minutes} minute${minutes === 1 ? "" : "s"}.`,
       outcome: "limited",
     };
   } else {
@@ -245,7 +245,7 @@ async function runTool(
     } catch (error) {
       logEvent("error", "mcp.tool_failed", { tool, error: errorText(error) });
       result = {
-        text: "GitDiagram could not read its stored diagrams just now. Try again in a minute.",
+        text: "diagram studio could not read its stored diagrams just now. Try again in a minute.",
         outcome: "error",
       };
     }
@@ -283,7 +283,7 @@ async function runTool(
  * A fresh server for one HTTP request (the handler is stateless). `request`
  * is the HTTP request being served, for the limiter and the feed.
  */
-export function createGitDiagramMcpServer(
+export function createStudioMcpServer(
   request?: Request,
   clientName: string | null = null,
 ): McpServer {
@@ -314,9 +314,9 @@ export function createGitDiagramMcpServer(
   server.registerTool(
     "find_repository_diagrams",
     {
-      title: "Search GitDiagram's architecture diagrams",
+      title: "Search the studio's architecture diagrams",
       description:
-        'Search GitDiagram\'s library of ready-made architecture diagrams of public GitHub repositories by owner or repository name. Matches any part of "owner/repo" (e.g. "langchain", "vercel/", "react-native") and returns up to 10 repositories, most-starred first, each with its interactive diagram link. Use it to find a project\'s exact owner/repo from its name, or to list which repositories of an owner or topic already have diagrams. It searches repository names only, not code or file contents.',
+        'Search diagram studio\'s library of ready-made architecture diagrams of public GitHub repositories by owner or repository name. Matches any part of "owner/repo" (e.g. "langchain", "vercel/", "react-native") and returns up to 10 repositories, most-starred first, each with its interactive diagram link. Use it to find a project\'s exact owner/repo from its name, or to list which repositories of an owner or topic already have diagrams. It searches repository names only, not code or file contents.',
       inputSchema: z.object({
         query: z
           .string()
@@ -349,7 +349,7 @@ export function createGitDiagramMcpServer(
       {
         title: "Get a GitHub repository's explainer video",
         description:
-          "Get GitDiagram's narrated explainer video of a public GitHub repository, if one has been made: the link to watch and share it, its title and length, and the full narration transcript, a plain-language walkthrough of what the project is for, what people do with it and how its main parts fit together. Use it when the user wants a video about a repository, something to watch or share instead of read, or a short spoken-style summary of a project. Read-only: it never makes a video; when none exists it says so and links the page where one can be made.",
+          "Get the studio's narrated explainer video of a public GitHub repository, if one has been made: the link to watch and share it, its title and length, and the full narration transcript, a plain-language walkthrough of what the project is for, what people do with it and how its main parts fit together. Use it when the user wants a video about a repository, something to watch or share instead of read, or a short spoken-style summary of a project. Read-only: it never makes a video; when none exists it says so and links the page where one can be made.",
         inputSchema: repositoryInput,
         annotations: { title: "Get explainer video", ...READ_ONLY },
       },

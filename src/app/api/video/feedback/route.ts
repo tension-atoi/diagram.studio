@@ -58,7 +58,7 @@ export async function POST(request: Request): Promise<Response> {
   const parsed = await parseSameOriginJsonRequest(request, {
     schema: feedbackSchema,
     maxBytes: 16 * 1024,
-    crossOriginError: "Feedback must be sent from GitDiagram.",
+    crossOriginError: "Feedback must be sent from diagram studio.",
   });
   if (!parsed.success) return parsed.response;
   const { username, repo, message, email, at } = parsed.data;

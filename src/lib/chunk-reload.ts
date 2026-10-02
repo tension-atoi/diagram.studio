@@ -9,7 +9,7 @@
  * is being generated (`data-generating` on <html>): that would cancel the run.
  */
 function installChunkReload(win: Window) {
-  const key = "gitdiagram:chunk-reload-at";
+  const key = "gnu-in-labs-diagram-studio:chunk-reload-at";
   const minimumGapMs = 10 * 60 * 1000;
   const pattern =
     /Failed to load chunk|Loading (CSS )?chunk [^ ]+ failed|Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed/i;

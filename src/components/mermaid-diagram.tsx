@@ -117,7 +117,7 @@ const MermaidChart = ({
       );
 
       try {
-        const renderId = `gitdiagram-${Math.random().toString(36).slice(2)}`;
+        const renderId = `gnu-in-labs-diagram-studio-${Math.random().toString(36).slice(2)}`;
         const safeChart = sanitizeMermaidSourceForRender(chart);
         const { svg, bindFunctions } = await withDomNodesSerializingSafely(() =>
           mermaid.render(renderId, safeChart, renderTarget),

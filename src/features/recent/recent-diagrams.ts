@@ -17,8 +17,8 @@ export interface RecentDiagram {
   viewedAt: number;
 }
 
-const STORAGE_KEY = "gitdiagram-recent-diagrams";
-const CHANGE_EVENT = "gitdiagram:recent-diagrams";
+const STORAGE_KEY = "gnu-in-labs-diagram-studio-recent-diagrams";
+const CHANGE_EVENT = "gnu-in-labs-diagram-studio:recent-diagrams";
 export const MAX_RECENT_DIAGRAMS = 8;
 
 // The server's rules for GitHub names (server/generate/types.ts), lowercased,

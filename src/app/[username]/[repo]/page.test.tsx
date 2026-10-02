@@ -130,9 +130,7 @@ describe("repository page", () => {
       params: Promise.resolve({ username: "acme", repo: "demo" }),
     });
 
-    expect(metadata.title).toBe(
-      "acme/demo architecture diagram: how it works | GitDiagram",
-    );
+    expect(metadata.title).toBe("acme/demo architecture diagram: how it works");
     expect(metadata.description).toBe(
       "Demo is a small service that stores notes. Requests enter the app and are written to the store.",
     );

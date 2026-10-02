@@ -21,11 +21,11 @@ const DEFAULT_MODEL_FAMILY = "gpt-6-luna";
 const COMPLIMENTARY_QUOTA_BUCKET = "openai-complimentary-small-models";
 const QUOTA_FINALIZATION_ATTEMPTS = 2;
 const DEFAULT_DENIAL_MESSAGE =
-  "GitDiagram's free daily OpenAI capacity is used up for now. I'm a solo student engineer running this free and open source, so please try again after 00:00 UTC or use your own OpenAI API key.";
+  "the studio's free daily OpenAI capacity is used up for now. I'm a solo student engineer running this free and open source, so please try again after 00:00 UTC or use your own OpenAI API key.";
 const DEFAULT_PROVIDER_MISMATCH_MESSAGE =
-  "GitDiagram's complimentary-only mode requires AI_PROVIDER=openai on the default server key. I'm a solo student engineer running this free and open source, so please switch the server back to OpenAI or use your own API key.";
+  "the studio's complimentary-only mode requires AI_PROVIDER=openai on the default server key. I'm a solo student engineer running this free and open source, so please switch the server back to OpenAI or use your own API key.";
 const DEFAULT_MODEL_MISMATCH_MESSAGE =
-  "GitDiagram's complimentary-only mode requires the configured complimentary model family on the default server key. Please use your own API key or try again later.";
+  "the studio's complimentary-only mode requires the configured complimentary model family on the default server key. Please use your own API key or try again later.";
 
 export interface ComplimentaryQuotaReservation {
   reservationId: string;

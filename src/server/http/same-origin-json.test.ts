@@ -55,19 +55,19 @@ function parse(input: Request, maxBytes = 1_024) {
 describe("parseSameOriginJsonRequest", () => {
   it("accepts same-origin JSON with media type parameters", async () => {
     const result = await parse(
-      request(JSON.stringify({ name: " GitDiagram " }), {
+      request(JSON.stringify({ name: " diagram studio " }), {
         "Content-Type": "application/json; charset=utf-8",
       }),
     );
 
     expect(result).toEqual({
       success: true,
-      data: { name: "GitDiagram" },
+      data: { name: "diagram studio" },
     });
   });
 
   it("rejects cross-origin requests before reading the body", async () => {
-    const input = request(JSON.stringify({ name: "GitDiagram" }), {
+    const input = request(JSON.stringify({ name: "diagram studio" }), {
       Origin: "https://attacker.example",
       "Sec-Fetch-Site": "cross-site",
     });
@@ -85,7 +85,7 @@ describe("parseSameOriginJsonRequest", () => {
 
   it("requires the application/json media type", async () => {
     const result = await parse(
-      request(JSON.stringify({ name: "GitDiagram" }), {
+      request(JSON.stringify({ name: "diagram studio" }), {
         "Content-Type": "text/plain",
       }),
     );
@@ -95,7 +95,7 @@ describe("parseSameOriginJsonRequest", () => {
 
   it("rejects declared and actual UTF-8 payloads over the byte limit", async () => {
     const declaredTooLarge = await parse(
-      request(JSON.stringify({ name: "GitDiagram" }), {
+      request(JSON.stringify({ name: "diagram studio" }), {
         "Content-Length": "1025",
       }),
     );
@@ -120,7 +120,7 @@ describe("parseSameOriginJsonRequest", () => {
   });
 
   it("turns body read failures into a canonical invalid-payload response", async () => {
-    const input = request(JSON.stringify({ name: "GitDiagram" }));
+    const input = request(JSON.stringify({ name: "diagram studio" }));
     vi.spyOn(input, "text").mockRejectedValue(new Error("socket closed"));
 
     const result = await parse(input);

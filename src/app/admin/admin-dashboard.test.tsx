@@ -116,7 +116,7 @@ describe("signing out everywhere", () => {
     await signOutEverywhere();
     expect(reload).not.toHaveBeenCalled();
     expect(screen.getByRole("alert")).toHaveTextContent(
-      /Could not reach GitDiagram/,
+      /Could not reach diagram studio/,
     );
   });
 

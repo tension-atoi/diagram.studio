@@ -98,7 +98,7 @@ export function AdminDashboard() {
         body?.error ??
         (response
           ? "Could not sign out. Try again."
-          : "Could not reach GitDiagram to sign out. Check the connection and try again."),
+          : "Could not reach diagram studio to sign out. Check the connection and try again."),
       everywhere,
     });
     setSigningOut(false);

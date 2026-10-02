@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import {
   exportMermaidSvgAsPng,
-  withGitDiagramCredit,
+  withStudioCredit,
 } from "~/features/diagram/export";
 import { readmeMarkdown, type ReadmeEmbed } from "~/features/diagram/readme";
 import { captureAnalyticsEvent } from "~/lib/analytics-client";
@@ -131,7 +131,7 @@ export function DiagramExport({
               icon={Copy}
               onAction={async () => {
                 await navigator.clipboard.writeText(
-                  withGitDiagramCredit(diagram, repository),
+                  withStudioCredit(diagram, repository),
                 );
                 shared("mermaid");
               }}

@@ -17,7 +17,8 @@ import { seal, unseal } from "./seal";
  * is Lax because GitHub's redirect back is a cross-site navigation, which
  * Strict cookies do not ride along with.
  */
-export const GITHUB_CONNECT_FLOW_COOKIE = "gitdiagram_github_connect";
+export const GITHUB_CONNECT_FLOW_COOKIE =
+  "gnu_in_labs_diagram_studio_github_connect";
 const SEAL_PURPOSE = "github-connect-flow";
 const FLOW_MAX_AGE_SECONDS = 10 * 60;
 /** Bounds the silent authorize/install round trips of one attempt. */

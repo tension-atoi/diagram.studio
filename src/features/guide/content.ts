@@ -51,7 +51,7 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
       id: "private-repositories",
       heading: "Private repositories",
       paragraphs: [
-        "Choose Private Repos in the header and paste a fine-grained GitHub personal access token that can read the repositories you want. The token stays in a secure cookie in your browser and is sent only with your own requests; it is never saved on GitDiagram's servers. Diagrams of private repositories are stored separately, where only that token can reach them. The [privacy policy](/privacy) has the details.",
+        "Choose Private Repos in the header and paste a fine-grained GitHub personal access token that can read the repositories you want. The token stays in a secure cookie in your browser and is sent only with your own requests; it is never saved on the studio's servers. Diagrams of private repositories are stored separately, where only that token can reach them. The [privacy policy](/privacy) has the details.",
         "Making diagrams is free within a daily limit. If it runs out, you can add your own OpenAI API key under API Key.",
       ],
     },
@@ -79,16 +79,16 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
       id: "alternatives",
       heading: "Other ways to visualize a codebase",
       paragraphs: [
-        "GitDiagram is built for one job: a single picture of a whole repository, with no setup. Other tools do other jobs better:",
+        "diagram studio is built for one job: a single picture of a whole repository, with no setup. Other tools do other jobs better:",
       ],
       entries: [
         {
           name: "DeepWiki",
-          text: "Replace `github` with `deepwiki` in a repository URL to get a generated wiki: many pages of documentation with diagrams, and a chat that answers questions about the code. Better when you want to read about a project in depth or ask it questions. GitDiagram is better when you want the whole system on one screen, each part linked to its code.",
+          text: "Replace `github` with `deepwiki` in a repository URL to get a generated wiki: many pages of documentation with diagrams, and a chat that answers questions about the code. Better when you want to read about a project in depth or ask it questions. diagram studio is better when you want the whole system on one screen, each part linked to its code.",
         },
         {
           name: "Claude Code, Codex or another coding agent",
-          text: "Ask the agent in your own checkout to draw a Mermaid diagram. It can read every file, including uncommitted work and private code that never leaves your machine, and draw exactly the view you ask for: one feature, one request path, a sequence diagram. Better for a focused question or code that isn't on GitHub. GitDiagram is better when you want a diagram without cloning anything, a link you can share, or a quick overview before you open the code.",
+          text: "Ask the agent in your own checkout to draw a Mermaid diagram. It can read every file, including uncommitted work and private code that never leaves your machine, and draw exactly the view you ask for: one feature, one request path, a sequence diagram. Better for a focused question or code that isn't on GitHub. diagram studio is better when you want a diagram without cloning anything, a link you can share, or a quick overview before you open the code.",
         },
         {
           name: "Sourcegraph",
@@ -100,7 +100,7 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
         },
         {
           name: "Drawing it yourself",
-          text: "Writing a Mermaid, PlantUML or draw.io diagram by hand gives full control, and GitHub renders Mermaid inside Markdown files. Better for a diagram you maintain in your own docs. Exporting GitDiagram's Mermaid code is a quick first draft to edit.",
+          text: "Writing a Mermaid, PlantUML or draw.io diagram by hand gives full control, and GitHub renders Mermaid inside Markdown files. Better for a diagram you maintain in your own docs. Exporting the studio's Mermaid code is a quick first draft to edit.",
         },
       ],
     },
@@ -114,8 +114,8 @@ export const GUIDE_QUESTIONS: GuideQuestion[] = [
       "Open `/{owner}/{repo}` in the studio, for example `/pallets/flask`. The diagram opens in the app, with nothing else to install.",
   },
   {
-    question: "Is GitDiagram free?",
-    answer: `Yes. Opening stored diagrams is free, and making new ones is free within a daily limit; after that you can use your own OpenAI API key. GitDiagram is also [open source](${GITHUB_REPO_URL}).`,
+    question: "Is diagram studio free?",
+    answer: `Yes. Opening stored diagrams is free, and making new ones is free within a daily limit; after that you can use your own OpenAI API key. diagram studio is also [open source](${GITHUB_REPO_URL}).`,
   },
   {
     question: "Does it work with private repositories?",
@@ -140,7 +140,7 @@ export const GUIDE_QUESTIONS: GuideQuestion[] = [
   {
     question: "How is it different from DeepWiki?",
     answer:
-      "DeepWiki writes a multi-page wiki with a chat; GitDiagram gives one interactive diagram of the whole system, with each part linked to its code. They work well together.",
+      "DeepWiki writes a multi-page wiki with a chat; diagram studio gives one interactive diagram of the whole system, with each part linked to its code. They work well together.",
   },
 ];
 

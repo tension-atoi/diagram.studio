@@ -1,21 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { useEffect } from "react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, expect, it } from "vitest";
 import type { BrowsePageResult } from "~/features/browse/catalog";
-
-const sponsorMounts = vi.hoisted(() => ({ count: 0 }));
-vi.mock("~/components/sponsor-slot", () => ({
-  SponsorCatalogRow: function SponsorCatalogRow() {
-    useEffect(() => {
-      sponsorMounts.count += 1;
-    }, []);
-    return (
-      <tr data-testid="sponsor-row">
-        <td />
-      </tr>
-    );
-  },
-}));
 
 import { BrowseCatalogResults } from "./browse-catalog-results";
 
@@ -56,8 +41,7 @@ function results(result: BrowsePageResult) {
   );
 }
 
-it("keeps only the listing rows, without an ad row, while the listings change", () => {
-  sponsorMounts.count = 0;
+it("keeps one row per listing while the listings change", () => {
   const view = render(results(page(["a", "b", "c"])));
   const rows = () =>
     screen
@@ -65,15 +49,11 @@ it("keeps only the listing rows, without an ad row, while the listings change", 
       .slice(1)
       .map((row) => row.dataset.testid ?? row.textContent?.split("owner/")[1]);
 
-  // One row per listing. There is no ad row: SponsorCatalogRow is
-  // intentionally not mounted while the owner has no sponsor (yet).
   const expectListings = (expected: string[]) => {
     expect(rows()).toHaveLength(expected.length);
     expected.forEach((repo, index) => {
       expect(rows()[index]?.startsWith(repo)).toBe(true);
     });
-    expect(screen.queryByTestId("sponsor-row")).toBeNull();
-    expect(sponsorMounts.count).toBe(0);
   };
 
   expectListings(["a", "b", "c"]);
@@ -87,5 +67,4 @@ it("keeps only the listing rows, without an ad row, while the listings change", 
 
   view.rerender(results(page(["only"])));
   expectListings(["only"]);
-  expect(screen.queryByTestId("sponsor-row")).toBeNull();
 });

@@ -1,6 +1,6 @@
 import styles from "./workspace.module.css";
 
-/** The 3×3 pixel mark that pulses while GitDiagram is working. */
+/** The 3×3 pixel mark that pulses while diagram studio is working. */
 export function ActivityMark({ active = true }: { active?: boolean }) {
   return (
     <span

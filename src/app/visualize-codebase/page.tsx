@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: GUIDE_TITLE,
     description: GUIDE_DESCRIPTION,
     url: `${SITE_URL}${GUIDE_PATH}`,
-    siteName: "GitDiagram",
+    siteName: "diagram studio",
     type: "article",
   },
 };
@@ -73,7 +73,7 @@ function guideJsonLd(videos: boolean) {
   const url = `${SITE_URL}${GUIDE_PATH}`;
   const publisher = {
     "@type": "Organization",
-    name: "GitDiagram",
+    name: "diagram studio",
     url: SITE_URL,
   };
   return {
@@ -109,7 +109,7 @@ function guideJsonLd(videos: boolean) {
           {
             "@type": "ListItem",
             position: 1,
-            name: "GitDiagram",
+            name: "diagram studio",
             item: SITE_URL,
           },
           {

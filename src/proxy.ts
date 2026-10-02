@@ -15,7 +15,6 @@ const RESERVED_FIRST_SEGMENTS = new Set([
   "api",
   "phx9a",
   "_next",
-  "out",
   "sitemap",
   "admin",
   "mcp",
@@ -56,7 +55,7 @@ function fetchSurface(path: string, markdown: boolean): string {
 }
 
 /**
- * GitDiagram does not expose Server Actions. Reject forged action requests at
+ * diagram studio does not expose Server Actions. Reject forged action requests at
  * the proxy boundary so they never reach the Next.js action decoder.
  */
 export function proxy(

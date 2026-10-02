@@ -1,5 +1,5 @@
 // What the /admin "Search & AI" panel shows: how often AI assistants name
-// GitDiagram (a daily run of fixed questions, server/visibility/ai-visibility.ts)
+// diagram studio (a daily run of fixed questions, server/visibility/ai-visibility.ts)
 // and which crawlers and AI agents fetch the site (server/visibility/agent-fetch.ts).
 
 export type AiProvider = "openai" | "anthropic";

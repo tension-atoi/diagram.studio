@@ -24,7 +24,7 @@ function feedbackConfig(): FeedbackConfig | null {
   const domain = process.env.RESEND_EMAIL_DOMAIN?.trim();
   const to = process.env.VIDEO_FEEDBACK_TO?.trim();
   if (!apiKey || !domain || !to) return null;
-  return { apiKey, from: `GitDiagram <feedback@${domain}>`, to };
+  return { apiKey, from: `diagram studio <feedback@${domain}>`, to };
 }
 
 /**

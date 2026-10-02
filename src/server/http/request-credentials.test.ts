@@ -82,7 +82,7 @@ describe("request credentials", () => {
     await setCredential("openai_api_key", " sk-test ");
 
     expect(mocks.cookieStore.set).toHaveBeenCalledWith(
-      "gitdiagram_openai_api_key",
+      "gnu_in_labs_diagram_studio_openai_api_key",
       "sk-test",
       expect.objectContaining({
         httpOnly: true,
@@ -104,7 +104,7 @@ describe("request credentials", () => {
     await clearCredential("github_pat");
 
     expect(mocks.cookieStore.set).toHaveBeenLastCalledWith(
-      "gitdiagram_github_pat",
+      "gnu_in_labs_diagram_studio_github_pat",
       "",
       expect.objectContaining({
         httpOnly: true,
@@ -127,7 +127,7 @@ describe("request credentials", () => {
     await setCredential("openai_api_key", "sk-test");
 
     expect(mocks.cookieStore.set).toHaveBeenCalledWith(
-      "gitdiagram_openai_api_key",
+      "gnu_in_labs_diagram_studio_openai_api_key",
       "sk-test",
       expect.objectContaining({ secure: true }),
     );
@@ -175,7 +175,7 @@ describe("request credentials", () => {
   });
 
   it("ignores malformed oversized cookie values", async () => {
-    mocks.values.set("gitdiagram_openai_api_key", {
+    mocks.values.set("gnu_in_labs_diagram_studio_openai_api_key", {
       value: "x".repeat(2_049),
     });
 

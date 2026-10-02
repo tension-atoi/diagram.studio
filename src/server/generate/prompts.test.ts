@@ -56,7 +56,7 @@ describe("evidence and coverage instructions", () => {
       source_files: `${index}\n\nFILE "src/main.rs"\nfn main() {}\nEND FILE`,
     });
     expect(message).toContain(
-      "<source_files>\nSOURCE INDEX (computed by GitDiagram",
+      "<source_files>\nSOURCE INDEX (computed from the repository files",
     );
     expect(message).toContain(
       "src/main.rs (26 KB, excerpt) -> src/network/proxy.rs",

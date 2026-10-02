@@ -74,7 +74,7 @@ function formatSize(size: number | undefined): string {
  * A compact map of the files that matter most: which were excerpted, which
  * were read only for their references, and which exist but were not read. It
  * tells the model which core modules exist (so they are not dropped) and which
- * connections GitDiagram actually saw in the code (so edges can be cited).
+ * connections diagram studio actually saw in the code (so edges can be cited).
  */
 export function formatSourceIndex(
   entries: IndexEntry[],
@@ -83,7 +83,7 @@ export function formatSourceIndex(
 ): string {
   if (!entries.length) return "";
   const header = [
-    "SOURCE INDEX (computed by GitDiagram from the repository files, not written by a model)",
+    "SOURCE INDEX (computed from the repository files, not written by a model)",
     'Each line: path (size, how it was used) -> repository files it imports or names anywhere in its full text, including parts not excerpted below. "excerpt": excerpted below. "read": read in full, not excerpted. "not read": never opened, so its contents and connections are unknown. Lists miss dynamic, HTTP, event and configuration wiring.',
     ...(core.length
       ? [

@@ -116,21 +116,21 @@ export function PrivateReposDialog({
     "https://github.com/settings/personal-access-tokens/new",
   );
   tokenUrl.search = new URLSearchParams({
-    name: "GitDiagram",
+    name: "diagram studio",
     description: "Read selected repositories to generate architecture diagrams",
     expires_in: "30",
     contents: "read",
     ...(repository ? { target_name: repository.split("/")[0]! } : {}),
   }).toString();
   const aiPrompt = [
-    `Help me connect ${repository ? `https://github.com/${repository}` : "a private GitHub repository"} to GitDiagram.`,
-    `Use my browser to open ${tokenUrl.toString()} and create a fine-grained personal access token named GitDiagram that expires in 30 days.`,
+    `Help me connect ${repository ? `https://github.com/${repository}` : "a private GitHub repository"} to diagram studio.`,
+    `Use my browser to open ${tokenUrl.toString()} and create a fine-grained personal access token named diagram studio that expires in 30 days.`,
     repository
       ? `Choose the resource owner ${repository.split("/")[0]} and grant access only to the ${repository} repository.`
       : "Ask me which repository I want to use, then choose its resource owner and grant access only to that repository.",
     "Set repository Contents to Read-only; Metadata read access is included automatically. Do not add write or account permissions.",
     "If the organization requires approval, tell me what its admin needs to approve.",
-    "Help me paste the token directly into GitDiagram's GitHub access dialog and save it. Do not put the token in chat, logs, or files.",
+    "Help me paste the token directly into the studio's GitHub access dialog and save it. Do not put the token in chat, logs, or files.",
     "If you cannot use my browser, walk me through these steps briefly.",
   ].join("\n\n");
 
@@ -141,8 +141,8 @@ export function PrivateReposDialog({
       title="GitHub access"
       description={
         GITHUB_CONNECT_ENABLED
-          ? "Connect GitHub to let GitDiagram read your private repository."
-          : "Use a token to let GitDiagram read your private repository."
+          ? "Connect GitHub to let diagram studio read your private repository."
+          : "Use a token to let diagram studio read your private repository."
       }
       primary={
         GITHUB_CONNECT_ENABLED
@@ -177,11 +177,11 @@ export function PrivateReposDialog({
       dataUsage={
         <>
           {GITHUB_CONNECT_ENABLED &&
-            "Continue with GitHub gives GitDiagram read-only access to only the repositories you pick, and you can remove it anytime in your GitHub settings. "}
+            "Continue with GitHub gives diagram studio read-only access to only the repositories you pick, and you can remove it anytime in your GitHub settings. "}
           Your {GITHUB_CONNECT_ENABLED ? "sign-in or token" : "token"} is kept
           in a protected browser cookie for 30 days. Repository content is sent
           to the AI provider to generate your diagram. Private diagrams are
-          stored privately on GitDiagram.
+          stored privately on diagram studio.
         </>
       }
     />

@@ -6,6 +6,18 @@ import { countryName, flag, tally } from "~/features/admin/format";
 import type { LiveVisitor } from "~/features/admin/types";
 import { BarList, Panel } from "./ui";
 
+import { SITE_URL } from "~/lib/site";
+
+/** True when a referrer is this deployment itself, which counts as direct. */
+const OWN_HOST = new URL(SITE_URL).host.toLowerCase();
+function isOwnOrigin(ref: string): boolean {
+  try {
+    return new URL(ref).host.toLowerCase() === OWN_HOST;
+  } catch {
+    return false;
+  }
+}
+
 // Where the people here now are: which pages, which countries (open one to
 // see its cities), and which sites sent them.
 //
@@ -129,7 +141,7 @@ export const AudiencePanels = memo(function AudiencePanels({
     () =>
       tally(
         people,
-        (v) => (!v.ref || /gitdiagram\.com$/.test(v.ref) ? "Direct" : v.ref),
+        (v) => (!v.ref || isOwnOrigin(v.ref) ? "Direct" : v.ref),
         6,
       ),
     [people],

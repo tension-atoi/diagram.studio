@@ -1,7 +1,7 @@
 import "server-only";
 
 /**
- * "Continue with GitHub" runs on its own GitHub App ("GitDiagram Private
+ * "Continue with GitHub" runs on its own GitHub App ("diagram studio Private
  * Repos"), separate from the app whose installation token reads public
  * repositories. That app's private key lives on the server, and any
  * installation of it could be read with that key alone. This app only ever

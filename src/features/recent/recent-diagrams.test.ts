@@ -9,7 +9,7 @@ import {
   useRecentDiagrams,
 } from "./recent-diagrams";
 
-const KEY = "gitdiagram-recent-diagrams";
+const KEY = "gnu-in-labs-diagram-studio-recent-diagrams";
 
 afterEach(() => {
   localStorage.clear();
@@ -84,7 +84,11 @@ describe("recent diagrams", () => {
     expect(result.current.map((entry) => entry.repo)).toEqual(["demo"]);
     // The same array while storage is unchanged.
     const first = result.current;
-    act(() => window.dispatchEvent(new Event("gitdiagram:recent-diagrams")));
+    act(() =>
+      window.dispatchEvent(
+        new Event("gnu-in-labs-diagram-studio:recent-diagrams"),
+      ),
+    );
     expect(result.current).toBe(first);
 
     act(() => clearRecentDiagrams());

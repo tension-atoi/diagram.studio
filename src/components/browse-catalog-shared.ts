@@ -39,7 +39,7 @@ const utcMonthNames = [
   "Dec",
 ] as const;
 
-const BROWSE_SESSION_STORAGE_KEY = "gitdiagram:browse-query";
+const BROWSE_SESSION_STORAGE_KEY = "gnu-in-labs-diagram-studio:browse-query";
 export const HOVER_PREVIEW_MEDIA_QUERY =
   "(min-width: 1024px) and (hover: hover) and (pointer: fine)";
 export const HOVER_PREVIEW_WIDTH_PX = 360;

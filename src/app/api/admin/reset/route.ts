@@ -21,7 +21,7 @@ export async function POST(request: Request): Promise<Response> {
   const parsed = await parseSameOriginJsonRequest(request, {
     schema: requestSchema,
     maxBytes: 256,
-    crossOriginError: "Reset limits from GitDiagram.",
+    crossOriginError: "Reset limits from diagram studio.",
   });
   if (!parsed.success) return parsed.response;
   const { target } = parsed.data;

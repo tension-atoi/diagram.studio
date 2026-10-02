@@ -7,7 +7,7 @@ import { SITE_URL } from "~/lib/site";
  * cannot silently invalidate every URL a test asserts on. It is the loopback
  * origin the desktop app serves on, never a public one.
  */
-export const ORIGIN = SITE_URL.replace(/\/+$/, "");
+const ORIGIN = SITE_URL.replace(/\/+$/, "");
 
 /** `${ORIGIN}/path`, for building a URL in an assertion. */
 export function siteUrl(path = ""): string {

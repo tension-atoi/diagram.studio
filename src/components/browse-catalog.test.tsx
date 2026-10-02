@@ -381,7 +381,7 @@ describe("BrowseCatalog", () => {
 
   it("restores the last browse state on browser back when the URL returns bare", async () => {
     window.sessionStorage.setItem(
-      "gitdiagram:browse-query",
+      "gnu-in-labs-diagram-studio:browse-query",
       JSON.stringify({
         q: "vercel",
         sort: "stars_desc",

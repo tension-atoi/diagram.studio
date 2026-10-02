@@ -1,4 +1,4 @@
-// GitDiagram publishes nothing under /.well-known/. Without this route the
+// diagram studio publishes nothing under /.well-known/. Without this route the
 // repository page ([username]/[repo]) answers /.well-known/oauth-protected-resource
 // and /.well-known/oauth-authorization-server with a 200 HTML page, which MCP
 // clients (Claude's connector setup among them) read as OAuth metadata for the

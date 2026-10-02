@@ -1,5 +1,5 @@
 // Countries where making new videos is limited to keep spend in check: a
-// large share of GitDiagram's traffic comes from them, far more than the
+// large share of the studio's traffic comes from them, far more than the
 // video budget can pay for. Everyone there can still watch and download every
 // video already made. The operator picks how limited from /admin:
 // - "blocked": no new videos from these countries.

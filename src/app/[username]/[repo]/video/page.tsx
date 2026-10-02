@@ -91,13 +91,13 @@ export async function generateMetadata({
     url: `${SITE_URL}/${username.toLowerCase()}/${repo.toLowerCase()}/opengraph-image`,
     width: 1200,
     height: 630,
-    alt: "GitDiagram repository preview",
+    alt: "diagram studio repository preview",
   };
 
   // No video yet: nothing to preview or index until one is made.
   if (!summary) {
-    const title = `${username}/${repo} video tour | GitDiagram`;
-    const description = `Watch or make a one-minute video tour of ${username}/${repo} on GitDiagram.`;
+    const title = `${username}/${repo} video tour | diagram studio`;
+    const description = `Watch or make a one-minute video tour of ${username}/${repo} on diagram studio.`;
     return {
       title,
       description,
@@ -107,7 +107,7 @@ export async function generateMetadata({
         title,
         description,
         url: `${SITE_URL}${path}`,
-        siteName: "GitDiagram",
+        siteName: "diagram studio",
         type: "website",
         images: [fallbackImage],
       },
@@ -121,7 +121,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${username}/${repo}, explained in a minute | GitDiagram`;
+  const title = `${username}/${repo}, explained in a minute | diagram studio`;
   const description =
     summary.opening ||
     `A narrated one-minute video tour of ${username}/${repo}: what it does and how it works.`;
@@ -143,7 +143,7 @@ export async function generateMetadata({
       title,
       description,
       url: `${SITE_URL}${path}`,
-      siteName: "GitDiagram",
+      siteName: "diagram studio",
       type: "video.other",
       images: [image],
       ...(files.mp4
@@ -190,7 +190,11 @@ function videoJsonLd(username: string, repo: string, summary: VideoSummary) {
       name: `${username}/${repo}`,
       codeRepository: `https://github.com/${username}/${repo}`,
     },
-    publisher: { "@type": "Organization", name: "GitDiagram", url: SITE_URL },
+    publisher: {
+      "@type": "Organization",
+      name: "diagram studio",
+      url: SITE_URL,
+    },
     // Summaries cached before `seconds` was recorded leave it out.
     ...(typeof summary.seconds === "number"
       ? { duration: `PT${summary.seconds}S` }

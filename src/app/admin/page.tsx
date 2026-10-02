@@ -11,7 +11,7 @@ import { AdminSignIn } from "./admin-sign-in";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Live · GitDiagram",
+  title: "Live · diagram studio",
   robots: { index: false, follow: false },
 };
 

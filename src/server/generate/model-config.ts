@@ -56,7 +56,7 @@ export function supportsTextVerbosity(
   );
 }
 
-/** Fast mode is funded by GitDiagram, never silently charged to a user's key. */
+/** Fast mode is funded by diagram studio, never silently charged to a user's key. */
 export function getGenerationServiceTier(params: {
   provider: AIProvider;
   model: string;

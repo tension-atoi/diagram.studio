@@ -163,10 +163,12 @@ describe("the diagram view", () => {
 
   it("shows the tool's own message when there is no diagram to draw", async () => {
     await showResult({
-      content: [{ type: "text", text: "Too many GitDiagram requests.\nMore." }],
+      content: [
+        { type: "text", text: "Too many diagram studio requests.\nMore." },
+      ],
       isError: true,
     });
-    expect(view().textContent).toBe("Too many GitDiagram requests.");
+    expect(view().textContent).toBe("Too many diagram studio requests.");
   });
 
   it("falls back to a link when Mermaid cannot draw the diagram", async () => {

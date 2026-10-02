@@ -120,7 +120,9 @@ describe("MCP endpoint", () => {
           readOnlyHint: true,
           destructiveHint: false,
         });
-      expect(client.getServerVersion()).toMatchObject({ name: "gitdiagram" });
+      expect(client.getServerVersion()).toMatchObject({
+        name: "diagram-studio",
+      });
       await client.close();
     },
   );
@@ -164,8 +166,8 @@ describe("MCP endpoint", () => {
     const { tools } = await client.listTools();
     const byName = new Map(tools.map((tool) => [tool.name, tool]));
     expect(byName.get("get_repository_diagram")?._meta).toMatchObject({
-      ui: { resourceUri: "ui://gitdiagram/diagram-view-v1.html" },
-      "openai/outputTemplate": "ui://gitdiagram/diagram-view-v1.html",
+      ui: { resourceUri: "ui://gnu.in.labs/diagram-view-v1.html" },
+      "openai/outputTemplate": "ui://gnu.in.labs/diagram-view-v1.html",
     });
     expect(byName.get("find_repository_diagrams")?._meta?.ui).toBeUndefined();
     expect(byName.get("get_explainer_video")?._meta?.ui).toBeUndefined();
@@ -173,12 +175,12 @@ describe("MCP endpoint", () => {
     const { resources } = await client.listResources();
     expect(resources).toEqual([
       expect.objectContaining({
-        uri: "ui://gitdiagram/diagram-view-v1.html",
+        uri: "ui://gnu.in.labs/diagram-view-v1.html",
         mimeType: "text/html;profile=mcp-app",
       }),
     ]);
     const { contents } = await client.readResource({
-      uri: "ui://gitdiagram/diagram-view-v1.html",
+      uri: "ui://gnu.in.labs/diagram-view-v1.html",
     });
     const [view] = contents as unknown as Array<{
       mimeType: string;

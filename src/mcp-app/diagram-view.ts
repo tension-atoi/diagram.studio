@@ -21,7 +21,7 @@ import {
 } from "~/features/mcp-app/diagram-payload";
 import { createViewport, type Viewport } from "./viewport";
 
-// The diagram view GitDiagram shows inline in ChatGPT and other MCP Apps
+// The diagram view diagram studio shows inline in ChatGPT and other MCP Apps
 // hosts when get_repository_diagram runs (the ui:// resource in
 // src/server/mcp/app.ts loads this bundle, built by scripts/build-mcp-app.mjs).
 // It renders the stored Mermaid source with the site's own safety layers:
@@ -31,7 +31,7 @@ import { createViewport, type Viewport } from "./viewport";
 const root = document.getElementById("studio-view");
 
 const app = new App(
-  { name: "GitDiagram diagram view", version: "1.0.0" },
+  { name: "diagram studio diagram view", version: "1.0.0" },
   { availableDisplayModes: ["inline", "fullscreen"] },
 );
 
@@ -136,8 +136,8 @@ async function renderDiagram(current: DiagramViewPayload) {
   if (!root) return;
   if (current.status === "missing" || !current.mermaid) {
     showMessage(
-      `GitDiagram has no diagram of ${current.repository} yet. Open it on GitDiagram to make one; it usually takes about a minute.`,
-      { label: "Make the diagram on GitDiagram", url: current.diagramUrl },
+      `diagram studio has no diagram of ${current.repository} yet. Open it on diagram studio to make one; it usually takes about a minute.`,
+      { label: "Make the diagram on diagram studio", url: current.diagramUrl },
     );
     return;
   }
@@ -204,8 +204,8 @@ async function renderDiagram(current: DiagramViewPayload) {
   } catch {
     if (render !== renderCount) return;
     showMessage(
-      `The diagram of ${current.repository} could not be drawn here. It is available on GitDiagram.`,
-      { label: "Open in GitDiagram", url: current.diagramUrl },
+      `The diagram of ${current.repository} could not be drawn here. It is available on diagram studio.`,
+      { label: "Open in diagram studio", url: current.diagramUrl },
     );
     return;
   } finally {
@@ -253,7 +253,7 @@ app.ontoolresult = (result) => {
       .trim();
     payload = null;
     showMessage(
-      text.split("\n")[0] || "GitDiagram could not load this diagram.",
+      text.split("\n")[0] || "diagram studio could not load this diagram.",
     );
     return;
   }

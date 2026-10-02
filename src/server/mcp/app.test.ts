@@ -13,7 +13,7 @@ import { siteUrl } from "~/test-support/site";
 
 describe("the diagram view resource", () => {
   it("is versioned in its URI", () => {
-    expect(DIAGRAM_VIEW_URI).toMatch(/^ui:\/\/gitdiagram\/.+-v\d+\.html$/);
+    expect(DIAGRAM_VIEW_URI).toMatch(/^ui:\/\/gnu\.in\.labs\/.+-v\d+\.html$/);
   });
 
   it("loads its script only from the origin its policy allows", () => {

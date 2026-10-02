@@ -92,7 +92,6 @@ describe("proxy", () => {
     ["/acme/demo", "text/markdownish"],
     ["/api/diagram-state", "text/markdown"],
     ["/sitemap/0.xml", "text/markdown"],
-    ["/out/sponsor", "text/markdown"],
     ["/acme/demo/video", "text/markdown"],
   ])("leaves %s with Accept %s alone", (path, accept) => {
     const response = proxy(

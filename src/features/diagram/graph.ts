@@ -119,7 +119,7 @@ export interface GraphAttemptAudit {
   strippedPathCount?: number;
   /** Edge evidence paths dropped as unknown, or as files the model never saw. */
   strippedEvidenceCount?: number;
-  /** Edges whose evidence GitDiagram filled from the files it read. */
+  /** Edges whose evidence diagram studio filled from the files it read. */
   filledEvidenceCount?: number;
   status: "failed" | "succeeded";
   createdAt: string;

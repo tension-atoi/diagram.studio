@@ -35,7 +35,7 @@ function getEnvApiKey(provider: AIProvider): string | undefined {
 function getOpenRouterHeaders(): Record<string, string> {
   const headers: Record<string, string> = {};
   const siteUrl = process.env.OPENROUTER_SITE_URL?.trim();
-  const appName = process.env.OPENROUTER_APP_NAME?.trim() || "GitDiagram";
+  const appName = process.env.OPENROUTER_APP_NAME?.trim() || "diagram studio";
 
   if (siteUrl) {
     headers["HTTP-Referer"] = siteUrl;

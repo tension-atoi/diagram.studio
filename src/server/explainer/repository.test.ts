@@ -58,7 +58,7 @@ describe("readRepositoryForVideo", () => {
     ["Repository not found."],
     ["A GitHub token is required to analyze a private repository."],
   ])(
-    "explains that a repository GitDiagram cannot read must be public (%s)",
+    "explains that a repository diagram studio cannot read must be public (%s)",
     async (message) => {
       vi.mocked(getGithubData).mockRejectedValue(new Error(message));
       await expect(read()).rejects.toBeInstanceOf(VideoInputError);

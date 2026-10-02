@@ -38,7 +38,7 @@ function fakeAsk(provider: AiProvider, prompt: string, mode: AiMode) {
     provider === "openai" && mode === "search" && prompt === FIRST
       ? `- **diagram studio** turns a repo into a diagram (${siteUrl()}).\n- **Madge**`
       : provider === "anthropic" && prompt === FIRST
-        ? "- **Madge**\n- **GitDiagram**"
+        ? "- **Madge**\n- **diagram studio**"
         : "Use Madge or Graphviz.";
   return Promise.resolve({
     model: "m",

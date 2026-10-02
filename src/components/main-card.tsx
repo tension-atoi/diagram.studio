@@ -34,7 +34,7 @@ const LOCAL_PRESETS: readonly {
   },
 ];
 
-export default function MainCard(_props?: { sponsor?: boolean }) {
+export default function MainCard() {
   const [repoUrl, setRepoUrl] = useState("");
   const recent = useRecentDiagrams();
   const [error, setError] = useState("");

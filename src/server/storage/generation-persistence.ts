@@ -55,7 +55,7 @@ export async function persistGenerationResult(params: {
     );
     params.recordTiming("persistence", persistenceStartedAt);
     return params.successfulDiagramState && params.audit.status === "succeeded"
-      ? "This private repository was read with GitDiagram's own GitHub access, so the diagram cannot be cached. Connect your own GitHub token to keep it."
+      ? "This private repository was read with the studio's own GitHub access, so the diagram cannot be cached. Connect your own GitHub token to keep it."
       : undefined;
   }
 

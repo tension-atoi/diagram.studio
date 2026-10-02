@@ -28,7 +28,7 @@ import { upstashCommand, upstashEval } from "~/server/storage/upstash";
 // payment the same way before refunding it, so it never refunds one a run
 // has just claimed.
 
-export const VIDEO_PRODUCT = "gitdiagram-video";
+export const VIDEO_PRODUCT = "gnu-in-labs-diagram-studio-video";
 export const PAID_SESSION = /^cs_(?:live|test)_[A-Za-z0-9]{10,200}$/;
 
 const KEY = (sessionId: string) => `video:v1:paid:${sessionId}`;
@@ -105,7 +105,7 @@ export async function createVideoCheckout(params: {
           product_data: {
             name: `Explainer video of ${username}/${repo}`,
             description:
-              "A narrated one-minute video of the repository, made by GitDiagram. It stays free for everyone to watch. If it can't be made, you get your money back.",
+              "A narrated one-minute video of the repository, made by diagram studio. It stays free for everyone to watch. If it can't be made, you get your money back.",
           },
         },
       },
@@ -116,7 +116,7 @@ export async function createVideoCheckout(params: {
     client_reference_id: params.visitorId,
     metadata,
     payment_intent_data: {
-      description: `GitDiagram video of ${username}/${repo}`,
+      description: `diagram studio video of ${username}/${repo}`,
       metadata,
     },
     success_url: `${watch}?paid={CHECKOUT_SESSION_ID}`,

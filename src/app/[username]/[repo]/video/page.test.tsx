@@ -57,7 +57,7 @@ describe("video watch page without a video", () => {
   it("keeps the page out of search and does not promise a video", async () => {
     const metadata = await generateMetadata({ params });
     expect(metadata.robots).toEqual({ index: false, follow: true });
-    expect(metadata.title).toBe("acme/demo video tour | GitDiagram");
+    expect(metadata.title).toBe("acme/demo video tour | diagram studio");
     expect(metadata.openGraph).toMatchObject({ type: "website" });
     expect(metadata.openGraph).not.toHaveProperty("videos");
   });
@@ -78,7 +78,7 @@ describe("video watch page with a video", () => {
     const metadata = await generateMetadata({ params });
     expect(metadata.robots).toBeUndefined();
     expect(metadata.title).toBe(
-      "acme/demo, explained in a minute | GitDiagram",
+      "acme/demo, explained in a minute | diagram studio",
     );
     expect(metadata.description).toBe(
       "Demo draws diagrams. It reads the code first.",

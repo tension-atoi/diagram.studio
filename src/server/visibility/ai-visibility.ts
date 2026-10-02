@@ -22,7 +22,7 @@ import { AI_VISIBILITY_PROMPTS, readAnswer } from "./ai-answer";
 
 // Once a day (Vercel Cron, /api/internal/ai-visibility) the fixed questions go
 // to ChatGPT's and Claude's models, each with web search and from memory, and
-// the answers are read for GitDiagram. A small summary is kept for half a
+// the answers are read for diagram studio. A small summary is kept for half a
 // year (the trend), the answers themselves for a month.
 
 const PREFIX = "ai-visibility:v1:";
@@ -85,7 +85,7 @@ function summarize(params: {
       if (answer.position !== null) stats.positionSum += answer.position;
       mark = answer.cited ? "2" : answer.mentioned ? "1" : "0";
       for (const tool of answer.tools)
-        if (tool !== "GitDiagram")
+        if (tool !== "diagram studio")
           competitors.set(tool, (competitors.get(tool) ?? 0) + 1);
     }
     if (index >= 0) {

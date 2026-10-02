@@ -26,7 +26,8 @@ const LEGACY_STORAGE_KEYS: Record<CredentialKind, string> = {
   openai_api_key: "openai_api_key",
   github_pat: "github_pat",
 };
-const CREDENTIAL_MUTATION_LOCK = "gitdiagram-credential-mutation";
+const CREDENTIAL_MUTATION_LOCK =
+  "gnu-in-labs-diagram-studio-credential-mutation";
 
 let legacyMigrationPromise: Promise<boolean> | undefined;
 

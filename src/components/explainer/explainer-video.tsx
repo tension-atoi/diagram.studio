@@ -169,8 +169,8 @@ function MakingLine({ model, repo }: { model?: string; repo: string }) {
     );
   return (
     <>
-      {director ?? "GitDiagram"} reads {repo}, writes a script and designs every
-      scene while the narration is recorded.{" "}
+      {director ?? "diagram studio"} reads {repo}, writes a script and designs
+      every scene while the narration is recorded.{" "}
       {model?.startsWith("gpt-")
         ? "Usually a minute or two."
         : "Usually under a minute."}

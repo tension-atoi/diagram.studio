@@ -20,7 +20,8 @@ import { seal, unseal } from "./seal";
  * with a server key), so the browser cannot read the tokens inside it or
  * swap in another GitHub account's id.
  */
-export const GITHUB_CONNECTION_COOKIE = "gitdiagram_github_connection";
+export const GITHUB_CONNECTION_COOKIE =
+  "gnu_in_labs_diagram_studio_github_connection";
 const GITHUB_CONNECTION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
 const SEAL_PURPOSE = "github-connection";
@@ -134,7 +135,7 @@ export function clearGitHubConnection(cookies: CookieWriter): void {
  */
 export function githubConnectionStorageKey(userId: number): string {
   return createHmac("sha256", readRequiredEnv("CACHE_KEY_SECRET"))
-    .update(`gitdiagram:github-account-storage:v1:${userId}`)
+    .update(`gnu-in-labs-diagram-studio:github-account-storage:v1:${userId}`)
     .digest("hex");
 }
 

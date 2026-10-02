@@ -228,7 +228,9 @@ describe("GET /api/github/callback", () => {
     });
     expect(cookies.get(GITHUB_CONNECTION_COOKIE)!.value).not.toContain("ghu_");
     expect(cookies.get(GITHUB_CONNECT_FLOW_COOKIE)?.maxAge).toBe(0);
-    expect(cookies.get("gitdiagram_github_pat")?.maxAge).toBe(0);
+    expect(cookies.get("gnu_in_labs_diagram_studio_github_pat")?.maxAge).toBe(
+      0,
+    );
     const header = response.headers
       .getSetCookie()
       .find((value) => value.startsWith(`${GITHUB_CONNECTION_COOKIE}=`))!;

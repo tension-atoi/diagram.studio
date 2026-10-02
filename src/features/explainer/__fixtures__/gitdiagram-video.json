@@ -3,7 +3,7 @@
   "createdAt": "2026-09-25T07:18:29.003Z",
   "meta": {
     "owner": "ahmedkhaleel2004",
-    "repo": "gitdiagram",
+    "repo": "diagram-studio",
     "url": "https://github.com/ahmedkhaleel2004/gitdiagram",
     "description": "Free, simple, fast interactive diagrams and explainer videos for any GitHub repository",
     "stars": 17079,
@@ -135,7 +135,7 @@
             "e": 9.12
           },
           {
-            "w": "gitdiagram",
+            "w": "diagram-studio",
             "s": 9.2,
             "e": 9.84
           },

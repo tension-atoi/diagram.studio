@@ -65,7 +65,7 @@ export function CSPostHogProvider({ children }: { children: React.ReactNode }) {
       attribute="class"
       defaultTheme="light"
       enableSystem={false}
-      storageKey="gitdiagram-theme"
+      storageKey="gnu-in-labs-diagram-studio-theme"
     >
       <AnalyticsAfterCredentialMigration />
       {children}

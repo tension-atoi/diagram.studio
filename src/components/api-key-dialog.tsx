@@ -10,10 +10,10 @@ interface ApiKeyDialogProps {
 
 const API_KEYS_URL = "https://platform.openai.com/api-keys";
 const AI_PROMPT = [
-  "Help me set up an OpenAI API key for GitDiagram.",
-  `Use my browser to open ${API_KEYS_URL} and help me create a secret key named GitDiagram in my chosen project.`,
+  "Help me set up an OpenAI API key for diagram studio.",
+  `Use my browser to open ${API_KEYS_URL} and help me create a secret key named diagram studio in my chosen project.`,
   "Explain that diagram generations using this key are billed to my OpenAI API account. If billing needs setup, walk me through it and ask before adding payment details or buying credits.",
-  "Help me paste the key directly into GitDiagram's OpenAI API key dialog and save it. Do not put the key in chat, logs, or files.",
+  "Help me paste the key directly into the studio's OpenAI API key dialog and save it. Do not put the key in chat, logs, or files.",
   "If you cannot use my browser, walk me through these steps briefly.",
 ].join("\n\n");
 
@@ -38,8 +38,8 @@ export function ApiKeyDialog(props: ApiKeyDialogProps) {
       dataUsage={
         <>
           Your key is kept in a protected browser cookie for 30 days. Page
-          JavaScript cannot read it. GitDiagram uses it only on the server to
-          generate your diagrams.
+          JavaScript cannot read it. diagram studio uses it only on the server
+          to generate your diagrams.
         </>
       }
     />

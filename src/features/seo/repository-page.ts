@@ -17,15 +17,15 @@ export const repositoryMarkdownPath = (owner: string, repo: string) =>
   `${repoPath(owner, repo)}.md`;
 
 /**
- * "owner/repo architecture diagram: how it works | GitDiagram", shortened to
+ * "owner/repo architecture diagram: how it works | diagram studio", shortened to
  * fit about 60 characters: the site name goes first, then "how it works".
  */
 export function repositoryPageTitle(owner: string, repo: string): string {
   const name = `${owner}/${repo}`;
   const candidates = [
-    `${name} architecture diagram: how it works | GitDiagram`,
+    `${name} architecture diagram: how it works | diagram studio`,
     `${name} architecture diagram: how it works`,
-    `${name} architecture diagram | GitDiagram`,
+    `${name} architecture diagram | diagram studio`,
     `${name} architecture diagram`,
   ];
   return (
@@ -121,7 +121,7 @@ export function repositoryJsonLd(params: {
           {
             "@type": "ListItem",
             position: 1,
-            name: "GitDiagram",
+            name: "diagram studio",
             item: SITE_URL,
           },
           { "@type": "ListItem", position: 2, name, item: url },

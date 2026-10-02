@@ -6,7 +6,7 @@ import {
 } from "@modelcontextprotocol/server";
 import { after } from "next/server";
 
-import { createGitDiagramMcpServer } from "./server";
+import { createStudioMcpServer } from "./server";
 import { normalizeClientName, recordMcpConnect } from "./usage";
 import { MCP_URL } from "~/lib/site";
 
@@ -29,14 +29,14 @@ const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Max-Age": "86400",
 };
 
-const ABOUT = `GitDiagram MCP server (streamable HTTP).
+const ABOUT = `diagram studio MCP server (streamable HTTP).
 
 Architecture diagrams and explanations of public GitHub repositories, for AI agents.
 Tools: get_repository_diagram, find_repository_diagrams, get_explainer_video.
 
-Claude Code:  claude mcp add --transport http gitdiagram ${MCP_URL}
-Codex:        codex mcp add gitdiagram --url ${MCP_URL}
-Cursor:       add {"mcpServers": {"gitdiagram": {"url": "${MCP_URL}"}}} to ~/.cursor/mcp.json
+Claude Code:  claude mcp add --transport http diagram-studio ${MCP_URL}
+Codex:        codex mcp add diagram-studio --url ${MCP_URL}
+Cursor:       add {"mcpServers": {"diagram-studio": {"url": "${MCP_URL}"}}} to ~/.cursor/mcp.json
 `;
 
 interface JsonRpcMessage {
@@ -121,7 +121,7 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
 
   const handler = createMcpHandler(
     ({ requestInfo }) =>
-      createGitDiagramMcpServer(requestInfo ?? request, client.name),
+      createStudioMcpServer(requestInfo ?? request, client.name),
     {
       legacy: "stateless",
       // One JSON answer per request: nothing here streams progress, and a

@@ -58,7 +58,7 @@ async function checkout(request: Request, visitor: Visitor): Promise<Response> {
   const parsed = await parseSameOriginJsonRequest(request, {
     schema: requestSchema,
     maxBytes: 512,
-    crossOriginError: "Buy videos from GitDiagram.",
+    crossOriginError: "Buy videos from diagram studio.",
   });
   if (!parsed.success) return parsed.response;
   const { username, repo } = parsed.data;

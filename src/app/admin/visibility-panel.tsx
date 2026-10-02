@@ -15,7 +15,7 @@ import {
 } from "~/features/admin/visibility";
 import { BarList, number, Panel, Tile, TOUCH } from "./ui";
 
-// How visible GitDiagram is to AI assistants and crawlers. Read once when the
+// How visible diagram studio is to AI assistants and crawlers. Read once when the
 // dashboard opens (and on Refresh): it changes once a day, so it is not part
 // of the 5-second poll.
 
@@ -156,7 +156,7 @@ function AnswerText({ answer }: { answer: AiAnswer }) {
         <span className={`${SOFT} tabular-nums`}>
           {answer.error
             ? answer.error
-            : `${answer.mentioned ? `GitDiagram #${answer.position ?? "?"}` : "No GitDiagram"}${answer.inSources ? " · in sources" : ""} · $${answer.costUsd.toFixed(3)}`}
+            : `${answer.mentioned ? `diagram studio #${answer.position ?? "?"}` : "No diagram studio"}${answer.inSources ? " · in sources" : ""} · $${answer.costUsd.toFixed(3)}`}
         </span>
       </div>
       {answer.text ? (
@@ -328,7 +328,7 @@ export function VisibilityPanel() {
       <div className="flex flex-col gap-5">
         <div>
           <p className={`mb-2 text-xs ${SOFT}`}>
-            How often assistants name GitDiagram when asked 12 everyday
+            How often assistants name diagram studio when asked 12 everyday
             questions: with web search, and from memory (training data).
           </p>
           <VariantTiles summaries={report?.summaries ?? []} />

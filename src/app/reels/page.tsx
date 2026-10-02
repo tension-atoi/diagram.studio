@@ -12,7 +12,7 @@ import { getVideoPage } from "~/server/explainer/catalog";
 import { isVideoExplainerEnabled } from "~/server/explainer/config";
 import { errorText, logEvent } from "~/server/log";
 
-const title = "GitHub Reels | GitDiagram";
+const title = "GitHub Reels | diagram studio";
 const description =
   "Swipe through one-minute video tours of GitHub's biggest repositories.";
 
@@ -20,7 +20,7 @@ const image = (path: string) => ({
   url: path,
   width: 1200,
   height: 630,
-  alt: "GitDiagram",
+  alt: "diagram studio",
 });
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/reels`,
     title,
     description,
-    siteName: "GitDiagram",
+    siteName: "diagram studio",
     images: [image("/opengraph-image.png")],
   },
   twitter: {

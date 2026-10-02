@@ -12,7 +12,7 @@ const RUN_MS = 240_000;
 
 /**
  * Asks ChatGPT's and Claude's models the day's questions and records how
- * often they name GitDiagram (see ai-visibility.ts). Vercel Cron calls it
+ * often they name diagram studio (see ai-visibility.ts). Vercel Cron calls it
  * once a day with CRON_SECRET; `?force=1` runs again on a day that already ran.
  */
 export async function GET(request: Request) {

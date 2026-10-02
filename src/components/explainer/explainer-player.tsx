@@ -34,7 +34,7 @@ type StageMessage =
   | { type: "error"; message: string };
 
 const STAGE_TIMEOUT_MS = 20_000;
-const CAPTIONS_KEY = "gitdiagram.video.captions";
+const CAPTIONS_KEY = "gnu-in-labs-diagram-studio.video.captions";
 // Each press of the speed button moves to the next.
 const SPEEDS = [1, 1.25, 1.5, 2, 0.75];
 // Pressing and holding either side of the picture plays at this speed.

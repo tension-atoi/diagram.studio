@@ -41,7 +41,7 @@ export async function POST(request: Request): Promise<Response> {
   const parsed = await parseSameOriginJsonRequest(request, {
     schema: requestSchema,
     maxBytes: 1024,
-    crossOriginError: "Change settings from GitDiagram.",
+    crossOriginError: "Change settings from diagram studio.",
   });
   if (!parsed.success) return parsed.response;
   try {

@@ -47,7 +47,7 @@ export function VideoGrid({ cards }: { cards: VideoCard[] }) {
   if (!cards.length)
     return (
       <p className="text-[hsl(var(--neo-soft-text))]">
-        No videos yet. Open any repository on GitDiagram and press Video.
+        No videos yet. Open any repository on diagram studio and press Video.
       </p>
     );
   return (

@@ -34,7 +34,7 @@ export const storedCredentialSchema = z
 export interface CredentialStatus {
   openaiApiKeyConfigured: boolean;
   githubPatConfigured: boolean;
-  /** Signed in with "Continue with GitHub" (the GitDiagram Private Repos app). */
+  /** Signed in with "Continue with GitHub" (the diagram studio Private Repos app). */
   githubAppConnected: boolean;
   githubLogin: string | null;
 }
@@ -52,8 +52,8 @@ export interface RequestCredentials {
 }
 
 const COOKIE_NAMES: Record<CredentialKind, string> = {
-  openai_api_key: "gitdiagram_openai_api_key",
-  github_pat: "gitdiagram_github_pat",
+  openai_api_key: "gnu_in_labs_diagram_studio_openai_api_key",
+  github_pat: "gnu_in_labs_diagram_studio_github_pat",
 };
 
 function cookieOptions(maxAge: number) {

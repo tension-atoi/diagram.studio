@@ -49,7 +49,7 @@ export async function POST(request: Request): Promise<Response> {
   const parsed = await parseSameOriginJsonRequest(request, {
     schema: requestSchema,
     maxBytes: 1024,
-    crossOriginError: "Sign in from GitDiagram.",
+    crossOriginError: "Sign in from diagram studio.",
   });
   if (!parsed.success) return parsed.response;
   if (!isOperatorConfigured()) {
@@ -109,7 +109,7 @@ export async function POST(request: Request): Promise<Response> {
  */
 export async function DELETE(request: Request): Promise<Response> {
   if (!isSameOriginRequest(request))
-    return jsonErrorResponse("Sign out from GitDiagram.", 403);
+    return jsonErrorResponse("Sign out from diagram studio.", 403);
   if (new URL(request.url).searchParams.get("everywhere") === "1") {
     if (!(await verifyAdminRequest(request)))
       return jsonErrorResponse("Sign in first.", 401);

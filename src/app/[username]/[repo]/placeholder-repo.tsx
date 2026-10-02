@@ -4,7 +4,7 @@ import Link from "next/link";
 import MainCard from "~/components/main-card";
 
 export const placeholderRepoMetadata: Metadata = {
-  title: "Replace user/repo with a repository | GitDiagram",
+  title: "Replace user/repo with a repository | diagram studio",
   description:
     "Swap the example user/repo in the address for any GitHub repository to see its architecture diagram.",
   robots: { index: false, follow: true },
@@ -53,7 +53,7 @@ export function PlaceholderRepo({
         </div>
       </div>
       <div className="flex justify-center sm:mb-16 lg:mb-0">
-        <MainCard sponsor={false} />
+        <MainCard />
       </div>
     </main>
   );

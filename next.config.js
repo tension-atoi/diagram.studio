@@ -111,11 +111,6 @@ const config = {
   transpilePackages: ["@aws-sdk/client-s3"],
   async redirects() {
     return [
-      {
-        source: "/sponsor",
-        destination: "/advertise",
-        permanent: true,
-      },
       // The video gallery moved from /watch to /videos.
       {
         source: "/:path(watch|video)",
@@ -168,17 +163,6 @@ const config = {
       // The README badge for diagrams; GitHub's image proxy may keep it a day.
       {
         source: "/diagram-badge.svg",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=604800",
-          },
-        ],
-      },
-      // Sponsor logos sit in the first screen, so skip the revalidation round
-      // trip on repeat visits. Give a changed logo a new file name.
-      {
-        source: "/sponsors/:path*",
         headers: [
           {
             key: "Cache-Control",

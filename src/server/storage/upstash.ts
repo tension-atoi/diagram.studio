@@ -89,7 +89,7 @@ export async function checkUpstashConnection(): Promise<void> {
   // application reads and writes are blocked. Probe a regular, read-only command.
   const response = await upstashCommand<number>([
     "EXISTS",
-    "gitdiagram:readiness",
+    "gnu-in-labs-diagram-studio:readiness",
   ]);
   if (response !== 0 && response !== 1) {
     throw new Error("Upstash did not return a valid readiness response.");

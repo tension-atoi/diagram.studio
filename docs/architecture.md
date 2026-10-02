@@ -34,8 +34,8 @@ The same Next.js application can also build into a minimal, non-root standalone 
 
 ## How generation works
 
-1. GitDiagram fetches the repository's default branch, recursive tree, and README through the GitHub API. When GitHub returns a partial (truncated) tree for a very large repository, the listing is kept and top-level folders it left out are read one level deep, so big repositories still get a diagram; the model only sees a bounded excerpt of the tree either way. An oversized README is rejected before model work begins.
-2. GitDiagram fetches bounded, integrity-checked source excerpts. Selection favors substantive runtime modules, distributes excerpts across long files, and preserves import bindings for sampled calls.
+1. diagram studio fetches the repository's default branch, recursive tree, and README through the GitHub API. When GitHub returns a partial (truncated) tree for a very large repository, the listing is kept and top-level folders it left out are read one level deep, so big repositories still get a diagram; the model only sees a bounded excerpt of the tree either way. An oversized README is rejected before model work begins.
+2. diagram studio fetches bounded, integrity-checked source excerpts. Selection favors substantive runtime modules, distributes excerpts across long files, and preserves import bindings for sampled calls.
 3. One managed Luna request streams a short architecture overview followed by a strict graph: groups, nodes, edges, shapes, labels, and repository paths. Explicit model overrides and user-supplied keys retain the separate explanation/graph flow.
 4. The server validates identifiers, graph connectivity, limits, and every linked path against the actual repository. Invalid output is retried with focused feedback.
 5. A deterministic compiler converts the validated AST to Mermaid with total text escaping and GitHub-only links.

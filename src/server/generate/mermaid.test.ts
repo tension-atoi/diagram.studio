@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { JSDOM } from "jsdom";
 
-import { withGitDiagramCredit } from "~/features/diagram/export";
+import { withStudioCredit } from "~/features/diagram/export";
 import { validateMermaidSyntax } from "~/server/generate/mermaid";
 
 function createDeferred<T>() {
@@ -49,7 +49,7 @@ describe("validateMermaidSyntax", () => {
 
   it("accepts the credit line Copy Mermaid puts on top", async () => {
     const result = await validateMermaidSyntax(
-      withGitDiagramCredit(
+      withStudioCredit(
         'flowchart TD\nA["API"]-->B\nclick A "https://github.com/acme/demo"',
         "acme/demo",
       ),

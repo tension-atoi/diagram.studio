@@ -24,7 +24,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * "Continue with GitHub": starts a sign-in with the GitDiagram Private Repos
+ * "Continue with GitHub": starts a sign-in with the diagram studio Private Repos
  * app. `repo` is the repository to come back to (and to check access for);
  * `install=1` goes to GitHub's install page first, for picking more
  * repositories; `from=menu` plus `return` serve the header's dialog.

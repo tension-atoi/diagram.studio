@@ -28,7 +28,7 @@ function llmsBody({ videos }: { videos: boolean }): string[] {
     "## For agents",
     "",
     `- [Repository Markdown](${SITE_URL}/fastapi/fastapi.md): \`${SITE_URL}/{owner}/{repo}.md\` (or the page URL with \`Accept: text/markdown\`) returns the overview, the Mermaid source, the components with GitHub links, and the connections. A repository with no stored diagram answers 404 with instructions to open the interactive page, which makes one.`,
-    `- [MCP server](${SITE_URL}/mcp): streamable HTTP at \`${SITE_URL}/mcp\`, read-only tools \`get_repository_diagram\`, \`find_repository_diagrams\` and \`get_explainer_video\`. Claude Code: \`claude mcp add --transport http gitdiagram ${SITE_URL}/mcp\`.`,
+    `- [MCP server](${SITE_URL}/mcp): streamable HTTP at \`${SITE_URL}/mcp\`, read-only tools \`get_repository_diagram\`, \`find_repository_diagrams\` and \`get_explainer_video\`. Claude Code: \`claude mcp add --transport http diagram-studio ${SITE_URL}/mcp\`.`,
     `- [Interactive page](${SITE_URL}/fastapi/fastapi): \`${SITE_URL}/{owner}/{repo}\`, the link to give a person. It also lists the components and connections as text.`,
     "",
     "## Docs",

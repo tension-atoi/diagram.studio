@@ -39,7 +39,7 @@ const EMPTY_MESSAGE =
   "This repository looks empty, so there is nothing to explain yet.";
 
 // What the diagram pipeline's GitHub read reports, as told to a video viewer.
-// Videos are read with GitDiagram's own token, never a visitor's, so a
+// Videos are read with the studio's own token, never a visitor's, so a
 // private repository reads as missing or as needing a token.
 const INPUT_ERRORS = new Map([
   [REPOSITORY_NOT_FOUND_ERROR, PUBLIC_ONLY_MESSAGE],

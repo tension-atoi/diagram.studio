@@ -15,7 +15,7 @@ import { networkOf } from "~/lib/network";
 import { requestGeo } from "~/server/http/vercel-geo";
 
 // Who may make new explainer videos during early access: anyone, on any
-// device, in the places GitDiagram's most valuable audience lives. It mirrors
+// device, in the places the studio's most valuable audience lives. It mirrors
 // the PostHog "priority audiences" (docs/operations/posthog.md). Everyone can
 // still watch and download every video already made.
 //

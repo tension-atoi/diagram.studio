@@ -15,7 +15,7 @@ const TAG_BYTES = 16;
 
 function sealKey(purpose: string): Buffer {
   return createHmac("sha256", readRequiredEnv("CACHE_KEY_SECRET"))
-    .update(`gitdiagram:${purpose}:v1`)
+    .update(`gnu-in-labs-diagram-studio:${purpose}:v1`)
     .digest();
 }
 

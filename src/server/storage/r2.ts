@@ -340,6 +340,6 @@ export async function checkR2Bucket(bucket: string): Promise<void> {
   // and transport errors still propagate.
   await getJsonObject(
     bucket,
-    "_meta/gitdiagram-readiness-sentinel-does-not-exist.json",
+    "_meta/gnu-in-labs-diagram-studio-readiness-sentinel-does-not-exist.json",
   );
 }
