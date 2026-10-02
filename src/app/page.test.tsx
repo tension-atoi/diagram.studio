@@ -14,7 +14,7 @@ describe("home page", () => {
   afterEach(cleanup);
 
   it("describes the diagram studio and drops the hosted URL-trick pitch", () => {
-    // The rebranded fork's own title/description, not the gitdiagram.com one.
+    // The studio's own title and description.
     expect(metadata).toMatchObject({
       title: "gnu.in.labs / diagram studio",
       description:

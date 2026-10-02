@@ -22,21 +22,13 @@ describe("sponsor README block", () => {
     expect(await format(readme, { parser: "markdown" })).toBe(readme);
   });
 
-  it("matches the committed README for the current schedule", () => {
+  // The sponsor programme is not running: the README carries no ad block, and
+  // the job that maintained it is gone. The generator still works, so the tests
+  // below cover it against a synthetic README rather than the committed one.
+  it("leaves a README with no sponsor block untouched", () => {
     const readme = read("README.md");
-    const sponsor = readme.slice(
-      readme.indexOf("<!-- sponsor:start -->"),
-      readme.indexOf("<!-- sponsor:end -->"),
-    );
-    const campaign = /\/out\/([a-z0-9-]+)\?/.exec(sponsor)?.[1];
-    // Whichever campaign is committed, the block is exactly what the job writes.
-    const at =
-      campaign === sentCampaign.id
-        ? Date.parse(sentCampaign.startsAt)
-        : campaign === coderabbitCampaign.id
-          ? Date.parse(coderabbitCampaign.startsAt)
-          : Date.parse(coderabbitCampaign.endsAt);
-    expect(updateSponsorReadme(readme, at)).toBe(readme);
+    expect(readme).not.toContain("<!-- sponsor:start -->");
+    expect(readme).not.toContain("<!-- sponsor:end -->");
   });
 
   it("takes the README logo width from the creative", () => {

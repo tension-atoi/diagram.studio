@@ -1,54 +1,71 @@
-# Traffic protection
+# Caching and page regeneration
 
-Repository browsing must not regenerate unchanged pages and social images for
-every crawler visit. Repository pages use a six-hour ISR interval, while social
-images use one day. Successful public generations immediately invalidate the page,
-data tag, and image route for normalized and requested URL casing. Both social
-metadata fields use the same Open Graph image; old Twitter image URLs redirect
-at the CDN without rendering a second image. Mixed-case repository and image
-URLs redirect to lowercase cache entries. Browse links only
-load a repository page when opened; they do not prefetch every visible result.
+How long a rendered page, image or metadata file stays valid before this app
+regenerates it. This matters locally too: every value below is a real interval
+that runs against the local server on `127.0.0.1`, so a stale diagram or a
+regenerated image is the same symptom here as it would be behind a CDN.
 
-The Vercel firewall also has these project-level rules, managed separately from
-deployments:
+There is no firewall, no CDN and no edge in this application. It serves from one
+machine, so nothing below is a defence against scraping — it is cache control,
+and that is a different problem. See the last section for what was true of the
+original deployment and no longer applies.
 
-| Rule | Conditions (all must match) | Action |
-| --- | --- | --- |
-| Amazonbot repository crawl | User agent contains `Amazonbot`; route is `/[username]/[repo]`, `/[username]/[repo]/opengraph-image`, or `/[username]/[repo]/twitter-image` | Deny |
-| Block Brightbot repository crawl | User agent equals `Brightbot 1.0`; route is `/[username]/[repo]`, `/[username]/[repo]/opengraph-image`, or `/[username]/[repo]/twitter-image` | Deny |
-| Repository scraper verification | Route is `/[username]/[repo]`; either ASN is `212317` or `213230`, or user agent exactly matches one of the signatures below | Challenge |
+## Revalidation intervals
 
-These conditions were selected after observing repeated bulk repository crawls.
-The crawler rotated Safari and Chrome signatures, then switched to other hosting
-networks. The challenge therefore matches either the original source networks or
-these exact user agents, always restricted to repository pages:
+Declared as `export const revalidate` on the route or page:
 
-```text
-Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0.1 Safari/605.1.15
-Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
-```
+| Route | Interval | What it serves |
+|---|---|---|
+| `[username]/[repo]/page.tsx` | 6 h (21600 s) | the repository diagram page |
+| `[username]/[repo]/llms.txt/route.ts` | 6 h (21600 s) | the plain-text view for language models |
+| `[username]/[repo]/video/page.tsx` | 5 min (300 s) | the video watch page |
+| `[username]/[repo]/opengraph-image/route.ts` | 1 day (86400 s) | the Open Graph card |
+| `[username]/[repo]/diagram.png/route.ts` | 1 day (86400 s) | the PNG export |
+| `advertise`, `reels`, `videos` | 5 min (300 s) | the small rotating pages |
 
-Real browsers matching those conditions must complete verification. Other
-ordinary traffic, Googlebot, Bingbot, and social link preview clients do not match
-these signatures. The Amazonbot robots policy also discourages future repository
-crawls. Existing API rate limits remain enabled. Paid Observability Plus is
-disabled to avoid event charges; PostHog remains the product analytics system.
+Repository pages and their social image are the expensive pair: the page renders
+the diagram, the image renders a card from it. A one-day image interval against a
+six-hour page is deliberate — a card is expensive to draw and rarely needs to be
+current.
 
-Inspect current rules with `vercel firewall rules list --expand`. Before changing
-them, inspect available firewall traffic and runtime logs, and use PostHog for
-browser behavior. Detailed historical Vercel queries require Observability Plus.
-Verify both matching
-traffic and ordinary requests after publishing. Alert counts are request volume,
-not unique visitors; check product analytics and billing independently.
+## Explicit invalidation
 
-If a rule starts matching legitimate traffic, change only that rule to logging:
+Intervals are the fallback. When something actually changes, the cache is
+invalidated by tag or path so the next request is fresh:
 
-```sh
-vercel firewall rules edit 'Amazonbot repository crawl' --action log --yes
-vercel firewall diff
-vercel firewall publish --yes
-```
+- `src/server/browse-index-cache.ts` calls `revalidateTag(BROWSE_INDEX_CACHE_TAG)`
+  after rewriting the browse index, so `/browse` never lists a diagram it cannot
+  open.
+- `src/server/explainer/cache.ts` invalidates the per-repository video summary
+  tag and the catalogue tag, plus `revalidatePath()` for that repository's
+  `/video` page, when a render finishes or is cleared.
+- `diagram-metadata` and the generation path invalidate the page and image routes
+  for a repository after a successful public generation, so a fresh diagram is
+  visible immediately rather than after the interval.
 
-Use the relevant rule name for the scraper challenge. Check for unrelated
-draft changes before publishing. Billing and platform security notifications are
-separate from Observability Plus anomaly alerts; leave those notifications on.
+Successful generations use the normalized path and the requested casing, so
+neither `/Owner/Repo` nor `/owner/repo` serves a stale copy of the other.
+
+## URL normalisation
+
+Mixed-case repository and image URLs redirect to their lowercase form, and the
+old Twitter image path redirects to the Open Graph one, so a repository has one
+cache entry per route rather than one per casing. Both social metadata fields
+point at the same Open Graph image, so the card is rendered once.
+
+Browse links do not prefetch: opening a repository page from a list is what loads
+it. Without that, a browse page would render every visible result in the
+background.
+
+## What does not apply here
+
+The original deployment ran on Vercel behind a firewall and a CDN, and carried a
+set of project-level rules for it: crawler user-agent denials (Amazonbot,
+Brightbot), an ASN-scoped challenge for bulk repository scrapers, and CDN-level
+redirects for social images. Those rules were tuned against observed crawl
+patterns on a public host and none of them exist in this repository.
+
+If this app is ever exposed publicly rather than bound to `127.0.0.1`, that
+exposure is a separate piece of work: rate limiting exists on the API routes, but
+there is no WAF, no challenge, and no crawler policy. Do not assume the caching
+described here protects a public deployment.

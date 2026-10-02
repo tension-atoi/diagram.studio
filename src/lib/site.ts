@@ -7,8 +7,7 @@
  * never point at somebody else's site. The constant below is only the fallback
  * for a hosted deployment that was started without SITE_URL set.
  *
- * `GITHUB_REPO_URL` is this fork's repository — the upstream project it was
- * forked from is not a parent of it and receives nothing from it.
+ * `GITHUB_REPO_URL` is this project's own repository.
  */
 function originFromEnv(value: string | undefined): string | undefined {
   const trimmed = value?.trim();

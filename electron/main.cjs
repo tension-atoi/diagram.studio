@@ -111,7 +111,7 @@ function readPersistedEnv(userData) {
 /**
  * The cache and the signing secret are required before the server boots, so
  * both are created on first launch: the secret is random per install and kept
- * at 0600, and the diagram cache moves off the old upstream-named directory.
+ * at 0600, and the diagram cache moves off the legacy directory name.
  *
  * @param {string} userData
  * @returns {string}

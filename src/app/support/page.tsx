@@ -4,46 +4,45 @@ import { TextPage, type TextPageSection } from "~/components/text-page";
 
 export const metadata: Metadata = {
   title: "Support",
-  description:
-    "Get help with GitDiagram, its MCP server and the GitDiagram plugin for ChatGPT and Codex.",
+  description: "Get help with the diagram studio and its local MCP server.",
   alternates: { canonical: "/support" },
 };
 
 const sections: TextPageSection[] = [
   {
-    heading: "Contact",
+    heading: "Reporting a problem",
     body: [
-      "Email ahmed@gitdiagram.com with the repository and what went wrong; you'll get an answer from the person who builds GitDiagram. Bugs and feature requests are also welcome as issues at github.com/ahmedkhaleel2004/gitdiagram.",
+      "Bugs and feature requests belong in the issue tracker at https://github.com/tension-atoi/diagram.studio. Include what you ran, what you expected, and what happened instead.",
+      "If the app showed an error dialog about the embedded server, the details are in the server log: logs/server.log under the application-data directory for gnu.in.labs Diagram Studio. That file is the fastest route to a diagnosis.",
     ],
   },
   {
-    heading: "Using GitDiagram in ChatGPT and Codex",
+    heading: "The status bar",
     body: [
-      'Add the GitDiagram plugin, then ask about a public GitHub repository, for example "Show me the architecture of fastapi/fastapi". In ChatGPT the diagram appears in the conversation: drag to move it, pinch or use the buttons to zoom, choose Expand for full screen, and click a component to open its code on GitHub.',
-      "The plugin reads diagrams GitDiagram has already made. If a repository has none yet, open the link it gives you: gitdiagram.com makes the diagram in about a minute, and the plugin can read it after that. The plugin works with public repositories only and needs no account.",
+      "The bar at the bottom reports what is actually running, not what it hopes is running. If it reads CHECKING ENGINE, the app has not answered yet. OLLAMA NOT REACHING means the daemon is not answering on 127.0.0.1:11434 — start it with ollama serve. MODEL NOT PULLED means Ollama is up but the configured model is absent; fetch it with ollama pull qwen3.6:35b-studio.",
+      "JEV VERIFIER OFF means no TypeSafe key is configured, so semantic verification is not running. That is the expected state of a fresh install.",
     ],
   },
   {
-    heading: "Other AI assistants",
+    heading: "Connecting an AI assistant",
     body: [
-      "Any MCP client can connect to gitdiagram.com/mcp (streamable HTTP, no sign-in). In Claude Code: claude mcp add --transport http gitdiagram https://gitdiagram.com/mcp. In Codex: codex mcp add gitdiagram --url https://gitdiagram.com/mcp.",
+      "The studio serves an MCP endpoint on the port confirmed at first launch, by default http://127.0.0.1:7421/mcp. The endpoint is local, needs no sign-in, and only answers while the app is running.",
+      "In Claude Code: claude mcp add --transport http diagram-studio http://127.0.0.1:7421/mcp. In Codex: codex mcp add diagram-studio --url http://127.0.0.1:7421/mcp.",
+      "The port is recorded in config.json in the application-data directory and is shown in the first-launch dialog; edit it there and relaunch to move it.",
     ],
   },
   {
     heading: "Common questions",
     body: [
-      "“Too many GitDiagram requests”: each person and network has an hourly allowance; wait a few minutes and try again.",
-      "Privacy and deletion requests: see gitdiagram.com/privacy, or email ahmed@gitdiagram.com.",
+      "“Ollama is not answering”: the daemon is stopped, or listening on a different port. The expected base URL is http://127.0.0.1:11434/v1.",
+      "“The local server did not answer in time”: the embedded Next.js server failed to start within 90 seconds. Read logs/server.log; a missing CACHE_KEY_SECRET or an unreadable standalone build appears there.",
+      "Diagrams disappeared after an upgrade: the cache moved from ~/.cache/gitdiagram to ~/.cache/gnu-in-labs-diagram-studio on first launch of the renamed app. Both directories are plain JSON; the old one is not read any more.",
     ],
   },
 ];
 
 export default function SupportPage() {
   return (
-    <TextPage
-      title="Support"
-      updated="September 29, 2026"
-      sections={sections}
-    />
+    <TextPage title="Support" updated="October 2, 2026" sections={sections} />
   );
 }

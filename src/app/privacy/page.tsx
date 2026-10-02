@@ -4,70 +4,78 @@ import { TextPage, type TextPageSection } from "~/components/text-page";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "What GitDiagram collects, why, and who it is shared with.",
+  description:
+    "What the diagram studio reads, where it stores it, and what it sends.",
   alternates: { canonical: "/privacy" },
 };
 
 const sections: TextPageSection[] = [
   {
-    heading: "What GitDiagram reads",
+    heading: "This app runs on your machine",
     body: [
-      "When you ask for a diagram or video, GitDiagram reads that repository's file tree, README and a few source files through the GitHub API. Diagrams and videos of public repositories are stored and shown to anyone who opens the same repository.",
-      "For a private repository you supply your own GitHub token. The token is sent with each request and never saved on our servers; the diagram is stored in a separate private location that only that token can reach.",
+      "gnu.in.labs / diagram studio is a desktop application. The server that draws diagrams is started by the app itself and listens only on 127.0.0.1, so other devices on your network cannot reach it. Nothing about your use of it is visible to us, because there is no service on our side to see it.",
+      "This policy describes the two things that genuinely leave your computer, and where everything else is kept.",
     ],
   },
   {
-    heading: "AI assistants (ChatGPT, Codex, Claude and other MCP apps)",
+    heading: "What is read from GitHub",
     body: [
-      "When an AI assistant uses GitDiagram through its MCP server (gitdiagram.com/mcp) or the GitDiagram plugin, GitDiagram receives only what the assistant sends to its tools: a repository name or GitHub link, or a search term. It needs no account or sign-in, never receives your chat, and only returns diagrams, explanations and videos of public repositories that are already stored. In ChatGPT, the diagram is shown in an interactive view that opens links only on github.com and gitdiagram.com.",
-      "To apply rate limits, GitDiagram uses the caller's IP address and, when ChatGPT sends one, its anonymized user ID, which is hashed before use. Those rate-limit counters expire within an hour. We keep daily totals of tool calls per tool and per assistant app (such as chatgpt or codex) for 120 days, without IP addresses or user IDs. Our live dashboard briefly shows each call's tool, the public repository it was about and an approximate location derived from the IP address; these notices are held for at most a day and never written to a database.",
+      "When you ask for a diagram, the app reads that repository through GitHub's API: its file tree, its README, and the individual source files the diagram links to. GitHub receives those requests from your IP address, under GitHub's own terms.",
+      "For a private repository you supply a GitHub token. It is held by the app for the session and never written to a server, because there is no server to write it to.",
+    ],
+  },
+  {
+    heading: "What is sent to an AI provider",
+    body: [
+      "Drawing a diagram means sending parts of the repository to the model that writes it. By default that model is Ollama running on 127.0.0.1:11434 on your own machine, in which case the repository content does not leave the computer at all.",
+      "If you choose a hosted provider in the settings — OpenRouter, or an OpenAI-compatible service — the relevant parts of the repository are sent to that provider to produce the diagram, under that provider's terms. This is the one place where repository content can leave the machine, and it is a choice made in the settings.",
+      "The optional TypeSafe/Jev semantic verifier, when a key is configured, also receives a bounded extract of the repository for verification: at most 20 edge snippets of 300 characters each, a 1500-character README excerpt, a 2000-character manifest excerpt, and at most 60 file paths. It is off unless a key is set, and the packaged app ships without one.",
+    ],
+  },
+  {
+    heading: "Where your diagrams are stored",
+    body: [
+      "Diagrams are written to your own disk, under ~/.cache/gnu-in-labs-diagram-studio/, one JSON file per repository. There is no hosted database, no object storage bucket, and no CDN copy.",
+      "The application also keeps a port choice, a signing secret and a log file under the platform's application-data directory for gnu.in.labs Diagram Studio. The signing secret is generated on first launch, stored readable only by your user account, and never leaves the machine.",
+      "Deleting the cache directory removes your stored diagrams; the application offers no remote copy to restore them from.",
     ],
   },
   {
     heading: "Keys you enter",
     body: [
-      "GitHub tokens and OpenAI keys you enter are kept in a secure, HttpOnly cookie in your browser for up to 30 days and sent with your requests. They are never saved on our servers, and you can remove them at any time from the same settings.",
+      "GitHub tokens, OpenRouter keys and TypeSafe keys are written to the application-data directory, readable only by your user account, so they survive a restart. They are passed to the server process through its environment and are never written into the application bundle.",
+      "Removing a key from the settings removes it from that file.",
     ],
   },
   {
     heading: "Analytics",
     body: [
-      "We use PostHog to understand how the site is used: page views, clicks, errors and session replays. Replays mask everything typed into inputs and do not record network requests. We don't create profiles of anonymous visitors.",
+      "There is no analytics in this build. No page-view tracker is mounted and no analytics key is configured, so the analytics library is never loaded and no event is sent. Code for optional product analytics remains in the tree but is unreachable; see docs/operations/posthog.md.",
     ],
   },
   {
-    heading: "Abuse control and cookies",
+    heading: "Rate limiting",
     body: [
-      "Your IP address and approximate location (from our host, Vercel) are used to apply rate limits and daily limits and to decide where videos are available. A random ID cookie, kept for up to a year, counts video limits per browser. Rate-limit counters expire on their own.",
+      "Generation requests are limited in-process. The counters are held in memory or on your disk, they expire at the end of their window, and no counter leaves the machine. No external rate-limiting service is configured.",
     ],
   },
   {
-    heading: "Payments",
+    heading: "Payments, email and hosting",
     body: [
-      "If you buy a video, Stripe handles the payment. Your card details go to Stripe, never to us. We keep the Stripe payment's ID, the repository it was for and your browser's random ID, to make that one video and to refund it automatically if it can't be made.",
+      "None of these are active. There is no payment provider configured, no transactional email service, and no hosting platform behind this application. The integrations that would use them remain in the code but are unreachable without credentials.",
     ],
   },
   {
-    heading: "Who processes data",
+    heading: "How long data is kept",
     body: [
-      "Vercel (hosting), Cloudflare (storage and live visitor counts), Upstash (rate-limit counters), PostHog (analytics), Resend (delivering feedback emails), Stripe (payments), GitHub (repository data), and the AI providers that write diagrams, videos and narration (OpenAI, Anthropic and OpenRouter). Repository content is sent to those AI providers only to make what you asked for.",
-    ],
-  },
-  {
-    heading: "How long we keep data",
-    body: [
-      "Diagrams and videos of public repositories stay published until they are replaced or removed; private diagrams can only be read with the token that made them. Keys you enter stay in your browser for up to 30 days; the random video ID cookie, up to a year. Rate-limit counters expire at the end of their window, at most a day. Payment records are kept as long as tax and accounting rules require. Analytics events and session replays are kept under our PostHog plan's retention. Emails are kept while we need them to help you. You can ask us to delete anything about you at any time.",
-    ],
-  },
-  {
-    heading: "Email",
-    body: [
-      "If you email us or send feedback, we keep that conversation to reply to you. We don't sell personal data or use it for advertising. Sponsors see only aggregate numbers, such as clicks on their placement.",
+      "Repository content sent to a provider is governed by that provider's retention. Locally: diagrams stay in the cache directory until you delete them, keys stay in the application-data directory until you remove them, and the signing secret persists for the life of the install.",
     ],
   },
   {
     heading: "Contact",
-    body: ["Questions or deletion requests: ahmed@gitdiagram.com."],
+    body: [
+      "This application is free software. Questions and bug reports belong in the repository's issue tracker: https://github.com/tension-atoi/diagram.studio.",
+    ],
   },
 ];
 
@@ -75,7 +83,7 @@ export default function PrivacyPage() {
   return (
     <TextPage
       title="Privacy Policy"
-      updated="September 29, 2026"
+      updated="October 2, 2026"
       sections={sections}
     />
   );

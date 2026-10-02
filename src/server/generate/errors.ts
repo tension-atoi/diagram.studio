@@ -42,7 +42,7 @@ export function rethrowAsUpstreamProviderError(error: unknown): never {
 }
 
 const DEFAULT_OPENAI_KEY_QUOTA_EXHAUSTED_ERROR =
-  "GitDiagram's default OpenAI key is temporarily unavailable because its upstream API quota is exhausted. I'm a solo student engineer running this free and open source, so please try again later or use your own OpenAI API key.";
+  "The shared OpenAI key is temporarily unavailable because its API quota is exhausted. Please try again later or use your own OpenAI API key.";
 const REDACTED_UPSTREAM_ERROR =
   "The AI provider returned an error while generating this diagram. Please retry.";
 
