@@ -1,20 +1,10 @@
 // @vitest-environment node
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { NextRequest } from "next/server";
 import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
 
 import { config, proxy } from "~/proxy";
-import { recordAgentFetch } from "~/server/visibility/agent-fetch";
-
-vi.mock("~/server/visibility/agent-fetch", () => ({
-  recordAgentFetch: vi.fn(() => Promise.resolve()),
-}));
-
-const GPTBOT =
-  "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot";
-const BROWSER =
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/19.0 Safari/605.1.15";
 
 describe("proxy", () => {
   it("rejects forged Server Action requests without caching the response", () => {
@@ -55,7 +45,6 @@ describe("proxy", () => {
     ["/acme/demo/opengraph-image", false],
     ["/api/diagram-state", false],
     ["/api/Private", false],
-    ["/phx9a/UPPERCASE", false],
     ["/_next/static/chunks/ABC.js", false],
     ["/browse", false],
     ["/", false],
@@ -135,48 +124,5 @@ describe("proxy", () => {
         headers: { "next-action": "x" },
       }),
     ).toBe(true);
-  });
-
-  it.each([
-    ["/fastapi/fastapi", GPTBOT, true],
-    ["/llms.txt", GPTBOT, true],
-    ["/", GPTBOT, true],
-    ["/api/video", GPTBOT, false],
-    ["/_next/static/chunk.js", GPTBOT, false],
-    ["/fastapi/fastapi", BROWSER, false],
-    ["/llms.txt", BROWSER, false],
-  ])(
-    "runs for known crawlers only, to count them: %s",
-    (url, userAgent, matches) => {
-      expect(
-        unstable_doesMiddlewareMatch({
-          config,
-          url,
-          headers: { "user-agent": userAgent },
-        }),
-      ).toBe(matches);
-    },
-  );
-
-  it("counts a crawler fetch by the part of the site it was for", () => {
-    const waitUntil = vi.fn();
-    vi.mocked(recordAgentFetch).mockClear();
-    proxy(
-      new NextRequest("https://gitdiagram.com/fastapi/fastapi.md", {
-        headers: { "user-agent": GPTBOT },
-      }),
-      { waitUntil } as never,
-    );
-    proxy(
-      new NextRequest("https://gitdiagram.com/fastapi/fastapi", {
-        headers: { "user-agent": GPTBOT },
-      }),
-      { waitUntil } as never,
-    );
-    expect(vi.mocked(recordAgentFetch).mock.calls).toEqual([
-      [GPTBOT, "repo-md"],
-      [GPTBOT, "repo"],
-    ]);
-    expect(waitUntil).toHaveBeenCalledTimes(2);
   });
 });

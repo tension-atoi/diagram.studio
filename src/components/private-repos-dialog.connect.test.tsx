@@ -11,7 +11,6 @@ import { PrivateReposDialog } from "~/components/private-repos-dialog";
 import type * as GitHubConnectModule from "~/features/credentials/github-connect";
 
 const mocks = vi.hoisted(() => ({
-  captureAnalyticsEvent: vi.fn(),
   clearCredential: vi.fn(),
   getCredentialStatus: vi.fn(),
   saveCredential: vi.fn(),
@@ -21,9 +20,6 @@ vi.mock("~/features/credentials/api", () => ({
   clearCredential: mocks.clearCredential,
   getCredentialStatus: mocks.getCredentialStatus,
   saveCredential: mocks.saveCredential,
-}));
-vi.mock("~/lib/analytics-client", () => ({
-  captureAnalyticsEvent: mocks.captureAnalyticsEvent,
 }));
 vi.mock("~/features/credentials/github-connect", async (importOriginal) => ({
   ...(await importOriginal<typeof GitHubConnectModule>()),
@@ -60,10 +56,6 @@ describe("private repositories dialog with Continue with GitHub", () => {
     expect(screen.queryByLabelText("GitHub personal access token")).toBeNull();
 
     fireEvent.click(connect);
-    expect(mocks.captureAnalyticsEvent).toHaveBeenCalledWith(
-      "github_connect_started",
-      { source: "repo", mode: "authorize" },
-    );
 
     fireEvent.click(
       screen.getByRole("button", {

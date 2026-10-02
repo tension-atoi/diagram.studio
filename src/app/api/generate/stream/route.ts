@@ -108,7 +108,6 @@ import {
   finalizeGenerationStream,
   logGenerationFinished,
 } from "~/server/generate/stream-finalization";
-import { emitLiveEvent, requestOrigin } from "~/server/admin/live-events";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -146,10 +145,6 @@ export async function POST(request: Request) {
     rateLimitedWindowStartSeconds,
   } = admission.value;
   // A private repository's name stays off the operator's live feed: a run is
-  // announced once GitHub has confirmed the repository public, and a run
-  // with the visitor's own GitHub token is labelled private throughout.
-  let liveLabel = githubPat?.trim() ? "a private repository" : "a repository";
-  let liveStarted = false;
   const generationAbortController = new AbortController();
   const deadlineSignal = AbortSignal.timeout(GENERATION_DEADLINE_MS);
   const postResponseTasks: Array<() => Promise<void>> = [];
@@ -313,18 +308,6 @@ export async function POST(request: Request) {
               used_private_github_token: Boolean(githubPat),
             }),
           );
-          const announceStarted = () => {
-            liveStarted = true;
-            void emitLiveEvent({
-              kind: "diagram.started",
-              repo: liveLabel,
-              model,
-              ownKey: Boolean(apiKey),
-              job: { id: audit.sessionId, state: "start", label: liveLabel },
-              ...requestOrigin(request),
-            });
-          };
-
           if (isComplimentaryGateEnabled() && !apiKey) {
             if (provider !== "openai") {
               const error = getComplimentaryProviderMismatchMessage();
@@ -391,9 +374,6 @@ export async function POST(request: Request) {
           repositoryVerified = true;
           recordTiming("github", githubStartedAt);
           storageVisibility = githubData.isPrivate ? "private" : "public";
-          if (!githubPat?.trim() && !githubData.isPrivate)
-            liveLabel = `${username}/${repo}`;
-          announceStarted();
           const context = prepareRepositoryContext(githubData);
           const analysisModel = selectAnalysisModel({
             provider,
@@ -1027,34 +1007,6 @@ export async function POST(request: Request) {
             stopCancellationPolling();
             request.signal.removeEventListener("abort", handleRequestAbort);
             deadlineSignal.removeEventListener("abort", handleDeadline);
-            // Queued even when finalizing throws, so /admin never shows the
-            // job running forever. Sent after the response closes, while the
-            // function stays up for its post-response work.
-            const finishedAudit = audit;
-            postResponseTasks.push(() => {
-              const finishedCost =
-                finishedAudit.finalCost ?? finishedAudit.estimatedCost;
-              return emitLiveEvent({
-                kind: "diagram.finished",
-                repo: liveLabel,
-                outcome: streamState.wasCancelled
-                  ? "cancelled"
-                  : finishedAudit.status === "succeeded"
-                    ? "complete"
-                    : "error",
-                errorCode: terminalErrorCode,
-                ms: Math.round(performance.now() - invocationStartedAt),
-                costUsd: finishedCost?.amountUsd ?? null,
-                ...(liveStarted
-                  ? {
-                      job: {
-                        id: finishedAudit.sessionId,
-                        state: "end" as const,
-                      },
-                    }
-                  : {}),
-              });
-            });
             await closeStream();
           }
 

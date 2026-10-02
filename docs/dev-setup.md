@@ -76,17 +76,6 @@ Optional GitHub authentication:
 - `GITHUB_APP_ID` or `GITHUB_CLIENT_ID`, plus `GITHUB_PRIVATE_KEY` and `GITHUB_INSTALLATION_ID`, for GitHub App authentication
 - `GITHUB_CONNECT_CLIENT_ID`, `GITHUB_CONNECT_CLIENT_SECRET`, `GITHUB_CONNECT_APP_SLUG` and `NEXT_PUBLIC_GITHUB_CONNECT=1` for "Continue with GitHub" on private repositories (a separate GitHub App; see `.env.example`)
 
-Optional browser analytics:
-
-- `NEXT_PUBLIC_POSTHOG_KEY`
-
-Optional explainer videos, operator dashboard and live presence:
-
-- `VIDEO_EXPLAINER_ENABLED=1` and `NEXT_PUBLIC_VIDEO_EXPLAINER=1` turn videos on. They need `OPENAI_API_KEY` (GPT-6.1 Sol and whisper-1) and `OPENROUTER_API_KEY` (the voice), plus `ANTHROPIC_API_KEY` while a configured video model is a Claude model (the default).
-- `VIDEO_ADMIN_TOKEN` (32+ characters) signs in to `/admin` and skips the video limits. `ANTHROPIC_ADMIN_KEY` lets `/admin` show the Claude credit left.
-- `NEXT_PUBLIC_PRESENCE_URL` and `PRESENCE_SECRET` connect the site to the presence worker (see [workers/presence/README.md](../workers/presence/README.md)).
-- Local MP4 renders need `VIDEO_RENDER_CHROME_PATH` and must run `next dev` under Node, not Bun.
-- The `VIDEO_*` limits, `SPONSOR_*` settings and `CRON_SECRET` are documented in `.env.example`.
 
 The default OpenAI configuration is:
 
@@ -196,12 +185,7 @@ bun run knip           # unused files, exports and dependencies
 bun audit
 bun run test
 bun run build
-bun run check:video-tracing   # after build: video routes trace ffmpeg and Chromium only where needed, within size ceilings
-bun run perf:budget           # after build: route, chunk and video engine size budgets
 ```
-
-`workers/presence` has its own lockfile; check it from that folder with
-`bun ci && bun run typecheck && bun run test && bun audit`.
 
 The test suite includes real Mermaid parser contract tests for the deterministic
 graph compiler, API route tests, cancellation and quota tests, storage
@@ -222,7 +206,6 @@ concurrency tests, and browser-rendering safety tests.
 ## Troubleshooting
 
 - **Typecheck or build fails on files under `.next/dev/types`.** `tsconfig.json` includes the route type validators that `next dev` generates there, and a stale copy from an older checkout can break `bun run typecheck` and `bun run build`. Delete it with `rm -rf .next/dev`; the next `bun run dev` regenerates it.
-- **MP4 renders.** `puppeteer-core` is pinned to the release built for the Chromium major that `@sparticuz/chromium` ships (see `lib/puppeteer/revisions.js` in puppeteer-core). Bump the two together, only when a new `@sparticuz/chromium` major is out; until then, skip Dependabot's puppeteer-core bumps.
 
 ## Fonts
 

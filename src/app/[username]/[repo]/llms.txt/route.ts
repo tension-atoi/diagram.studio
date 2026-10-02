@@ -1,13 +1,9 @@
-import { unstable_cache } from "next/cache";
 import { diagramReadout } from "~/features/diagram/readout";
 import {
   missingDiagramMarkdown,
   repositoryMarkdown,
 } from "~/features/diagram/markdown";
 import { SITE_URL } from "~/lib/site";
-import { videoSummaryTag } from "~/server/explainer/cache";
-import { isVideoExplainerEnabled } from "~/server/explainer/config";
-import { hasIndexedVideo } from "~/server/explainer/video-index";
 import { readPublicDiagramState } from "~/server/storage/public-diagram-state";
 import { getRepoPagePath } from "~/server/storage/repo-page-cache";
 
@@ -26,16 +22,6 @@ export function generateStaticParams() {
 
 const OWNER = /^[a-z0-9-]{1,39}$/i;
 const REPO = /^(?!\.{1,2}$)[a-z0-9._-]{1,100}$/i;
-
-/** Whether the repository has a video: one Redis read, refreshed with it. */
-function hasVideo(owner: string, repo: string): Promise<boolean> {
-  if (!isVideoExplainerEnabled()) return Promise.resolve(false);
-  return unstable_cache(
-    () => hasIndexedVideo(owner, repo),
-    ["repository-markdown-video", owner, repo],
-    { revalidate, tags: [videoSummaryTag(owner, repo)] },
-  )().catch(() => false);
-}
 
 function markdownResponse(body: string, status: number, canonical: string) {
   return new Response(body, {
@@ -69,10 +55,7 @@ export async function GET(
     return Response.redirect(`${canonical}.md`, 308);
   }
 
-  const [{ state, failed }, video] = await Promise.all([
-    readPublicDiagramState(owner, name),
-    hasVideo(owner, name),
-  ]);
+  const { state, failed } = await readPublicDiagramState(owner, name);
   if (failed) {
     // Cached for a minute at most (see readPublicDiagramState).
     return markdownResponse(
@@ -95,7 +78,6 @@ export async function GET(
       repo: name,
       diagram: state.diagram,
       readout,
-      videoUrl: video ? `${canonical}/video` : null,
     }),
     200,
     canonical,

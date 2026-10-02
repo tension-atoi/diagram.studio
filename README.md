@@ -1,7 +1,7 @@
 # gnu.in.labs / diagram studio
 
-Turn a GitHub repository into an interactive architecture diagram, a written
-explanation, and a narrated video tour — on your own machine.
+Turn a GitHub repository into an interactive architecture diagram and a written
+explanation of how it is put together — on your own machine.
 
 It is a local desktop application. The server that draws the diagrams starts
 with the app and listens on `127.0.0.1` only. By default the model that writes
@@ -17,7 +17,6 @@ the computer.
 - **Written explanations.** How the codebase is organised, what the main parts
   are, how they connect — generated from the repository itself, not from a
   summary of its README.
-- **Narrated video tours.** About a minute per repository, with a voice-over.
 - **A local MCP endpoint.** AI assistants read the same diagrams over
   `http://127.0.0.1:7421/mcp`, on the port you confirm at first launch.
 - **Private repositories.** Supply a GitHub token; the diagram is kept separately.
@@ -123,8 +122,7 @@ Testing Library's automatic cleanup never registers.
 
 - [docs/dev-setup.md](docs/dev-setup.md) — environment, commands, packaging, verify
 - [docs/architecture.md](docs/architecture.md) — how the application is put together
-- [docs/operations/posthog.md](docs/operations/posthog.md) — analytics: dormant, and what would happen if enabled
-- [docs/operations/sponsor-clicks.md](docs/operations/sponsor-clicks.md) — the sponsor mechanism: expired and inert
+- [docs/decisions/embedded-local-engine.md](docs/decisions/embedded-local-engine.md) — why the engine ships inside the app
 - [docs/operations/traffic-protection.md](docs/operations/traffic-protection.md) — caching and page regeneration
 
 ## License

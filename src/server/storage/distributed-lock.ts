@@ -54,22 +54,6 @@ async function release(key: string, token: string, failureEvent: string) {
  * release function when the lock was free, else null. The lock expires on
  * its own after ttlMs if the holder dies. Throws when Redis fails.
  */
-export async function tryDistributedLock(params: {
-  key: string;
-  ttlMs: number;
-  /** Logged when releasing fails. */
-  releaseFailureEvent?: string;
-}): Promise<(() => Promise<void>) | null> {
-  const token = randomUUID();
-  if (!(await acquire(params.key, token, params.ttlMs))) return null;
-  return () =>
-    release(
-      params.key,
-      token,
-      params.releaseFailureEvent ?? "storage.distributed_lock.release_failed",
-    );
-}
-
 export async function withDistributedLock<T>(params: {
   key: string;
   callback: () => Promise<T>;

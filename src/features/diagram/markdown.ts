@@ -39,9 +39,8 @@ export function repositoryMarkdown(params: {
   diagram: string;
   readout: DiagramReadout;
   /** The watch page, when a video tour of the repository exists. */
-  videoUrl?: string | null;
 }): string {
-  const { owner, repo, diagram, readout, videoUrl } = params;
+  const { owner, repo, diagram, readout } = params;
   const name = `${owner}/${repo}`;
   const urls = repositoryUrls(owner, repo);
   const day = formatDay(readout.lastSuccessfulAt);
@@ -52,7 +51,6 @@ export function repositoryMarkdown(params: {
     "",
     `- Interactive diagram: ${urls.page}`,
     `- Repository: ${urls.github}`,
-    ...(videoUrl ? [`- Video tour (about a minute): ${videoUrl}`] : []),
     "",
   ];
 

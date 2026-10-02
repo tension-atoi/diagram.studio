@@ -28,7 +28,7 @@ export interface GuideQuestion {
 export const GUIDE_INTRODUCTION =
   "The quickest way to understand an unfamiliar repository is a picture of its main parts and how they connect. This guide shows how to get one for any GitHub repository in one step, what it contains, how AI agents can use it, and when a different tool is the better choice.";
 
-export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
+export function guideSections(): GuideSection[] {
   return [
     {
       id: "one-step",
@@ -55,17 +55,6 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
         "Making diagrams is free within a daily limit. If it runs out, you can add your own OpenAI API key under API Key.",
       ],
     },
-    ...(videos
-      ? [
-          {
-            id: "videos",
-            heading: "Explainer videos",
-            paragraphs: [
-              "Many repositories also have a narrated video tour of about a minute: what the project is for, what people do with it, and how its main parts fit together. Open it with the Video button on a repository's page, or watch them all on [the videos page](/videos) or as [reels](/reels). Free videos are limited each day; past the limit, you can pay $3 to have one made.",
-            ],
-          },
-        ]
-      : []),
     {
       id: "ai-agents",
       heading: "Use it from AI agents",
@@ -165,7 +154,7 @@ function guideMarkdownText(text: string): string {
 }
 
 /** The whole guide as Markdown (the body of /llms-full.txt). */
-export function guideMarkdown({ videos }: { videos: boolean }): string {
+export function guideMarkdown(): string {
   const lines = [
     `## ${GUIDE_TITLE}`,
     "",
@@ -174,7 +163,7 @@ export function guideMarkdown({ videos }: { videos: boolean }): string {
     guideMarkdownText(GUIDE_INTRODUCTION),
     "",
   ];
-  for (const section of guideSections({ videos })) {
+  for (const section of guideSections()) {
     lines.push(`### ${section.heading}`, "");
     for (const paragraph of section.paragraphs)
       lines.push(guideMarkdownText(paragraph), "");

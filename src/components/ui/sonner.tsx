@@ -1,16 +1,17 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useStudioTheme } from "~/lib/theme-context";
 import { Toaster as Sonner } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
+  // Sonner knows two themes; the studio has a hybrid one, which is dark.
+  const { theme } = useStudioTheme();
 
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme={theme === "light" ? "light" : "dark"}
       className="toaster group"
       toastOptions={{
         classNames: {
@@ -22,7 +23,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           actionButton:
             "!bg-purple-200 dark:!bg-[hsl(var(--neo-button))] !border-[2px] !border-solid !border-black dark:!border-[#2d1d4e] !py-[14px] !px-6 !text-lg !text-black hover:!bg-purple-300 dark:hover:!bg-[hsl(var(--neo-button-hover))] !transition-colors !cursor-pointer",
           cancelButton:
-            "text-neutral-500 underline hover:text-neutral-700 dark:text-[hsl(var(--muted-foreground))] dark:hover:text-[hsl(var(--foreground))]",
+            "text-neutral-500 underline hover:text-neutral-700 dark:!text-[hsl(var(--neo-foreground))]",
         },
         duration: 5000,
       }}

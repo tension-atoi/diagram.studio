@@ -3,12 +3,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useGitHubConnectResult } from "~/hooks/use-github-connect-result";
 
-const mocks = vi.hoisted(() => ({ captureAnalyticsEvent: vi.fn() }));
-
-vi.mock("~/lib/analytics-client", () => ({
-  captureAnalyticsEvent: mocks.captureAnalyticsEvent,
-}));
-
 afterEach(() => {
   window.history.replaceState(null, "", "/");
   vi.clearAllMocks();
@@ -27,11 +21,6 @@ describe("useGitHubConnectResult", () => {
       }),
     );
     expect(window.location.pathname + window.location.search).toBe("/octo/app");
-    expect(mocks.captureAnalyticsEvent).toHaveBeenCalledTimes(1);
-    expect(mocks.captureAnalyticsEvent).toHaveBeenCalledWith(
-      "github_connect_completed",
-      { source: "repo" },
-    );
   });
 
   it("reports why a sign-in failed", async () => {
@@ -40,10 +29,11 @@ describe("useGitHubConnectResult", () => {
     const { result } = renderHook(() => useGitHubConnectResult("menu"));
 
     await waitFor(() => expect(result.current[0]?.status).toBe("failed"));
-    expect(mocks.captureAnalyticsEvent).toHaveBeenCalledWith(
-      "github_connect_failed",
-      { source: "menu", reason: "denied" },
-    );
+    expect(result.current[0]).toMatchObject({
+      status: "failed",
+      source: "menu",
+      reason: "denied",
+    });
   });
 
   it("leaves another entry point's outcome alone", async () => {
@@ -58,6 +48,5 @@ describe("useGitHubConnectResult", () => {
     await Promise.resolve();
     expect(result.current[0]).toBeNull();
     expect(window.location.search).toBe("?github=connected&github_from=menu");
-    expect(mocks.captureAnalyticsEvent).not.toHaveBeenCalled();
   });
 });

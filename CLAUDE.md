@@ -5,7 +5,8 @@ Guidance for working in this repository.
 ## What this is
 
 gnu.in.labs / diagram studio turns a GitHub repository into an interactive
-Mermaid architecture diagram, a written explanation, and a narrated video tour.
+Mermaid architecture diagram and a written explanation of how it is put
+together.
 It is **one Next.js 16 App Router application** (React 19, TypeScript, Tailwind 4,
 Bun). There is no separate backend — the generation API lives in Route Handlers
 under `src/app/api/`.
@@ -94,8 +95,8 @@ private repositories, and that secret is minted per install by Electron at 0600.
 
 `/mcp` serves a read-only MCP server on the local port the first-launch dialog
 confirmed (`MCP_URL` in `src/lib/site.ts`). `handler.ts` serves stateless
-streamable HTTP; `server.ts` holds the three read-only tools and the instructions
-agents read. `app.ts` registers the inline diagram view.
+streamable HTTP; `server.ts` holds one read-only tool — `get_repository_diagram` —
+and the instructions agents read. `app.ts` registers the inline diagram view.
 
 ### Layering
 
@@ -113,24 +114,13 @@ agents read. `app.ts` registers the inline diagram view.
   and `fr.ts` is typed as `Messages`, so a missing French string is a type
   error. Components read `t()` from `useStudioLanguage()`.
 
-### Hosted services, dormant
+### Two services remain, both optional and both off
 
-The tree still carries code for services this app does not use, each gated on an
-environment variable that is not set: R2, Upstash, Stripe, Resend, PostHog,
-IndexNow, Cloudflare, Vercel geolocation, and the sponsor programme. The code
-paths are unreachable. They are documented as dormant in
-`docs/operations/` and removed as a unit in the hosted-services cleanup — not
-maintained as if they worked. Do not add a dependency on them.
-
-### Explainer videos (feature-flagged, off by default)
-
-`VIDEO_EXPLAINER_ENABLED=1` plus `NEXT_PUBLIC_VIDEO_EXPLAINER=1` add a **Video**
-toggle in the repo toolbar and the watch page. The path is large — a two-model
-director and per-scene designer, a rendered engine under `public/video-engine/`,
-Chromium and ffmpeg, and cloud narration — and it is **off**: the narration
-needs a provider key, which a local install does not have. Read
-`src/features/explainer/` and the code before changing it; there is no summary
-here that would be shorter and still true.
+**R2 and Upstash.** `storage/r2.ts` and `storage/upstash.ts` are the only
+survivors of the hosted stack, kept because they are how a diagram moves off
+this machine and how shared rate limits work. Both are env-gated and unset, so
+`storage/local-disk.ts` is what runs. They are not maintained as if they were
+the default. Do not make anything depend on them being configured.
 
 ## Environment
 

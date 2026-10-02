@@ -60,15 +60,15 @@ export const REPOSITORY_TOO_LARGE_ERROR =
 // and carry no upstream response text, so `normalizeGenerationError` is willing
 // to show them verbatim.
 const GITHUB_REQUEST_TIMEOUT_ERROR = "GitHub request timed out. Please retry.";
-export const REPOSITORY_NOT_FOUND_ERROR = "Repository not found.";
-const FILE_TREE_UNAVAILABLE_ERROR = "Could not fetch repository file tree.";
-export const EMPTY_REPOSITORY_ERROR =
+const REPOSITORY_NOT_FOUND_ERROR = "Repository not found.";
+const EMPTY_REPOSITORY_ERROR =
   "Could not fetch repository file tree. Repository might be empty or inaccessible.";
+const PRIVATE_REPOSITORY_AUTH_REQUIRED_ERROR =
+  "A GitHub token is required to analyze a private repository.";
+const FILE_TREE_UNAVAILABLE_ERROR = "Could not fetch repository file tree.";
 function buildGithubRequestFailedError(status: number): string {
   return `GitHub request failed (${status}). Please retry.`;
 }
-export const PRIVATE_REPOSITORY_AUTH_REQUIRED_ERROR =
-  "A GitHub token is required to analyze a private repository.";
 export const MAX_README_BYTES = 750_000;
 export const GITHUB_REQUEST_TIMEOUT_MS = 30_000;
 const MAX_PUBLIC_TREE_CACHE_ENTRIES = 8;

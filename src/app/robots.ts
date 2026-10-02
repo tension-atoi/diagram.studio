@@ -26,25 +26,22 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     rules: [
       {
         userAgent: "*",
-        // Video posters live under /api but are link previews: X and LinkedIn
-        // honor robots.txt before fetching og:image. The longer rule wins.
-        allow: ["/", "/api/video/file"],
-        disallow: ["/api/", "/out/"],
+        allow: "/",
+        disallow: ["/api/"],
       },
       {
         // AI search and assistant crawlers read the pages, /llms.txt and each
         // repository's Markdown twin (/{owner}/{repo}.md). Named explicitly,
         // since a crawler follows only the most specific group naming it.
         userAgent: [...AI_CRAWLERS],
-        allow: ["/", "/api/video/file"],
-        disallow: ["/api/", "/out/"],
+        allow: "/",
+        disallow: ["/api/"],
       },
       {
-        // Bulk repo/image crawls create disproportionate origin
-        // traffic. Match the route-scoped WAF policy and prevent future crawls.
+        // Bulk repo/image crawls create disproportionate origin traffic.
         userAgent: ["Amazonbot", "Brightbot"],
         allow: "/",
-        disallow: ["/api/", "/out/", "/*/*"],
+        disallow: ["/api/", "/*/*"],
       },
     ],
     sitemap: getSitemapUrls(SITE_URL, sitemaps.length),

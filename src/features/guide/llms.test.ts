@@ -6,7 +6,7 @@ import { llmsFullText, llmsText } from "./llms";
 
 describe("llms.txt", () => {
   it("follows the llmstxt.org shape: title, summary, then link sections", () => {
-    const text = llmsText({ videos: true });
+    const text = llmsText();
     const lines = text.split("\n");
 
     expect(lines[0]).toBe("# gnu.in.labs / diagram studio");
@@ -31,7 +31,7 @@ describe("llms.txt", () => {
   });
 
   it("names the agent surfaces: Markdown twin, MCP and the guide", () => {
-    const text = llmsText({ videos: false });
+    const text = llmsText();
     expect(text).toContain(`${SITE_URL}/{owner}/{repo}.md`);
     expect(text).toContain("Accept: text/markdown");
     expect(text).toContain(`${SITE_URL}/mcp`);
@@ -40,9 +40,9 @@ describe("llms.txt", () => {
   });
 
   it("adds the whole guide, questions included, to llms-full.txt", () => {
-    const full = llmsFullText({ videos: true });
-    expect(full.startsWith(llmsText({ videos: true }).trimEnd())).toBe(true);
-    for (const section of guideSections({ videos: true }))
+    const full = llmsFullText();
+    expect(full.startsWith(llmsText().trimEnd())).toBe(true);
+    for (const section of guideSections())
       expect(full).toContain(`### ${section.heading}`);
     for (const { question } of GUIDE_QUESTIONS)
       expect(full).toContain(`#### ${question}`);

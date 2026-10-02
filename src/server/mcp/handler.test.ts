@@ -8,33 +8,14 @@ vi.mock("server-only", () => ({}));
 
 const mocks = vi.hoisted(() => ({
   getPublicDiagramArtifact: vi.fn(),
-  readVideoArtifact: vi.fn(),
-  getCachedBrowsePage: vi.fn(),
   upstashEval: vi.fn(),
-  emitLiveEvent: vi.fn(async () => undefined),
 }));
 
-vi.mock("~/lib/video-flag", () => ({ VIDEOS_ENABLED: true }));
 vi.mock("~/server/storage/artifact-store", () => ({
   getPublicDiagramArtifact: mocks.getPublicDiagramArtifact,
 }));
-vi.mock("~/server/explainer/store", () => ({
-  readVideoArtifact: mocks.readVideoArtifact,
-}));
-vi.mock("~/server/browse-index-cache", () => ({
-  getCachedBrowsePage: mocks.getCachedBrowsePage,
-}));
 vi.mock("~/server/storage/upstash", () => ({
   upstashEval: mocks.upstashEval,
-}));
-vi.mock("~/server/admin/live-events", () => ({
-  emitLiveEvent: mocks.emitLiveEvent,
-  requestOrigin: () => ({
-    country: "CA",
-    region: "ON",
-    city: "",
-    device: "desktop",
-  }),
 }));
 
 import { describeClient, handleMcpRequest } from "./handler";
@@ -96,8 +77,6 @@ beforeEach(() => {
   mocks.upstashEval.mockImplementation(async ({ keys }: { keys: string[] }) =>
     keys[0]?.startsWith("ratelimit:") ? [1, 3600] : 1,
   );
-  mocks.readVideoArtifact.mockResolvedValue(null);
-  mocks.getCachedBrowsePage.mockResolvedValue({ items: [], total: 0 });
 });
 
 afterEach(() => {
@@ -110,9 +89,7 @@ describe("MCP endpoint", () => {
     async (mode) => {
       const client = await connect(mode);
       const { tools } = await client.listTools();
-      expect(tools.map((tool) => tool.name).sort()).toEqual([
-        "find_repository_diagrams",
-        "get_explainer_video",
+      expect(tools.map((tool) => tool.name)).toEqual([
         "get_repository_diagram",
       ]);
       for (const tool of tools)
@@ -148,17 +125,6 @@ describe("MCP endpoint", () => {
     expect(text).toContain("**FastAPI app** `fastapi/applications.py`");
     expect(text).toContain("```mermaid");
     await client.close();
-    await vi.waitFor(() =>
-      expect(mocks.emitLiveEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          kind: "mcp.call",
-          tool: "get_repository_diagram",
-          outcome: "found",
-          repo: "fastapi/fastapi",
-          client: "claude-code",
-        }),
-      ),
-    );
   });
 
   it("attaches the diagram view to get_repository_diagram only", async () => {
@@ -169,8 +135,6 @@ describe("MCP endpoint", () => {
       ui: { resourceUri: "ui://gnu.in.labs/diagram-view-v1.html" },
       "openai/outputTemplate": "ui://gnu.in.labs/diagram-view-v1.html",
     });
-    expect(byName.get("find_repository_diagrams")?._meta?.ui).toBeUndefined();
-    expect(byName.get("get_explainer_video")?._meta?.ui).toBeUndefined();
 
     const { resources } = await client.listResources();
     expect(resources).toEqual([
@@ -219,17 +183,6 @@ describe("MCP endpoint", () => {
 
   it("never generates: a missing diagram points at the page that does", async () => {
     mocks.getPublicDiagramArtifact.mockResolvedValue(null);
-    mocks.getCachedBrowsePage.mockResolvedValue({
-      items: [
-        {
-          username: "tiangolo",
-          repo: "fastapi-utils",
-          stargazerCount: 10,
-          lastSuccessfulAt: "2026-01-01T00:00:00Z",
-        },
-      ],
-      total: 1,
-    });
     const client = await connect();
     const result = await client.callTool({
       name: "get_repository_diagram",
@@ -238,7 +191,6 @@ describe("MCP endpoint", () => {
     const text = textOf(result);
     expect(text).toContain("no diagram of someone/fastapi yet");
     expect(text).toContain(siteUrl("/someone/fastapi"));
-    expect(text).toContain("tiangolo/fastapi-utils");
     expect(result._meta?.["com.gnu.in.labs/diagram"]).toEqual({
       status: "missing",
       repository: "someone/fastapi",
@@ -248,11 +200,6 @@ describe("MCP endpoint", () => {
       mermaid: null,
     });
     await client.close();
-    await vi.waitFor(() =>
-      expect(mocks.emitLiveEvent).toHaveBeenCalledWith(
-        expect.not.objectContaining({ repo: expect.anything() }),
-      ),
-    );
   });
 
   it("refuses calls past the per-network limit", async () => {
@@ -322,32 +269,6 @@ describe("MCP endpoint", () => {
     });
     expect(result.isError).toBe(true);
     expect(mocks.getPublicDiagramArtifact).not.toHaveBeenCalled();
-    await client.close();
-  });
-
-  it("searches the browse index by stars", async () => {
-    mocks.getCachedBrowsePage.mockResolvedValue({
-      items: Array.from({ length: 20 }, (_, index) => ({
-        username: "vercel",
-        repo: `repo-${index}`,
-        stargazerCount: 100 - index,
-        lastSuccessfulAt: "2026-01-01T00:00:00Z",
-      })),
-      total: 42,
-    });
-    const client = await connect();
-    const result = await client.callTool({
-      name: "find_repository_diagrams",
-      arguments: { query: "github.com/vercel", limit: 3 },
-    });
-    expect(mocks.getCachedBrowsePage).toHaveBeenCalledWith({
-      q: "vercel",
-      sort: "stars_desc",
-    });
-    const text = textOf(result);
-    expect(text).toContain("3 of 42");
-    expect(text).toContain(siteUrl("/vercel/repo-2"));
-    expect(text).not.toContain("repo-3");
     await client.close();
   });
 

@@ -8,7 +8,6 @@ import {
   type GitHubConnectResult,
   type GitHubConnectSource,
 } from "~/features/credentials/github-connect";
-import { captureAnalyticsEvent } from "~/lib/analytics-client";
 
 /**
  * Picks up the outcome of a "Continue with GitHub" sign-in that started from
@@ -26,14 +25,6 @@ export function useGitHubConnectResult(source: GitHubConnectSource) {
       "",
       withoutGitHubConnectResult(window.location.href),
     );
-    if (parsed.status === "connected") {
-      captureAnalyticsEvent("github_connect_completed", { source });
-    } else {
-      captureAnalyticsEvent("github_connect_failed", {
-        source,
-        reason: parsed.reason,
-      });
-    }
     setResult(parsed);
   }, [source]);
 

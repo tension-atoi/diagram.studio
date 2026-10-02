@@ -34,10 +34,6 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("next/server", () => ({ after: mocks.after }));
-vi.mock("~/server/admin/live-events", () => ({
-  emitLiveEvent: vi.fn(async () => undefined),
-  requestOrigin: vi.fn(() => ({})),
-}));
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
   revalidateTag: vi.fn(),
@@ -111,8 +107,6 @@ vi.mock("~/server/generate/rate-limit", async (importOriginal) => ({
   refundGenerationRateLimit: mocks.refundRateLimit,
 }));
 import { POST } from "~/app/api/generate/stream/route";
-import { emitLiveEvent } from "~/server/admin/live-events";
-
 const estimateCostSummary = {
   kind: "estimate" as const,
   approximate: true,
@@ -286,60 +280,17 @@ describe("POST /api/generate/stream", () => {
     expect(mocks.refundRateLimit).not.toHaveBeenCalled();
   });
 
-  it("names a repository on the live feed only once it is confirmed public", async () => {
-    mockEstimate(1_000);
-    const live = () =>
-      vi
-        .mocked(emitLiveEvent)
-        .mock.calls.map(([event]) => [
-          event.kind,
-          event.repo,
-          event.job?.state ?? null,
-        ]);
-
-    mocks.getGithubData.mockRejectedValueOnce(
-      new Error("Repository not found."),
-    );
-    await (await POST(request())).text();
-    await mocks.afterCallback?.();
-    expect(live()).toEqual([["diagram.finished", "a repository", null]]);
-
-    vi.mocked(emitLiveEvent).mockClear();
-    mocks.streamCompletion.mockRejectedValue(new Error("upstream exploded"));
-    await (await POST(request())).text();
-    await mocks.afterCallback?.();
-    expect(live()).toEqual([
-      ["diagram.started", "openai/openai-node", "start"],
-      ["diagram.finished", "openai/openai-node", "end"],
-    ]);
-
-    vi.mocked(emitLiveEvent).mockClear();
-    mocks.resolveRequestCredentials.mockResolvedValue({ githubPat: "ghp_x" });
-    await (await POST(request())).text();
-    await mocks.afterCallback?.();
-    expect(live()).toEqual([
-      ["diagram.started", "a private repository", "start"],
-      ["diagram.finished", "a private repository", "end"],
-    ]);
-  });
-
-  it("ends the live job and closes the stream even when finalizing throws", async () => {
+  it("closes the stream even when finalizing throws", async () => {
     mockEstimate(1_000);
     mocks.streamCompletion.mockRejectedValue(new Error("upstream exploded"));
     mocks.finalizeStream.mockRejectedValueOnce(new Error("storage exploded"));
 
     // The response ends (no hang until the platform timeout).
-    await (await POST(request())).text();
+    const response = await POST(request());
+    await response.text();
     await mocks.afterCallback?.();
 
-    expect(
-      vi
-        .mocked(emitLiveEvent)
-        .mock.calls.map(([event]) => [event.kind, event.job?.state ?? null]),
-    ).toEqual([
-      ["diagram.started", "start"],
-      ["diagram.finished", "end"],
-    ]);
+    expect(response.bodyUsed).toBe(true);
   });
 
   it("does not throttle a caller who brings their own API key", async () => {

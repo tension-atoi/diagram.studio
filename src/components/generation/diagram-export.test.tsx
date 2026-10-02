@@ -3,11 +3,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { DiagramExport } from "./diagram-export";
 
 import { siteUrl } from "~/test-support/site";
-const { exportPng, capture } = vi.hoisted(() => ({
+const { exportPng } = vi.hoisted(() => ({
   exportPng: vi.fn(),
-  capture: vi.fn(),
 }));
-vi.mock("~/lib/analytics-client", () => ({ captureAnalyticsEvent: capture }));
 vi.mock("~/features/diagram/export", async (importOriginal) => ({
   ...(await importOriginal<object>()),
   exportMermaidSvgAsPng: exportPng,
@@ -115,45 +113,36 @@ describe("diagram export", () => {
   it.each([
     [
       "README picture",
-      "readme_picture",
       `[![Architecture diagram of acme/demo](${siteUrl("/acme/demo/diagram.png")})](${siteUrl("/acme/demo")}?utm_source=readme&utm_medium=picture)`,
     ],
     [
       "README badge",
-      "readme_badge",
       `[![Architecture diagram](${siteUrl("/diagram-badge.svg")})](${siteUrl("/acme/demo")}?utm_source=readme&utm_medium=badge)`,
     ],
-  ])(
-    "copies the %s Markdown and counts it",
-    async (label, method, markdown) => {
-      const writeText = vi.fn().mockResolvedValue(undefined);
-      Object.defineProperty(navigator, "clipboard", {
-        configurable: true,
-        value: { writeText },
-      });
-      render(
-        <DiagramExport
-          repository="acme/demo"
-          diagram="A-->B"
-          getSvg={() => null}
-          readme={{ owner: "acme", repo: "demo" }}
-        />,
-      );
-      open();
-      fireEvent.click(screen.getByRole("button", { name: label }));
+  ])("copies the %s Markdown", async (label, markdown) => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    render(
+      <DiagramExport
+        repository="acme/demo"
+        diagram="A-->B"
+        getSvg={() => null}
+        readme={{ owner: "acme", repo: "demo" }}
+      />,
+    );
+    open();
+    fireEvent.click(screen.getByRole("button", { name: label }));
 
-      expect(await screen.findByRole("status")).toHaveTextContent(
-        `${label} copied`,
-      );
-      expect(writeText).toHaveBeenCalledWith(markdown);
-      expect(capture).toHaveBeenCalledWith("diagram_shared", {
-        method,
-        repository: "acme/demo",
-      });
-    },
-  );
+    expect(await screen.findByRole("status")).toHaveTextContent(
+      `${label} copied`,
+    );
+    expect(writeText).toHaveBeenCalledWith(markdown);
+  });
 
-  it("counts a copied Mermaid source without naming a private repository", async () => {
+  it("copies the Mermaid source with the studio's credit", async () => {
     Object.defineProperty(navigator, "clipboard", {
       configurable: true,
       value: { writeText: vi.fn().mockResolvedValue(undefined) },
@@ -168,9 +157,5 @@ describe("diagram export", () => {
     open();
     fireEvent.click(screen.getByRole("button", { name: "Copy Mermaid" }));
     await screen.findByText("Mermaid copied");
-    expect(capture).toHaveBeenCalledWith("diagram_shared", {
-      method: "mermaid",
-      repository: null,
-    });
   });
 });

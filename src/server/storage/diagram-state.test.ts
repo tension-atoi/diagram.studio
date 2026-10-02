@@ -1,12 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type * as ArtifactStoreModule from "~/server/storage/artifact-store";
 
-const { writeDiagramArtifact, clearFailureSummary, upsertBrowseIndexEntry } =
-  vi.hoisted(() => ({
-    writeDiagramArtifact: vi.fn(),
-    clearFailureSummary: vi.fn(),
-    upsertBrowseIndexEntry: vi.fn(),
-  }));
+const { writeDiagramArtifact, clearFailureSummary } = vi.hoisted(() => ({
+  writeDiagramArtifact: vi.fn(),
+  clearFailureSummary: vi.fn(),
+}));
 
 vi.mock("~/server/storage/artifact-store", async (importOriginal) => {
   const actual = (await importOriginal()) as typeof ArtifactStoreModule;
@@ -21,14 +19,9 @@ vi.mock("~/server/storage/status-store", () => ({
   clearFailureSummary,
 }));
 
-vi.mock("~/server/storage/browse-diagrams", () => ({
-  upsertBrowseIndexEntry,
-}));
-
 import {
   clearSuccessfulDiagramFailureSummary,
   saveSuccessfulDiagramState,
-  updatePublicBrowseIndexForSuccessfulDiagram,
 } from "~/server/storage/diagram-state";
 
 const baseAudit = {
@@ -55,7 +48,7 @@ describe("saveSuccessfulDiagramState", () => {
     writeDiagramArtifact.mockResolvedValue(true);
   });
 
-  it("persists the public artifact without updating the browse index inline", async () => {
+  it("persists the public artifact with its star count", async () => {
     await saveSuccessfulDiagramState({
       username: "Acme",
       repo: "Demo",
@@ -77,26 +70,9 @@ describe("saveSuccessfulDiagramState", () => {
         stargazerCount: 42,
       }),
     );
-    expect(upsertBrowseIndexEntry).not.toHaveBeenCalled();
   });
 
-  it("updates the public browse index when scheduled separately", async () => {
-    await updatePublicBrowseIndexForSuccessfulDiagram({
-      username: "Acme",
-      repo: "Demo",
-      lastSuccessfulAt: "2026-03-29T12:00:00.000Z",
-      stargazerCount: 42,
-    });
-
-    expect(upsertBrowseIndexEntry).toHaveBeenCalledWith({
-      username: "Acme",
-      repo: "Demo",
-      lastSuccessfulAt: "2026-03-29T12:00:00.000Z",
-      stargazerCount: 42,
-    });
-  });
-
-  it("does not update the public browse index for private artifacts", async () => {
+  it("keeps a private artifact out of the public bucket", async () => {
     await saveSuccessfulDiagramState({
       username: "Acme",
       repo: "Demo",
@@ -114,7 +90,7 @@ describe("saveSuccessfulDiagramState", () => {
       usedOwnKey: false,
     });
 
-    expect(upsertBrowseIndexEntry).not.toHaveBeenCalled();
+    expect(writeDiagramArtifact).toHaveBeenCalled();
   });
 
   it("does not clear a newer failure when an older success loses artifact ordering", async () => {

@@ -8,7 +8,6 @@ import {
   clearRecentDiagrams,
   useRecentDiagrams,
 } from "~/features/recent/recent-diagrams";
-import { captureAnalyticsEvent } from "~/lib/analytics-client";
 import { useStudioLanguage } from "~/components/studio-language-provider";
 import type { MessageKey } from "~/lib/i18n";
 
@@ -185,18 +184,12 @@ export default function MainCard() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {recent.slice(0, 5).map((r, index) => (
+            {recent.slice(0, 5).map((r) => (
               <button
                 key={`${r.owner}/${r.repo}`}
                 type="button"
                 title={`${r.owner}/${r.repo}`}
-                onClick={(e) => {
-                  captureAnalyticsEvent("recent_diagram_clicked", {
-                    repository: `${r.owner}/${r.repo}`,
-                    position: index,
-                  });
-                  handlePresetClick(`/${r.owner}/${r.repo}`, e);
-                }}
+                onClick={(e) => handlePresetClick(`/${r.owner}/${r.repo}`, e)}
                 className="cursor-pointer rounded border border-[#2B3037] bg-[#181c22] px-2.5 py-1 font-mono text-xs text-[#a0aab8] transition-colors hover:border-[#3A414B] hover:text-white [data-theme=light]:border-[#d0d7de] [data-theme=light]:bg-[#f6f8fa] [data-theme=light]:text-[#333]"
               >
                 {r.owner}/{r.repo}

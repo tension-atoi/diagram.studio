@@ -5,39 +5,26 @@ const mocks = vi.hoisted(() => ({
   saveSuccessfulDiagramState: vi.fn(),
   persistTerminalSessionAudit: vi.fn(),
   clearSuccessfulDiagramFailureSummary: vi.fn(),
-  updatePublicBrowseIndexForSuccessfulDiagram: vi.fn(),
   writePublicDiagramPreview: vi.fn(),
   revalidatePath: vi.fn(),
   revalidateTag: vi.fn(),
-  revalidateBrowseIndexCache: vi.fn(),
-  notifyIndexNow: vi.fn(() => Promise.resolve()),
 }));
 
 vi.mock("next/cache", () => ({
   revalidatePath: mocks.revalidatePath,
   revalidateTag: mocks.revalidateTag,
 }));
-vi.mock("~/server/browse-index-cache", () => ({
-  revalidateBrowseIndexCache: mocks.revalidateBrowseIndexCache,
-}));
 vi.mock("~/server/storage/diagram-state", () => ({
   saveSuccessfulDiagramState: mocks.saveSuccessfulDiagramState,
   persistTerminalSessionAudit: mocks.persistTerminalSessionAudit,
   clearSuccessfulDiagramFailureSummary:
     mocks.clearSuccessfulDiagramFailureSummary,
-  updatePublicBrowseIndexForSuccessfulDiagram:
-    mocks.updatePublicBrowseIndexForSuccessfulDiagram,
-}));
-vi.mock("~/server/visibility/indexnow", () => ({
-  notifyIndexNow: mocks.notifyIndexNow,
 }));
 vi.mock("~/server/storage/artifact-store", () => ({
   writePublicDiagramPreview: mocks.writePublicDiagramPreview,
 }));
 
 import { persistGenerationResult } from "~/server/storage/generation-persistence";
-
-import { siteUrl } from "~/test-support/site";
 
 const audit = {
   sessionId: "session-1",
@@ -108,8 +95,6 @@ describe("persistGenerationResult", () => {
     expect(mocks.saveSuccessfulDiagramState).toHaveBeenCalledWith(
       expect.objectContaining({ visibility: "private" }),
     );
-    // A private repository's page is never announced to search engines.
-    expect(mocks.notifyIndexNow).not.toHaveBeenCalled();
   });
 
   it("expires saved diagram data and revalidates pages for both URL casings", async () => {
@@ -136,9 +121,6 @@ describe("persistGenerationResult", () => {
       "public-diagram-state:acme:demo",
       { expire: 0 },
     );
-    // Search engines hear about the page once, at its canonical address.
-    expect(mocks.notifyIndexNow).toHaveBeenCalledTimes(1);
-    expect(mocks.notifyIndexNow).toHaveBeenCalledWith([siteUrl("/acme/demo")]);
   });
 
   it("revalidates each route once when the request was already normalized", async () => {

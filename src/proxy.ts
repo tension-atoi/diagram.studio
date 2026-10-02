@@ -3,7 +3,6 @@ import {
   type NextRequest,
   NextResponse,
 } from "next/server";
-import { recordAgentFetch } from "~/server/visibility/agent-fetch";
 
 const REJECTION_HEADERS = {
   "Cache-Control": "no-store",
@@ -13,7 +12,6 @@ const REJECTION_HEADERS = {
 // First path segments that are the site's own, never a GitHub owner.
 const RESERVED_FIRST_SEGMENTS = new Set([
   "api",
-  "phx9a",
   "_next",
   "sitemap",
   "admin",
@@ -44,43 +42,27 @@ function markdownRoute(request: NextRequest): string | null {
   return wantsMarkdown ? `/${owner}/${repo}/llms.txt` : null;
 }
 
-/** Which part of the site a counted fetch was for. */
-function fetchSurface(path: string, markdown: boolean): string {
-  if (markdown) return "repo-md";
-  if (path === "/") return "home";
-  if (path === "/llms.txt" || path === "/llms-full.txt") return path.slice(1);
-  if (/^\/[^/]+\/[^/]+\/video\/?$/.test(path)) return "watch";
-  if (/^\/[^/]+\/[^/]+\/?$/.test(path)) return "repo";
-  return path.split("/")[1]?.slice(0, 30) || "other";
-}
-
 /**
  * The app does not expose Server Actions. Reject forged action requests at
  * the proxy boundary so they never reach the Next.js action decoder.
  */
 export function proxy(
   request: NextRequest,
-  event?: NextFetchEvent,
+  _event?: NextFetchEvent,
 ): NextResponse {
   if (!request.headers.has("next-action")) {
     const markdown =
       request.method === "GET" || request.method === "HEAD"
         ? markdownRoute(request)
         : null;
-    // Best effort, after the response: one Redis pipeline for known bots.
-    const counted = recordAgentFetch(
-      request.headers.get("user-agent"),
-      fetchSurface(request.nextUrl.pathname, Boolean(markdown)),
-    );
-    event?.waitUntil(counted);
     // Only mixed-case repository URLs and Markdown requests enter this branch
-    // in production. Keep query parameters (including PostHog campaign
+    // in production. Keep query parameters
     // attribution) on redirects.
     if (request.method === "GET" || request.method === "HEAD") {
       const url = request.nextUrl.clone();
       const path = url.pathname;
       if (
-        !/^\/(?:api|phx9a|_next)\//i.test(path) &&
+        !/^\/(?:api|_next)\//i.test(path) &&
         /^\/[^/]+\/[^/]+(?:\/opengraph-image)?\/?$/.test(path) &&
         path !== path.toLowerCase()
       ) {
@@ -108,28 +90,13 @@ export const config = {
       has: [{ type: "header", key: "next-action" }],
     },
     // Case-sensitive lookahead avoids running Proxy on ordinary lowercase
-    // pages, APIs, PostHog ingestion, or assets merely to normalize a URL.
-    "/((?!api/|phx9a/|_next/)(?=[^/]*[A-Z]|[^/]+/[^/]*[A-Z])[^/]+/[^/]+(?:/opengraph-image)?)",
+    // pages, APIs, or assets merely to normalize a URL.
+    "/((?!api/|_next/)(?=[^/]*[A-Z]|[^/]+/[^/]*[A-Z])[^/]+/[^/]+(?:/opengraph-image)?)",
     // A repository page's Markdown twin (see markdownRoute).
-    "/((?!api/|phx9a/|_next/)[^/]+/[^/]+\\.md)",
+    "/((?!api/|_next/)[^/]+/[^/]+\\.md)",
     {
-      source: "/((?!api/|phx9a/|_next/)[^/]+/[^/]+)",
+      source: "/((?!api/|_next/)[^/]+/[^/]+)",
       has: [{ type: "header", key: "accept", value: ".*text/markdown.*" }],
-    },
-    // Known crawlers and AI agents, counted even on pages the CDN serves from
-    // cache (where no route code runs). Only these user agents enter the
-    // proxy for plain pages, so ordinary visitors never pay for it. Must stay
-    // a literal (Next reads the matcher at build time).
-    {
-      source: "/((?!api/|phx9a/|_next/).*)",
-      has: [
-        {
-          type: "header",
-          key: "user-agent",
-          value:
-            ".*(?:ChatGPT-User|OAI-SearchBot|GPTBot|Claude-User|Claude-SearchBot|ClaudeBot|anthropic-ai|Perplexity|MistralAI-User|DuckAssistBot|GoogleAgent|Gemini-Deep-Research|Googlebot|bingbot|Applebot|meta-externalagent|CCBot|cohere-ai|YouBot).*",
-        },
-      ],
     },
   ],
 };

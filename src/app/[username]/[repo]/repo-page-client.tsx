@@ -14,25 +14,8 @@ import { usePublicDiagram } from "~/hooks/use-public-diagram";
 import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { isExampleRepo } from "~/lib/exampleRepos";
-import { VIDEOS_ENABLED } from "~/lib/video-flag";
 import { githubAccessTitle } from "~/features/diagram/github-access";
 import controls from "~/components/generation/workspace.module.css";
-
-const ExplainerVideo = dynamic(
-  () =>
-    import("~/components/explainer/explainer-video").then(
-      (module) => module.ExplainerVideo,
-    ),
-  { ssr: false },
-);
-
-const VideoInfo = dynamic(
-  () =>
-    import("~/components/explainer/video-info").then(
-      (module) => module.VideoInfo,
-    ),
-  { ssr: false },
-);
 
 const PrivateReposDialog = dynamic(
   () =>
@@ -131,19 +114,6 @@ export default function RepoPageClient({
           onRenderError={handleDiagramRenderError}
           regenerateDisabled={isExampleRepo(normalizedUsername, normalizedRepo)}
           readme={publicDiagram ?? undefined}
-          video={
-            VIDEOS_ENABLED ? (
-              <ExplainerVideo
-                username={normalizedUsername}
-                repo={normalizedRepo}
-              />
-            ) : undefined
-          }
-          info={
-            VIDEOS_ENABLED ? (
-              <VideoInfo username={normalizedUsername} repo={normalizedRepo} />
-            ) : undefined
-          }
           recovery={
             <>
               {showGithubAccessCta && (

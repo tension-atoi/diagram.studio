@@ -1,6 +1,6 @@
 // @vitest-environment node
 // The MCP limiter and usage counts are Lua scripts; these run them against a
-// real Redis (see src/server/explainer/test-redis.ts).
+// real Redis (see src/test-support/redis.ts).
 import {
   afterAll,
   afterEach,
@@ -11,7 +11,7 @@ import {
   vi,
 } from "vitest";
 
-import type { TestRedis } from "~/server/explainer/test-redis";
+import type { TestRedis } from "~/test-support/redis";
 
 const redis = vi.hoisted(() => ({ current: null as TestRedis | null }));
 
@@ -25,7 +25,7 @@ vi.mock("~/server/storage/upstash", () => ({
   }) => redis.current!.eval(params),
 }));
 
-import { startTestRedis } from "~/server/explainer/test-redis";
+import { startTestRedis } from "~/test-support/redis";
 import {
   consumeMcpRateLimit,
   getMcpUsage,

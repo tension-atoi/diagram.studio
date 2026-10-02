@@ -51,7 +51,6 @@ describe("repositoryMarkdown", () => {
       repo: "demo",
       diagram: "flowchart TD\n  A --> B",
       readout,
-      videoUrl: siteUrl("/acme/demo/video"),
     });
 
     expect(markdown).toContain("# acme/demo architecture");
@@ -60,9 +59,6 @@ describe("repositoryMarkdown", () => {
       `- Interactive diagram: ${siteUrl("/acme/demo")}`,
     );
     expect(markdown).toContain("- Repository: https://github.com/acme/demo");
-    expect(markdown).toContain(
-      `- Video tour (about a minute): ${siteUrl("/acme/demo/video")}`,
-    );
     expect(markdown).toContain(
       "## Overview\n\n#### Overview\nDemo serves an API.",
     );
@@ -77,14 +73,13 @@ describe("repositoryMarkdown", () => {
     expect(markdown.endsWith("\n")).toBe(true);
   });
 
-  it("leaves out the video line without a video, and never ends a fence early", () => {
+  it("never ends a fence early", () => {
     const markdown = repositoryMarkdown({
       owner: "acme",
       repo: "demo",
       diagram: 'flowchart TD\n  A["```"]',
       readout,
     });
-    expect(markdown).not.toContain("Video tour");
     expect(markdown).toContain('````mermaid\nflowchart TD\n  A["```"]\n````');
   });
 });

@@ -15,11 +15,11 @@ const EXAMPLES = [
   ["vercel/next.js", "Next.js"],
 ] as const;
 
-function llmsBody({ videos }: { videos: boolean }): string[] {
+function llmsBody(): string[] {
   return [
     "# gnu.in.labs / diagram studio",
     "",
-    `> The studio turns any GitHub repository into an interactive architecture diagram${videos ? " and a narrated video tour of about a minute" : ""}, on your own machine: https://github.com/{owner}/{repo} becomes ${SITE_URL}/{owner}/{repo}. Free, nothing to install, nothing leaves the computer by default.`,
+    `> The studio turns any GitHub repository into an interactive architecture diagram, on your own machine: https://github.com/{owner}/{repo} becomes ${SITE_URL}/{owner}/{repo}. Free, nothing to install, nothing leaves the computer by default.`,
     "",
     "Each diagram is made by an AI model from the repository's file tree, README and up to 12 source files: a short written overview, then a graph of the main components (grouped, at most 34) with labeled connections, checked against the real file tree and compiled to Mermaid. Every component links to its file or folder on GitHub. Diagrams are stored and shared, so a repository that has one opens instantly; others take about a minute to make in the browser. Private repositories need the owner's GitHub token and are never served to agents.",
     "",
@@ -45,19 +45,15 @@ function llmsBody({ videos }: { videos: boolean }): string[] {
     "",
     "## Optional",
     "",
-    `- [Browse diagrams](${SITE_URL}/browse): every stored public diagram, searchable.`,
-    ...(videos
-      ? [`- [Explainer videos](${SITE_URL}/videos): narrated video tours.`]
-      : []),
     `- [Source code](${GITHUB_REPO_URL}): the studio is open source under the MIT License.`,
     `- [Privacy policy](${SITE_URL}/privacy)`,
   ];
 }
 
-export function llmsText({ videos }: { videos: boolean }): string {
-  return `${llmsBody({ videos }).join("\n")}\n`;
+export function llmsText(): string {
+  return `${llmsBody().join("\n")}\n`;
 }
 
-export function llmsFullText({ videos }: { videos: boolean }): string {
-  return `${[...llmsBody({ videos }), "", guideMarkdown({ videos })].join("\n")}\n`;
+export function llmsFullText(): string {
+  return `${[...llmsBody(), "", guideMarkdown()].join("\n")}\n`;
 }

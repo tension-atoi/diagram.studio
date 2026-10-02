@@ -12,7 +12,6 @@ import {
   clearFailureSummary,
   writeFailureSummary,
 } from "~/server/storage/status-store";
-import { upsertBrowseIndexEntry } from "~/server/storage/browse-diagrams";
 import type { ArtifactVisibility } from "~/server/storage/types";
 import {
   readLocalDiagram,
@@ -172,18 +171,4 @@ export async function clearSuccessfulDiagramFailureSummary(params: {
   visibility: ArtifactVisibility;
 }): Promise<void> {
   await clearFailureSummary(params);
-}
-
-export async function updatePublicBrowseIndexForSuccessfulDiagram(params: {
-  username: string;
-  repo: string;
-  lastSuccessfulAt: string;
-  stargazerCount: number | null;
-}) {
-  await upsertBrowseIndexEntry({
-    username: params.username,
-    repo: params.repo,
-    lastSuccessfulAt: params.lastSuccessfulAt,
-    stargazerCount: params.stargazerCount,
-  });
 }

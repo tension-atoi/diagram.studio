@@ -3,9 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   getStoredDiagramState: vi.fn(),
-  hasIndexedVideo: vi.fn(),
   cachedReads: [] as Array<{ key: string; tags?: string[] }>,
-  videosOn: true,
 }));
 
 vi.mock("server-only", () => ({}));
@@ -23,16 +21,6 @@ vi.mock("next/cache", () => ({
 }));
 vi.mock("~/server/storage/artifact-store", () => ({
   getStoredDiagramState: mocks.getStoredDiagramState,
-}));
-vi.mock("~/server/explainer/config", () => ({
-  isVideoExplainerEnabled: () => mocks.videosOn,
-}));
-vi.mock("~/server/explainer/video-index", () => ({
-  hasIndexedVideo: mocks.hasIndexedVideo,
-}));
-vi.mock("~/server/explainer/cache", () => ({
-  videoSummaryTag: (owner: string, repo: string) =>
-    `explainer-video-summary:${owner}/${repo}`,
 }));
 
 import { GET, revalidate } from "./route";
@@ -69,14 +57,11 @@ const stored = {
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.cachedReads.length = 0;
-  mocks.videosOn = true;
-  mocks.hasIndexedVideo.mockResolvedValue(false);
 });
 
 describe("repository Markdown", () => {
   it("serves a stored diagram as Markdown with the page as canonical", async () => {
     mocks.getStoredDiagramState.mockResolvedValue(stored);
-    mocks.hasIndexedVideo.mockResolvedValue(true);
     const response = await call("acme", "demo");
 
     expect(response.status).toBe(200);
@@ -94,7 +79,6 @@ describe("repository Markdown", () => {
     expect(body).toContain(
       "[App](https://github.com/acme/demo/blob/HEAD/app.py)",
     );
-    expect(body).toContain(siteUrl("/acme/demo/video"));
   });
 
   it("reads only the public artifact, through the page's cache and tags", async () => {
@@ -105,18 +89,12 @@ describe("repository Markdown", () => {
       username: "acme",
       repo: "demo",
     });
-    expect(mocks.cachedReads).toEqual(
-      expect.arrayContaining([
-        {
-          key: "public-diagram-state",
-          tags: ["public-diagram-state:acme:demo"],
-        },
-        {
-          key: "repository-markdown-video",
-          tags: ["explainer-video-summary:acme/demo"],
-        },
-      ]),
-    );
+    expect(mocks.cachedReads).toEqual([
+      {
+        key: "public-diagram-state",
+        tags: ["public-diagram-state:acme:demo"],
+      },
+    ]);
     expect(revalidate).toBe(21600);
   });
 
@@ -131,23 +109,12 @@ describe("repository Markdown", () => {
     );
   });
 
-  it("answers 503 when storage fails, and links no video when videos are off", async () => {
+  it("answers 503 when storage fails", async () => {
     vi.spyOn(console, "error").mockImplementation(() => undefined);
-    mocks.videosOn = false;
     mocks.getStoredDiagramState.mockRejectedValue(new Error("R2 down"));
     const response = await call("acme", "demo");
 
     expect(response.status).toBe(503);
-    expect(mocks.hasIndexedVideo).not.toHaveBeenCalled();
-  });
-
-  it("still serves the diagram when the video lookup fails", async () => {
-    mocks.getStoredDiagramState.mockResolvedValue(stored);
-    mocks.hasIndexedVideo.mockRejectedValue(new Error("Redis down"));
-    const response = await call("acme", "demo");
-
-    expect(response.status).toBe(200);
-    expect(await response.text()).not.toContain("Video tour");
   });
 
   it("redirects mixed case and refuses names GitHub cannot have", async () => {

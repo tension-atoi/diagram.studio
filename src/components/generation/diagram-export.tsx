@@ -14,7 +14,6 @@ import {
   withStudioCredit,
 } from "~/features/diagram/export";
 import { readmeMarkdown, type ReadmeEmbed } from "~/features/diagram/readme";
-import { captureAnalyticsEvent } from "~/lib/analytics-client";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { ExportAction } from "./export-action";
 import styles from "./workspace.module.css";
@@ -39,17 +38,11 @@ export function DiagramExport({
   const container = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const id = useId();
-  const shared = (method: string) =>
-    captureAnalyticsEvent("diagram_shared", {
-      method,
-      repository: readme ? `${readme.owner}/${readme.repo}` : null,
-    });
   const copyReadme = async (kind: ReadmeEmbed) => {
     if (!readme) return;
     await navigator.clipboard.writeText(
       readmeMarkdown(readme.owner, readme.repo, kind),
     );
-    shared(`readme_${kind}`);
   };
 
   useEffect(() => {
@@ -119,7 +112,6 @@ export function DiagramExport({
                   getComputedStyle(document.body).backgroundColor,
                   repository,
                 );
-                shared("png");
               }}
             />
             <ExportAction
@@ -133,7 +125,6 @@ export function DiagramExport({
                 await navigator.clipboard.writeText(
                   withStudioCredit(diagram, repository),
                 );
-                shared("mermaid");
               }}
             />
             {readme && (

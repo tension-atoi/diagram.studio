@@ -10,7 +10,6 @@ import {
   type GitHubConnectFailure,
   type GitHubConnectSource,
 } from "~/features/credentials/github-connect";
-import { captureAnalyticsEvent } from "~/lib/analytics-client";
 
 import {
   CredentialDialog,
@@ -45,16 +44,11 @@ function GitHubConnect({
   connectError?: GitHubConnectFailure;
 }) {
   const needsInstall = connectError === "no_access" && Boolean(repository);
-  const start = (mode: "authorize" | "install") => {
-    captureAnalyticsEvent("github_connect_started", { source, mode });
-  };
-
   return (
     <div className="space-y-3">
       <a
         href={githubConnectUrl({ repository, source, returnTo })}
         data-dialog-autofocus
-        onClick={() => start("authorize")}
         className={`${controls.actionButton} ${controls.primary} w-full`}
       >
         <GitHubIcon className="h-4 w-4" aria-hidden="true" />
@@ -80,7 +74,6 @@ function GitHubConnect({
             returnTo,
             install: true,
           })}
-          onClick={() => start("install")}
           className={`${controls.actionButton} w-full`}
         >
           Choose repositories on GitHub

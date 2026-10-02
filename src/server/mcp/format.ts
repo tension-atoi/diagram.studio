@@ -1,7 +1,5 @@
-import type { BrowseIndexEntry } from "~/features/browse/catalog";
 import type { DiagramGraph } from "~/features/diagram/graph";
 import { parseGitHubRepoUrl } from "~/features/diagram/github-url";
-import type { VideoArtifact } from "~/features/explainer/types";
 import { SITE_URL } from "~/lib/site";
 import {
   githubRepoSchema,
@@ -62,21 +60,8 @@ export function parseRepositoryInput(input: string): RepositoryRef | null {
 }
 
 /** The query find_repository_diagrams matches against "owner/repo". */
-export function normalizeSearchQuery(query: string): string {
-  const repository = parseRepositoryInput(query);
-  if (repository) return `${repository.username}/${repository.repo}`;
-  return query
-    .trim()
-    .replace(/^(?:https?:\/\/)?(?:www\.)?github\.com\//i, "")
-    .replace(/^@/, "");
-}
-
 export function diagramUrl({ username, repo }: RepositoryRef): string {
   return `${SITE_URL}/${username.toLowerCase()}/${repo.toLowerCase()}`;
-}
-
-function videoUrl(ref: RepositoryRef): string {
-  return `${diagramUrl(ref)}/video`;
 }
 
 const githubUrl = ({ username, repo }: RepositoryRef) =>
@@ -147,7 +132,6 @@ export function formatDiagram(
     | "graph"
     | "lastSuccessfulAt"
   >,
-  options: { hasVideo: boolean },
 ): string {
   const ref = { username: artifact.username, repo: artifact.repo };
   const facts = [
@@ -162,8 +146,6 @@ export function formatDiagram(
     "",
     `Interactive diagram: ${diagramUrl(ref)} (zoomable; every component links to its source on GitHub)`,
   ];
-  if (options.hasVideo)
-    lines.push(`Narrated explainer video: ${videoUrl(ref)}`);
   lines.push(`Repository: ${facts.join(" · ")}`, "");
   if (artifact.explanation.trim())
     lines.push("## Explanation", "", artifact.explanation.trim(), "");
@@ -180,94 +162,14 @@ export function formatDiagram(
   return lines.join("\n");
 }
 
-function formatEntries(entries: BrowseIndexEntry[]): string[] {
-  return entries.map((entry) => {
-    const facts = [stars(entry.stargazerCount), day(entry.lastSuccessfulAt)]
-      .filter(Boolean)
-      .join(", ");
-    return `- ${entry.username}/${entry.repo}${facts ? ` (${facts})` : ""}: ${diagramUrl(entry)}`;
-  });
-}
-
 /** get_repository_diagram's answer when nothing is stored for the repository. */
-export function formatMissingDiagram(
-  ref: RepositoryRef,
-  similar: BrowseIndexEntry[],
-): string {
-  const lines = [
+export function formatMissingDiagram(ref: RepositoryRef): string {
+  return [
     `Diagram studio has no diagram of ${ref.username}/${ref.repo} yet.`,
     "",
     `To make one, open ${diagramUrl(ref)} in a browser: if the repository is public, diagram studio makes its architecture diagram there, usually in about a minute. Then call get_repository_diagram again to read it.`,
     "",
     "This tool never starts a generation itself. Check the owner/repo spelling if the repository should already have one.",
-  ];
-  if (similar.length)
-    lines.push(
-      "",
-      "Similar repositories that already have a diagram:",
-      ...formatEntries(similar),
-    );
-  return lines.join("\n");
-}
-
-/** find_repository_diagrams's answer. */
-export function formatSearchResults(
-  query: string,
-  entries: BrowseIndexEntry[],
-  total: number,
-): string {
-  if (!entries.length)
-    return [
-      `No stored diagrams match "${query}".`,
-      "",
-      'Search matches part of "owner/repo" (for example "fastapi" or "vercel/"). Any public repository can still get a diagram: call get_repository_diagram with its owner/repo for the link that generates one.',
-    ].join("\n");
-  const shown =
-    total > entries.length
-      ? `${entries.length} of ${total.toLocaleString("en-US")}, most-starred first`
-      : `${entries.length}`;
-  return [
-    `Diagrams matching "${query}" (${shown}):`,
-    "",
-    ...formatEntries(entries),
-    "",
-    "Call get_repository_diagram with one of these for its explanation, components and Mermaid source.",
-  ].join("\n");
-}
-
-const duration = (seconds: number) => {
-  const whole = Math.max(0, Math.round(seconds));
-  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
-};
-
-/** get_explainer_video's answer when a video exists. */
-export function formatVideo(video: VideoArtifact): string {
-  const ref = { username: video.meta.owner, repo: video.meta.repo };
-  const narration = video.plan.beats
-    .map((beat) => inline(beat.narration))
-    .filter(Boolean);
-  return [
-    `# Explainer video of ${ref.username}/${ref.repo} (diagram studio)`,
-    "",
-    `Title: ${inline(video.plan.title)}`,
-    `Watch: ${videoUrl(ref)}`,
-    `Length: ${duration(video.timing.DURATION)} · made ${day(video.createdAt) ?? "recently"}`,
-    `Interactive diagram: ${diagramUrl(ref)}`,
-    "",
-    "## Narration transcript",
-    "",
-    ...narration,
-    "",
-    `When sharing this with the user, link the video: ${videoUrl(ref)}`,
-  ].join("\n");
-}
-
-/** get_explainer_video's answer when no video exists. */
-export function formatMissingVideo(ref: RepositoryRef): string {
-  return [
-    `Diagram studio has no explainer video of ${ref.username}/${ref.repo} yet.`,
-    "",
-    `Videos are made on the website, not through this tool: open ${videoUrl(ref)} in a browser to see whether one can be made. The architecture diagram is available through get_repository_diagram.`,
   ].join("\n");
 }
 

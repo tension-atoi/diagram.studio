@@ -9,13 +9,8 @@ import {
 import { after } from "next/server";
 import { z } from "zod";
 
-import type { BrowseIndexEntry } from "~/features/browse/catalog";
 import type { DiagramViewPayload } from "~/features/mcp-app/diagram-payload";
-import { VIDEOS_ENABLED } from "~/lib/video-flag";
 import { SITE_URL } from "~/lib/site";
-import { emitLiveEvent, requestOrigin } from "~/server/admin/live-events";
-import { getCachedBrowsePage } from "~/server/browse-index-cache";
-import { readVideoArtifact } from "~/server/explainer/store";
 import { getClientIp } from "~/server/http/client-ip";
 import { errorText, logEvent } from "~/server/log";
 import { getPublicDiagramArtifact } from "~/server/storage/artifact-store";
@@ -28,13 +23,8 @@ import {
   diagramUrl,
   formatDiagram,
   formatMissingDiagram,
-  formatMissingVideo,
-  formatSearchResults,
-  formatVideo,
   invalidRepositoryMessage,
-  normalizeSearchQuery,
   parseRepositoryInput,
-  type RepositoryRef,
 } from "./format";
 import {
   consumeMcpRateLimit,
@@ -88,15 +78,9 @@ const repositoryInput = z.object({
     ),
 });
 
-const SIMILAR_LIMIT = 5;
-const SEARCH_LIMIT = 10;
-const MAX_SEARCH_RESULTS = 10;
-
 interface ToolOutcome {
   text: string;
   outcome: McpOutcome;
-  /** Named in the /admin feed only when a public artifact confirmed it. */
-  repo?: string;
   subject?: string;
   /** What the diagram view shows (get_repository_diagram only). */
   view?: DiagramViewPayload;
@@ -121,46 +105,15 @@ function later(task: () => Promise<unknown>): void {
   }
 }
 
-async function searchIndex(
-  query: string,
-  limit: number,
-): Promise<{ entries: BrowseIndexEntry[]; total: number } | null> {
-  const page = await getCachedBrowsePage({ q: query, sort: "stars_desc" });
-  return page
-    ? { entries: page.items.slice(0, limit), total: page.total }
-    : null;
-}
-
-async function similarDiagrams(
-  ref: RepositoryRef,
-): Promise<BrowseIndexEntry[]> {
-  try {
-    const found = await searchIndex(ref.repo, SIMILAR_LIMIT + 1);
-    const self = `${ref.username}/${ref.repo}`.toLowerCase();
-    return (found?.entries ?? [])
-      .filter(
-        (entry) => `${entry.username}/${entry.repo}`.toLowerCase() !== self,
-      )
-      .slice(0, SIMILAR_LIMIT);
-  } catch {
-    return [];
-  }
-}
-
 async function getRepositoryDiagram(input: string): Promise<ToolOutcome> {
   const ref = parseRepositoryInput(input);
   if (!ref)
     return { text: invalidRepositoryMessage(input), outcome: "invalid" };
   const subject = `${ref.username}/${ref.repo}`;
-  const [artifact, video] = await Promise.all([
-    getPublicDiagramArtifact(ref.username, ref.repo),
-    VIDEOS_ENABLED
-      ? readVideoArtifact(ref.username, ref.repo).catch(() => null)
-      : null,
-  ]);
+  const artifact = await getPublicDiagramArtifact(ref.username, ref.repo);
   if (!artifact?.diagram)
     return {
-      text: formatMissingDiagram(ref, await similarDiagrams(ref)),
+      text: formatMissingDiagram(ref),
       outcome: "missing",
       subject,
       view: {
@@ -174,9 +127,8 @@ async function getRepositoryDiagram(input: string): Promise<ToolOutcome> {
     };
   const repository = `${artifact.username}/${artifact.repo}`;
   return {
-    text: formatDiagram(artifact, { hasVideo: Boolean(video) }),
+    text: formatDiagram(artifact),
     outcome: "found",
-    repo: repository,
     subject,
     view: {
       status: "found",
@@ -186,36 +138,6 @@ async function getRepositoryDiagram(input: string): Promise<ToolOutcome> {
       stars: artifact.stargazerCount ?? null,
       mermaid: artifact.diagram,
     },
-  };
-}
-
-async function findRepositoryDiagrams(
-  query: string,
-  limit: number,
-): Promise<ToolOutcome> {
-  const normalized = normalizeSearchQuery(query);
-  const found = await searchIndex(normalized, limit);
-  if (!found) throw new Error("The browse index is unavailable.");
-  return {
-    text: formatSearchResults(normalized, found.entries, found.total),
-    outcome: found.entries.length ? "found" : "missing",
-    subject: normalized,
-  };
-}
-
-async function getExplainerVideo(input: string): Promise<ToolOutcome> {
-  const ref = parseRepositoryInput(input);
-  if (!ref)
-    return { text: invalidRepositoryMessage(input), outcome: "invalid" };
-  const subject = `${ref.username}/${ref.repo}`;
-  const video = await readVideoArtifact(ref.username, ref.repo);
-  if (!video)
-    return { text: formatMissingVideo(ref), outcome: "missing", subject };
-  return {
-    text: formatVideo(video),
-    outcome: "found",
-    repo: `${video.meta.owner}/${video.meta.repo}`,
-    subject,
   };
 }
 
@@ -251,22 +173,12 @@ async function runTool(
     }
   }
 
-  const origin = request ? requestOrigin(request) : {};
   later(async () => {
-    const notify = await recordMcpCall({
+    await recordMcpCall({
       tool,
       outcome: result.outcome,
       clientIp,
       subject: result.subject,
-    });
-    if (!notify) return;
-    await emitLiveEvent({
-      kind: "mcp.call",
-      tool,
-      outcome: result.outcome,
-      ...(result.repo ? { repo: result.repo } : {}),
-      ...(clientName ? { client: clientName } : {}),
-      ...origin,
     });
   });
 
@@ -310,54 +222,6 @@ export function createStudioMcpServer(
         getRepositoryDiagram(repository),
       ),
   );
-
-  server.registerTool(
-    "find_repository_diagrams",
-    {
-      title: "Search the studio's architecture diagrams",
-      description:
-        'Search diagram studio\'s library of ready-made architecture diagrams of public GitHub repositories by owner or repository name. Matches any part of "owner/repo" (e.g. "langchain", "vercel/", "react-native") and returns up to 10 repositories, most-starred first, each with its interactive diagram link. Use it to find a project\'s exact owner/repo from its name, or to list which repositories of an owner or topic already have diagrams. It searches repository names only, not code or file contents.',
-      inputSchema: z.object({
-        query: z
-          .string()
-          .min(1)
-          .max(100)
-          .describe(
-            'Part of a repository\'s "owner/repo" name, e.g. "fastapi", "microsoft/", or "next.js".',
-          ),
-        limit: z
-          .number()
-          .int()
-          .min(1)
-          .max(MAX_SEARCH_RESULTS)
-          .optional()
-          .describe(
-            `How many repositories to return (1–${MAX_SEARCH_RESULTS}, default ${SEARCH_LIMIT}).`,
-          ),
-      }),
-      annotations: { title: "Search diagrams", ...READ_ONLY },
-    },
-    ({ query, limit }, ctx) =>
-      runTool(request, "find_repository_diagrams", clientName, ctx, () =>
-        findRepositoryDiagrams(query, limit ?? SEARCH_LIMIT),
-      ),
-  );
-
-  if (VIDEOS_ENABLED)
-    server.registerTool(
-      "get_explainer_video",
-      {
-        title: "Get a GitHub repository's explainer video",
-        description:
-          "Get the studio's narrated explainer video of a public GitHub repository, if one has been made: the link to watch and share it, its title and length, and the full narration transcript, a plain-language walkthrough of what the project is for, what people do with it and how its main parts fit together. Use it when the user wants a video about a repository, something to watch or share instead of read, or a short spoken-style summary of a project. Read-only: it never makes a video; when none exists it says so and links the page where one can be made.",
-        inputSchema: repositoryInput,
-        annotations: { title: "Get explainer video", ...READ_ONLY },
-      },
-      ({ repository }, ctx) =>
-        runTool(request, "get_explainer_video", clientName, ctx, () =>
-          getExplainerVideo(repository),
-        ),
-    );
 
   return server;
 }

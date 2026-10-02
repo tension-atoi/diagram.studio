@@ -9,7 +9,6 @@ import {
 import { recordRecentDiagram } from "~/features/recent/recent-diagrams";
 
 const { capture } = vi.hoisted(() => ({ capture: vi.fn() }));
-vi.mock("~/lib/analytics-client", () => ({ captureAnalyticsEvent: capture }));
 
 const push = vi.fn();
 
@@ -106,10 +105,6 @@ describe("MainCard", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "facebook/react" }));
     expect(push).toHaveBeenCalledWith("/facebook/react");
-    expect(capture).toHaveBeenCalledWith("recent_diagram_clicked", {
-      repository: "facebook/react",
-      position: 0,
-    });
 
     fireEvent.click(screen.getByRole("button", { name: "Clear history" }));
     expect(screen.queryByText("Recently Inspected:")).not.toBeInTheDocument();

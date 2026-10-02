@@ -1,23 +1,11 @@
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-// The live-presence worker (workers/presence): every tab holds one socket to it.
-const presenceOrigin = (() => {
-  try {
-    const url = new URL(process.env.NEXT_PUBLIC_PRESENCE_URL ?? "");
-    return /^wss?:$/.test(url.protocol) ? ` ${url.origin}` : "";
-  } catch {
-    return "";
-  }
-})();
-
 // Defence in depth behind the diagram sanitization pipeline: if a DOMPurify
 // bypass ever lands, `connect-src 'self'` still denies the injected code any
 // way to phone home, and object/base/form rules deny the usual pivots.
 //
 // `script-src` keeps 'unsafe-inline' because Next.js emits inline bootstrap
 // scripts; tightening it further requires nonces, which need a middleware that
-// can stamp each response. PostHog and its recorder extensions are same-origin
-// via the /phx9a rewrite, so they need no CSP exception.
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
@@ -26,9 +14,8 @@ const contentSecurityPolicy = [
   // blob: and data: carry the rendered SVG through the PNG export path.
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  `connect-src 'self'${presenceOrigin}`,
+
   "worker-src 'self' blob:",
-  // Same-origin frames only: the explainer video stage (/video-engine).
   "frame-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
@@ -38,60 +25,10 @@ const contentSecurityPolicy = [
   ...(isDevelopment ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
 
-// The explainer stage renders model-written text, so it gets a stricter policy
-// than the app: only same-origin script files run (no inline scripts or
-// handlers), nothing can be fetched, and only our own pages may frame it.
-const videoStagePolicy = [
-  "default-src 'self'",
-  "script-src 'self'",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
-  "font-src 'self'",
-  "connect-src 'none'",
-  "object-src 'none'",
-  "base-uri 'none'",
-  "form-action 'none'",
-  "frame-ancestors 'self'",
-].join("; ");
-
-// Explainer videos are rendered to MP4 in headless Chromium with ffmpeg. Both
-// ship native binaries that must stay out of the bundle and be traced into the
-// functions that launch them. The render route only mixes and joins with
-// ffmpeg (segments and posters render through /api/video/render/segment), so
-// it and the generate route (which asks the segment route for its poster)
-// leave Chromium's ~60 MB out; their code (ffmpeg.ts) never imports the
-// Chromium half (render.ts), and scripts/check-video-render-tracing.mjs keeps
-// it that way. All of bin/ is needed even with graphics mode off:
-// @sparticuz/chromium unpacks swiftshader.tar.br on every launch regardless.
-const chromiumFiles = ["./node_modules/@sparticuz/chromium/bin/**"];
-const ffmpegFiles = ["./node_modules/ffmpeg-static/ffmpeg"];
-const videoRenderFiles = [...chromiumFiles, ...ffmpegFiles];
-
-// IndexNow proves ownership with a key file at the site root: /<key>.txt is
-// served by /api/indexnow-key (src/server/visibility/indexnow.ts).
-const indexNowKey = process.env.INDEXNOW_KEY?.trim() ?? "";
-const indexNowRewrites = /^[A-Za-z0-9-]{8,128}$/.test(indexNowKey)
-  ? [{ source: `/${indexNowKey}.txt`, destination: "/api/indexnow-key" }]
-  : [];
-
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: false,
   devIndicators: false,
-  serverExternalPackages: [
-    "@sparticuz/chromium",
-    "puppeteer-core",
-    "ffmpeg-static",
-  ],
-  outputFileTracingIncludes: {
-    "/api/video/render": ffmpegFiles,
-    "/api/video/render/segment": videoRenderFiles,
-    "/api/video/generate": ffmpegFiles,
-  },
-  outputFileTracingExcludes: {
-    "/api/video/render": chromiumFiles,
-    "/api/video/generate": chromiumFiles,
-  },
   allowedDevOrigins: ["127.0.0.1"],
   // The packaged desktop app and the Railway container both run Next's
   // standalone server. Nothing else is allowed to flip this: `bun run build`
@@ -111,12 +48,6 @@ const config = {
   transpilePackages: ["@aws-sdk/client-s3"],
   async redirects() {
     return [
-      // The video gallery moved from /watch to /videos.
-      {
-        source: "/:path(watch|video)",
-        destination: "/videos",
-        permanent: true,
-      },
       // Support replacing github.com in a file, branch, issue or pull-request URL.
       {
         source: "/:username/:repo/twitter-image",
@@ -133,19 +64,10 @@ const config = {
   },
   async rewrites() {
     return [
-      ...indexNowRewrites,
       // OpenAI's plugin portal proves the MCP server's domain with a token.
       {
         source: "/.well-known/openai-apps-challenge",
         destination: "/api/openai-apps-challenge",
-      },
-      {
-        source: "/phx9a/static/:path*",
-        destination: "https://us-assets.i.posthog.com/static/:path*",
-      },
-      {
-        source: "/phx9a/:path*",
-        destination: "https://us.i.posthog.com/:path*",
       },
     ];
   },
@@ -187,14 +109,6 @@ const config = {
         ],
       },
       // Must follow the catch-all rule: later rules override the same header.
-      {
-        source: "/video-engine/:path*",
-        headers: [
-          { key: "Content-Security-Policy", value: videoStagePolicy },
-          // Engine code changes with the app, so it always revalidates.
-          { key: "Cache-Control", value: "no-cache" },
-        ],
-      },
       // The diagram view chat apps show (scripts/build-mcp-app.mjs) loads
       // from their sandboxed frames, on other origins; module scripts need
       // CORS. The entry keeps its name, so it revalidates; chunks are hashed.
@@ -214,18 +128,8 @@ const config = {
           },
         ],
       },
-      {
-        source: "/video-engine/assets/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=604800",
-          },
-        ],
-      },
     ];
   },
-  // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
 };
 

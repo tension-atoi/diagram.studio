@@ -13,7 +13,6 @@ import {
   guideSections,
 } from "~/features/guide/content";
 import { SITE_URL } from "~/lib/site";
-import { VIDEOS_ENABLED } from "~/lib/video-flag";
 
 export const metadata: Metadata = {
   title: "How to Visualize a Codebase: GitHub Architecture Diagrams",
@@ -69,7 +68,7 @@ function richText(text: string): ReactNode[] {
   );
 }
 
-function guideJsonLd(videos: boolean) {
+function guideJsonLd() {
   const url = `${SITE_URL}${GUIDE_PATH}`;
   const publisher = {
     "@type": "Organization",
@@ -90,9 +89,7 @@ function guideJsonLd(videos: boolean) {
         dateModified: GUIDE_UPDATED,
         author: publisher,
         publisher,
-        articleSection: guideSections({ videos }).map(
-          (section) => section.heading,
-        ),
+        articleSection: guideSections().map((section) => section.heading),
       },
       {
         "@type": "FAQPage",
@@ -125,10 +122,10 @@ function guideJsonLd(videos: boolean) {
 }
 
 export default function VisualizeCodebasePage() {
-  const sections = guideSections({ videos: VIDEOS_ENABLED });
+  const sections = guideSections();
   return (
     <main className="container mx-auto max-w-2xl px-6 py-12 text-black dark:text-neutral-100">
-      <JsonLd data={guideJsonLd(VIDEOS_ENABLED)} />
+      <JsonLd data={guideJsonLd()} />
       <article>
         <h1 className="text-3xl font-bold text-balance">{GUIDE_TITLE}</h1>
         <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
