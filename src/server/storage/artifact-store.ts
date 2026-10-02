@@ -130,6 +130,8 @@ export async function getStoredDiagramArtifact(params: {
   username: string;
   repo: string;
   githubPat?: string;
+  /** Namespaces written before a rename; read after the primary one. */
+  legacyStorageKeys?: string[];
 }): Promise<{
   artifact: DiagramArtifact;
   location: StorageLocation;

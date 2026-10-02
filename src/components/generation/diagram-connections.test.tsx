@@ -140,7 +140,7 @@ describe("connections list", () => {
     expect(toggle).toHaveTextContent("2, not checked");
     fireEvent.click(toggle);
     expect(
-      screen.getByText(/made before diagram studio checked/),
+      screen.getByText(/made before the connections were checked/),
     ).toBeVisible();
     expect(screen.queryByText(/inferred/)).not.toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();

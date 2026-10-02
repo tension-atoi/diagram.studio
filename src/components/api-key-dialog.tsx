@@ -38,7 +38,7 @@ export function ApiKeyDialog(props: ApiKeyDialogProps) {
       dataUsage={
         <>
           Your key is kept in a protected browser cookie for 30 days. Page
-          JavaScript cannot read it. diagram studio uses it only on the server
+          JavaScript cannot read it. Diagram studio uses it only on the server
           to generate your diagrams.
         </>
       }

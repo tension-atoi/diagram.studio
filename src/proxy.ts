@@ -55,7 +55,7 @@ function fetchSurface(path: string, markdown: boolean): string {
 }
 
 /**
- * diagram studio does not expose Server Actions. Reject forged action requests at
+ * The app does not expose Server Actions. Reject forged action requests at
  * the proxy boundary so they never reach the Next.js action decoder.
  */
 export function proxy(

@@ -5,7 +5,7 @@ import { TextPage, type TextPageSection } from "~/components/text-page";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "What the diagram studio reads, where it stores it, and what it sends.",
+    "What diagram studio reads, where it stores it, and what it sends.",
   alternates: { canonical: "/privacy" },
 };
 

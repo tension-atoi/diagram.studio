@@ -245,7 +245,7 @@ async function runTool(
     } catch (error) {
       logEvent("error", "mcp.tool_failed", { tool, error: errorText(error) });
       result = {
-        text: "diagram studio could not read its stored diagrams just now. Try again in a minute.",
+        text: "Diagram studio could not read its stored diagrams just now. Try again in a minute.",
         outcome: "error",
       };
     }

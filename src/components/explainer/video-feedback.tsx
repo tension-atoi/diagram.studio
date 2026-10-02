@@ -82,7 +82,7 @@ export function VideoFeedbackForm({
         What did you think of this video?
       </label>
       <p className={styles.hint}>
-        It goes straight to my inbox (I&apos;m Ahmed, I make diagram studio).
+        It goes straight to my inbox (I&apos;m Ahmed, I built diagram studio).
         What worked, what felt off, what you wish it showed.
       </p>
       <textarea

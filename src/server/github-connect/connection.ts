@@ -133,10 +133,34 @@ export function clearGitHubConnection(cookies: CookieWriter): void {
  * can be any string, so it must not be guessable from the public account id:
  * it is keyed with the server secret, never `github-user:<id>`.
  */
-export function githubConnectionStorageKey(userId: number): string {
+/**
+ * The storage namespace a GitHub sign-in may read.
+ *
+ * The domain string was renamed with the product, and because this is an HMAC
+ * input the rename silently orphaned every private artifact already written
+ * under the old namespace: the derivation returns a different digest, so nothing
+ * is found and a second copy is written. Both are returned, old first, so a
+ * sign-in still reaches what it wrote before the rename.
+ */
+const STORAGE_DOMAIN = "gnu-in-labs-diagram-studio";
+const LEGACY_STORAGE_DOMAIN = "gitdiagram";
+
+function storageKeyFor(domain: string, userId: number): string {
   return createHmac("sha256", readRequiredEnv("CACHE_KEY_SECRET"))
-    .update(`gnu-in-labs-diagram-studio:github-account-storage:v1:${userId}`)
+    .update(`${domain}:github-account-storage:v1:${userId}`)
     .digest("hex");
+}
+
+export function githubConnectionStorageKey(userId: number): string {
+  return storageKeyFor(STORAGE_DOMAIN, userId);
+}
+
+/** Every namespace this sign-in may read, most recent derivation first. */
+function githubConnectionStorageKeys(userId: number): string[] {
+  return [
+    storageKeyFor(STORAGE_DOMAIN, userId),
+    storageKeyFor(LEGACY_STORAGE_DOMAIN, userId),
+  ];
 }
 
 const recentRefreshes = new Map<
@@ -177,6 +201,8 @@ export function resetGitHubConnectionRefreshesForTests(): void {
 export interface ResolvedGitHubConnection {
   token: string;
   storageKey: string;
+  /** Namespaces written before the product was renamed; still readable. */
+  legacyStorageKeys: string[];
   login: string;
 }
 
@@ -192,12 +218,19 @@ export async function resolveGitHubConnection(
 ): Promise<ResolvedGitHubConnection | null> {
   const connection = readGitHubConnection(cookies);
   if (!connection) return null;
-  const storageKey = githubConnectionStorageKey(connection.uid);
+  const storageKeys = githubConnectionStorageKeys(connection.uid);
+  const storageKey = storageKeys[0]!;
+  const legacyStorageKeys = storageKeys.slice(1);
 
   const needsRefresh =
     connection.atx !== null && connection.atx - now < REFRESH_MARGIN_MS;
   if (!needsRefresh) {
-    return { token: connection.at, storageKey, login: connection.login };
+    return {
+      token: connection.at,
+      storageKey,
+      legacyStorageKeys,
+      login: connection.login,
+    };
   }
 
   const canRefresh =
@@ -217,7 +250,12 @@ export async function resolveGitHubConnection(
       } catch {
         // Cookies are read-only outside a route handler; use the token anyway.
       }
-      return { token: refreshed.at, storageKey, login: connection.login };
+      return {
+        token: refreshed.at,
+        storageKey,
+        legacyStorageKeys,
+        login: connection.login,
+      };
     }
   } else if (connection.atx !== null && connection.atx <= now) {
     try {
@@ -230,6 +268,11 @@ export async function resolveGitHubConnection(
 
   // Refresh failed: the old token still works until it actually expires.
   return connection.atx !== null && connection.atx > now
-    ? { token: connection.at, storageKey, login: connection.login }
+    ? {
+        token: connection.at,
+        storageKey,
+        legacyStorageKeys,
+        login: connection.login,
+      }
     : null;
 }

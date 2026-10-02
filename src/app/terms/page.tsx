@@ -4,8 +4,7 @@ import { TextPage, type TextPageSection } from "~/components/text-page";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description:
-    "The terms for using the diagram studio and its local MCP server.",
+  description: "The terms for using diagram studio and its local MCP server.",
   alternates: { canonical: "/terms" },
 };
 

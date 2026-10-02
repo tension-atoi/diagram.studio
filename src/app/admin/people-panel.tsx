@@ -185,7 +185,7 @@ export function PeoplePanel({
         </dl>
       </div>
       <p className="mt-3 text-xs text-[hsl(var(--neo-soft-text))]">
-        One per browser, with a diagram studio tab in view or seen in the last
+        One per browser, with a tab of the studio in view or seen in the last
         two minutes. Browsers with any tab open, background tabs included:{" "}
         {number.format(withTabOpen)}.
       </p>

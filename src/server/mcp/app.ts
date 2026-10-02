@@ -108,7 +108,7 @@ export function diagramViewHtml(origin = mcpAppOrigin()): string {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>diagram studio</title>
+<title>Diagram studio</title>
 <style>${STYLES}</style>
 </head>
 <body>
@@ -134,7 +134,7 @@ export function diagramViewResourceMeta(origin = mcpAppOrigin()) {
 export function registerDiagramView(server: McpServer): void {
   registerAppResource(
     server,
-    "diagram studio diagram view",
+    "diagram studio view",
     DIAGRAM_VIEW_URI,
     {
       description:

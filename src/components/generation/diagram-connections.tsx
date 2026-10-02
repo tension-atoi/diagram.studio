@@ -49,8 +49,8 @@ export function DiagramConnections({
       <div id={id} hidden={!expanded}>
         {expanded && unchecked && (
           <p className={`${notes.prose} ${styles.note}`}>
-            This diagram was made before diagram studio checked connections
-            against the code. Regenerate it to see the file behind each arrow.
+            This diagram was made before the connections were checked against
+            the code. Regenerate it to see the file behind each arrow.
           </p>
         )}
         {expanded && (

@@ -15,7 +15,7 @@ function covers(nodePath: string, path: string): boolean {
 }
 
 /**
- * A citation must be a file the model was shown: one diagram studio read, or the
+ * A citation must be a file the model was shown: one the app read, or the
  * README it was given. A file known only by its name in the tree cannot show
  * a relationship, so citing it is dropped. So is a file that belongs to
  * neither side and does not reference both (the wiring file that constructs

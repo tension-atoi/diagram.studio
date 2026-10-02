@@ -1022,7 +1022,7 @@ function build() {
   // A feed cut signs off with where to see this diagram, big enough to read on a phone.
   var sign = FEED
     ? h("div", "", "margin-top:56px;display:flex;align-items:center;gap:18px;transform-origin:0 50%", endInner, GLYPH + '<span class="mono" style="font:600 42px/1.1 \'Geist Mono\';color:var(--purple-deep);word-break:break-all">' + esc(M.owner + "/" + M.repo) + "</span>")
-    : h("div", "", "margin-top:56px;display:flex;flex-wrap:wrap;align-items:center;gap:18px", endInner, GLYPH + '<span class="mono" style="font:600 28px/1 \'Geist Mono\'">github.com/' + esc(M.owner + "/" + M.repo) + '</span><span style="font:400 24px/1 Geist;color:var(--ink-2);margin-left:6px">· made with GitDiagram</span>');
+    : h("div", "", "margin-top:56px;display:flex;flex-wrap:wrap;align-items:center;gap:18px", endInner, GLYPH + '<span class="mono" style="font:600 28px/1 \'Geist Mono\'">github.com/' + esc(M.owner + "/" + M.repo) + '</span><span style="font:400 24px/1 Geist;color:var(--ink-2);margin-left:6px">· made with diagram studio</span>');
   tl.set(end, { visibility: "visible" }, endAt);
   words.forEach(function (sp, k) { tl.fromTo(sp, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, endAt + 0.1 + k * 0.06); });
   riseIn(sign, endAt + 0.5, { y: 20, d: 0.5 });

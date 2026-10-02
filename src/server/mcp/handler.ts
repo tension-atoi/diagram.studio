@@ -29,7 +29,7 @@ const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Max-Age": "86400",
 };
 
-const ABOUT = `diagram studio MCP server (streamable HTTP).
+const ABOUT = `Diagram studio MCP server (streamable HTTP).
 
 Architecture diagrams and explanations of public GitHub repositories, for AI agents.
 Tools: get_repository_diagram, find_repository_diagrams, get_explainer_video.

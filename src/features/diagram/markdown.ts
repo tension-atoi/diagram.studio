@@ -126,12 +126,12 @@ export function missingDiagramMarkdown(owner: string, repo: string): string {
   return [
     `# ${inline(name)} architecture`,
     "",
-    `diagram studio has no stored diagram of ${inline(name)} yet.`,
+    `Diagram studio has no stored diagram of ${inline(name)} yet.`,
     "",
     `To make one, open ${urls.page} in a browser: the page generates the diagram (about a minute), stores it, and this Markdown then describes it. Private repositories need the owner's GitHub token and are never served here.`,
     "",
     `- Repository: ${urls.github}`,
-    `- How diagram studio works: ${SITE_URL}/llms.txt`,
+    `- How the studio works: ${SITE_URL}/llms.txt`,
     "",
   ].join("\n");
 }

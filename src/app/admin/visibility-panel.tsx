@@ -156,7 +156,7 @@ function AnswerText({ answer }: { answer: AiAnswer }) {
         <span className={`${SOFT} tabular-nums`}>
           {answer.error
             ? answer.error
-            : `${answer.mentioned ? `diagram studio #${answer.position ?? "?"}` : "No diagram studio"}${answer.inSources ? " · in sources" : ""} · $${answer.costUsd.toFixed(3)}`}
+            : `${answer.mentioned ? `diagram studio #${answer.position ?? "?"}` : "Not named"}${answer.inSources ? " · in sources" : ""} · $${answer.costUsd.toFixed(3)}`}
         </span>
       </div>
       {answer.text ? (

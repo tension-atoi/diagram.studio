@@ -107,12 +107,17 @@ export function getReadLocations(params: {
   username: string;
   repo: string;
   githubPat?: string;
+  /** Namespaces written before a rename; read after the primary one. */
+  legacyStorageKeys?: string[];
 }): StorageLocation[] {
   const locations: StorageLocation[] = [];
   if (params.githubPat?.trim()) {
     locations.push(
       getPrivateLocation(params.username, params.repo, params.githubPat),
     );
+  }
+  for (const namespace of params.legacyStorageKeys ?? []) {
+    locations.push(getPrivateLocation(params.username, params.repo, namespace));
   }
   locations.push(getPublicLocation(params.username, params.repo));
   return locations;

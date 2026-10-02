@@ -19,6 +19,12 @@ export const repositoryMarkdownPath = (owner: string, repo: string) =>
 /**
  * "owner/repo architecture diagram: how it works | diagram studio", shortened to
  * fit about 60 characters: the site name goes first, then "how it works".
+ *
+ * The site name is 14 characters, so the longest repository that still earns a
+ * branded title is 9 characters ("rails/rails" no longer does). That is a real
+ * loss of brand in search results; the budget would have to grow to keep both.
+ * It is left at 60 for now because a longer title is truncated by the engines
+ * anyway.
  */
 export function repositoryPageTitle(owner: string, repo: string): string {
   const name = `${owner}/${repo}`;

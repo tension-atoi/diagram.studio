@@ -181,7 +181,7 @@ export function PrivateReposDialog({
           Your {GITHUB_CONNECT_ENABLED ? "sign-in or token" : "token"} is kept
           in a protected browser cookie for 30 days. Repository content is sent
           to the AI provider to generate your diagram. Private diagrams are
-          stored privately on diagram studio.
+          stored privately on your disk.
         </>
       }
     />

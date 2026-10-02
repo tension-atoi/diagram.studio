@@ -51,7 +51,7 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
       id: "private-repositories",
       heading: "Private repositories",
       paragraphs: [
-        "Choose Private Repos in the header and paste a fine-grained GitHub personal access token that can read the repositories you want. The token stays in a secure cookie in your browser and is sent only with your own requests; it is never saved on the studio's servers. Diagrams of private repositories are stored separately, where only that token can reach them. The [privacy policy](/privacy) has the details.",
+        "Choose Private Repos in the header and paste a fine-grained GitHub personal access token that can read the repositories you want. The token stays in a secure cookie in your browser and is sent only with your own requests; it is never saved anywhere but your browser. Diagrams of private repositories are stored separately, where only that token can reach them. The [privacy policy](/privacy) has the details.",
         "Making diagrams is free within a daily limit. If it runs out, you can add your own OpenAI API key under API Key.",
       ],
     },
@@ -79,12 +79,12 @@ export function guideSections({ videos }: { videos: boolean }): GuideSection[] {
       id: "alternatives",
       heading: "Other ways to visualize a codebase",
       paragraphs: [
-        "diagram studio is built for one job: a single picture of a whole repository, with no setup. Other tools do other jobs better:",
+        "Diagram studio is built for one job: a single picture of a whole repository, with no setup. Other tools do other jobs better:",
       ],
       entries: [
         {
           name: "DeepWiki",
-          text: "Replace `github` with `deepwiki` in a repository URL to get a generated wiki: many pages of documentation with diagrams, and a chat that answers questions about the code. Better when you want to read about a project in depth or ask it questions. diagram studio is better when you want the whole system on one screen, each part linked to its code.",
+          text: "Replace `github` with `deepwiki` in a repository URL to get a generated wiki: many pages of documentation with diagrams, and a chat that answers questions about the code. Better when you want to read about a project in depth or ask it questions. Diagram studio is better when you want the whole system on one screen, each part linked to its code.",
         },
         {
           name: "Claude Code, Codex or another coding agent",
@@ -115,7 +115,7 @@ export const GUIDE_QUESTIONS: GuideQuestion[] = [
   },
   {
     question: "Is diagram studio free?",
-    answer: `Yes. Opening stored diagrams is free, and making new ones is free within a daily limit; after that you can use your own OpenAI API key. diagram studio is also [open source](${GITHUB_REPO_URL}).`,
+    answer: `Yes. Opening stored diagrams is free, and making new ones is free within a daily limit; after that you can use your own OpenAI API key. Diagram studio is also [open source](${GITHUB_REPO_URL}).`,
   },
   {
     question: "Does it work with private repositories?",

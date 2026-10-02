@@ -195,7 +195,7 @@ export function formatMissingDiagram(
   similar: BrowseIndexEntry[],
 ): string {
   const lines = [
-    `diagram studio has no diagram of ${ref.username}/${ref.repo} yet.`,
+    `Diagram studio has no diagram of ${ref.username}/${ref.repo} yet.`,
     "",
     `To make one, open ${diagramUrl(ref)} in a browser: if the repository is public, diagram studio makes its architecture diagram there, usually in about a minute. Then call get_repository_diagram again to read it.`,
     "",
@@ -218,7 +218,7 @@ export function formatSearchResults(
 ): string {
   if (!entries.length)
     return [
-      `No stored diagram studio diagrams match "${query}".`,
+      `No stored diagrams match "${query}".`,
       "",
       'Search matches part of "owner/repo" (for example "fastapi" or "vercel/"). Any public repository can still get a diagram: call get_repository_diagram with its owner/repo for the link that generates one.',
     ].join("\n");
@@ -227,7 +227,7 @@ export function formatSearchResults(
       ? `${entries.length} of ${total.toLocaleString("en-US")}, most-starred first`
       : `${entries.length}`;
   return [
-    `diagram studio diagrams matching "${query}" (${shown}):`,
+    `Diagrams matching "${query}" (${shown}):`,
     "",
     ...formatEntries(entries),
     "",
@@ -265,7 +265,7 @@ export function formatVideo(video: VideoArtifact): string {
 /** get_explainer_video's answer when no video exists. */
 export function formatMissingVideo(ref: RepositoryRef): string {
   return [
-    `diagram studio has no explainer video of ${ref.username}/${ref.repo} yet.`,
+    `Diagram studio has no explainer video of ${ref.username}/${ref.repo} yet.`,
     "",
     `Videos are made on the website, not through this tool: open ${videoUrl(ref)} in a browser to see whether one can be made. The architecture diagram is available through get_repository_diagram.`,
   ].join("\n");

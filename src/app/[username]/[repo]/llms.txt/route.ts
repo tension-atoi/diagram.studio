@@ -76,7 +76,7 @@ export async function GET(
   if (failed) {
     // Cached for a minute at most (see readPublicDiagramState).
     return markdownResponse(
-      `# ${owner}/${name} architecture\n\ndiagram studio could not read its stored diagram just now. Try again in a minute, or open ${canonical}.\n`,
+      `# ${owner}/${name} architecture\n\nDiagram studio could not read its stored diagram just now. Try again in a minute, or open ${canonical}.\n`,
       503,
       canonical,
     );

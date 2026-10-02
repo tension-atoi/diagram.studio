@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -35,6 +36,12 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("server-only", () => ({}));
+
+/** The pre-rename derivation, kept so the fallback stays exercised. */
+const legacyGithubConnectionStorageKey = (uid: number) =>
+  createHmac("sha256", "test-cache-key-secret")
+    .update(`gitdiagram:github-account-storage:v1:${uid}`)
+    .digest("hex");
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => mocks.cookieStore),
 }));
@@ -229,6 +236,9 @@ describe("request credentials", () => {
         apiKey: undefined,
         githubPat: "ghu_current",
         githubStorageKey: githubConnectionStorageKey(42),
+        // The namespace was renamed with the product; what the sign-in wrote
+        // under the previous derivation is still readable.
+        legacyStorageKeys: [legacyGithubConnectionStorageKey(42)],
       });
       await expect(getCredentialStatus()).resolves.toMatchObject({
         githubPatConfigured: false,

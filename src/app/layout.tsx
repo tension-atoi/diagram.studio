@@ -12,13 +12,13 @@ import { DEFAULT_LANG } from "~/lib/i18n";
 export const metadata: Metadata = {
   title: "gnu.in.labs / diagram studio",
   description:
-    "Local-first, agnostic architecture diagram studio for software systems and repositories.",
+    "Local-first, provider-agnostic architecture diagrams for software systems and repositories.",
   metadataBase: new URL(SITE_URL || "http://localhost:3001"),
   openGraph: {
     type: "website",
     locale: "en_US",
     title: "gnu.in.labs / diagram studio",
-    description: "Local-first architecture diagram studio.",
+    description: "Local-first architecture diagrams.",
     siteName: "gnu.in.labs",
   },
 };

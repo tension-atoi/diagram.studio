@@ -9,7 +9,7 @@ import type { BrowseQuery } from "~/features/browse/catalog";
 export const metadata: Metadata = {
   title: "gnu.in.labs / repository index",
   description:
-    "Local architecture diagram studio repository catalog and cached topologies.",
+    "Repository catalog and cached topologies, from gnu.in.labs / diagram studio.",
   alternates: {
     canonical: "/browse",
   },
