@@ -47,7 +47,7 @@ export function PlaceholderRepo({
               href="/fastapi/fastapi"
               className="font-mono text-[0.95em] font-semibold underline decoration-2 underline-offset-4"
             >
-              gitdiagram.com/fastapi/fastapi
+              /fastapi/fastapi
             </Link>
           </p>
         </div>

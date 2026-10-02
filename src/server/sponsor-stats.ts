@@ -52,13 +52,24 @@ const VERIFIED_SNAPSHOT: SponsorStats = {
   githubStars: 16178,
 };
 
-const pageviews = `event = '$pageview'
-      AND properties.$host IN ('gitdiagram.com', 'www.gitdiagram.com')`;
+/**
+ * Hostname filter, read from the environment at call time: the sponsor report
+ * must only count this deployment's own traffic. It is a function rather than a
+ * constant because the environment is not final when this module is imported.
+ */
+function pageviews() {
+  const hosts = (process.env.POSTHOG_REPORT_HOSTS ?? "")
+    .split(",")
+    .map((host) => `'${host.trim()}'`)
+    .filter((host) => host !== "''");
+  return `event = '$pageview'
+      AND properties.$host IN (${hosts.join(", ")})`;
+}
 
 function posthogCredentials() {
   const apiKey = process.env.POSTHOG_PERSONAL_API_KEY?.trim();
-  const projectId = process.env.POSTHOG_PROJECT_ID?.trim() || "113380";
-  if (!apiKey || !/^\d+$/.test(projectId)) {
+  const projectId = process.env.POSTHOG_PROJECT_ID?.trim();
+  if (!apiKey || !projectId || !/^\d+$/.test(projectId)) {
     throw new Error("Sponsor analytics credentials are not configured.");
   }
   return { apiKey, projectId };
@@ -107,7 +118,7 @@ async function refreshRecentStats() {
     countIf(properties.$pathname = '/'),
     countIf(properties.$pathname = '/browse')
     FROM events
-    WHERE ${pageviews}
+    WHERE ${pageviews()}
       AND timestamp >= ${end} - INTERVAL 30 DAY
       AND timestamp < ${end}`;
 
@@ -163,7 +174,7 @@ async function refreshLifetimeStats() {
     uniqExact(distinct_id),
     toUnixTimestamp(min(timestamp))
     FROM events
-    WHERE ${pageviews}
+    WHERE ${pageviews()}
       AND timestamp < toDateTime(${cutoff}, 'UTC')`;
   const [lifetimePageviews, lifetimeVisitors, firstEvent] =
     lifetimeResponse.parse(await queryPostHog("sponsor-stats-lifetime", query))

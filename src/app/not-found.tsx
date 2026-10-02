@@ -17,8 +17,8 @@ export default function NotFound() {
           This page does not exist
         </h1>
         <p className="mt-4 text-base text-[hsl(var(--neo-soft-text))] dark:text-neutral-300">
-          A diagram lives at gitdiagram.com/owner/repo, the same path as the
-          repository on GitHub.
+          A diagram lives at /owner/repo, the same path as the repository on
+          GitHub.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link

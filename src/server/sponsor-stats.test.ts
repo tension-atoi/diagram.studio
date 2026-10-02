@@ -54,7 +54,8 @@ function sources({
 beforeEach(() => {
   vi.stubGlobal("fetch", request);
   vi.stubEnv("POSTHOG_PERSONAL_API_KEY", "test-query-key");
-  vi.stubEnv("POSTHOG_PROJECT_ID", "113380");
+  vi.stubEnv("POSTHOG_PROJECT_ID", "123456");
+  vi.stubEnv("POSTHOG_REPORT_HOSTS", "studio.example,www.studio.example");
   vi.spyOn(console, "warn").mockImplementation(() => {});
   vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-09-17T23:41:00Z"));
   request.mockReset();
@@ -96,7 +97,7 @@ describe("sponsor stats", () => {
       "timestamp < toDateTime(1789686000, 'UTC')",
     );
     expect(recent.query.query).toContain(
-      "properties.$host IN ('gitdiagram.com', 'www.gitdiagram.com')",
+      "properties.$host IN ('studio.example', 'www.studio.example')",
     );
     const lifetime = queryBody("sponsor-stats-lifetime");
     // 2026-09-17T00:00:00Z.
