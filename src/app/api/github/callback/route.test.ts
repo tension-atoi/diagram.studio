@@ -18,7 +18,7 @@ import {
 } from "~/server/github-connect/flow";
 import { pkceChallenge } from "~/server/github-connect/oauth";
 
-const ORIGIN = "https://gitdiagram.com";
+const ORIGIN = "https://studio.test";
 
 type SetCookie = { name: string; value: string; maxAge?: number };
 

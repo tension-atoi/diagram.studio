@@ -11,8 +11,8 @@ describe("isSameOriginRequest", () => {
   it("accepts a direct same-origin browser request", () => {
     expect(
       isSameOriginRequest(
-        request("https://gitdiagram.com/api/diagram-state", {
-          origin: "https://gitdiagram.com",
+        request("https://studio.test/api/diagram-state", {
+          origin: "https://studio.test",
           "sec-fetch-site": "same-origin",
         }),
       ),
@@ -99,8 +99,8 @@ describe("isSameOriginRequest", () => {
   it("rejects a cross-site fetch even when the origin otherwise matches", () => {
     expect(
       isSameOriginRequest(
-        request("https://gitdiagram.com/api/diagram-state", {
-          origin: "https://gitdiagram.com",
+        request("https://studio.test/api/diagram-state", {
+          origin: "https://studio.test",
           "sec-fetch-site": "cross-site",
         }),
       ),
@@ -109,11 +109,11 @@ describe("isSameOriginRequest", () => {
 
   it("rejects missing, malformed, and non-HTTP origins", () => {
     expect(
-      isSameOriginRequest(request("https://gitdiagram.com/api/diagram-state")),
+      isSameOriginRequest(request("https://studio.test/api/diagram-state")),
     ).toBe(false);
     expect(
       isSameOriginRequest(
-        request("https://gitdiagram.com/api/diagram-state", {
+        request("https://studio.test/api/diagram-state", {
           origin: "not a URL",
         }),
       ),
@@ -121,8 +121,8 @@ describe("isSameOriginRequest", () => {
     expect(
       isSameOriginRequest(
         request("http://0.0.0.0:8080/api/diagram-state", {
-          origin: "https://gitdiagram.com",
-          "x-forwarded-host": "gitdiagram.com",
+          origin: "https://studio.test",
+          "x-forwarded-host": "studio.test",
           "x-forwarded-proto": "javascript",
         }),
       ),

@@ -43,11 +43,11 @@ vi.mock("~/server/http/request-credentials", () => ({
 import { POST } from "~/app/api/generate/cost/route";
 
 function request() {
-  return new Request("https://gitdiagram.com/api/generate/cost", {
+  return new Request("https://studio.test/api/generate/cost", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Origin: "https://gitdiagram.com",
+      Origin: "https://studio.test",
       "Sec-Fetch-Site": "same-origin",
     },
     body: JSON.stringify({ username: "openai", repo: "openai-node" }),
@@ -121,18 +121,15 @@ describe("POST /api/generate/cost", () => {
   it("rejects a cross-origin caller before touching GitHub", async () => {
     // Estimation runs the same GitHub ingestion as a real generation, so an
     // open endpoint drains the server's shared API budget.
-    const crossOrigin = new Request(
-      "https://gitdiagram.com/api/generate/cost",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Origin: "https://evil.example",
-          "Sec-Fetch-Site": "cross-site",
-        },
-        body: JSON.stringify({ username: "openai", repo: "openai-node" }),
+    const crossOrigin = new Request("https://studio.test/api/generate/cost", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://evil.example",
+        "Sec-Fetch-Site": "cross-site",
       },
-    );
+      body: JSON.stringify({ username: "openai", repo: "openai-node" }),
+    });
 
     const response = await POST(crossOrigin);
 

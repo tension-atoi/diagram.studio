@@ -6,7 +6,7 @@ import {
 } from "~/server/generate/types";
 
 function jsonRequest(body: unknown, headers?: HeadersInit) {
-  return new Request("https://gitdiagram.com/api/generate/stream", {
+  return new Request("https://studio.test/api/generate/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify(body),
@@ -97,7 +97,7 @@ describe("parseGenerateRequest", () => {
   it("requires JSON and rejects malformed JSON", async () => {
     await expect(
       parseGenerateRequest(
-        new Request("https://gitdiagram.com/api/generate/stream", {
+        new Request("https://studio.test/api/generate/stream", {
           method: "POST",
           body: "not-json",
         }),
@@ -106,7 +106,7 @@ describe("parseGenerateRequest", () => {
 
     await expect(
       parseGenerateRequest(
-        new Request("https://gitdiagram.com/api/generate/stream", {
+        new Request("https://studio.test/api/generate/stream", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: "{",
@@ -116,7 +116,7 @@ describe("parseGenerateRequest", () => {
   });
 
   it("rejects payloads above the endpoint bound", async () => {
-    const request = new Request("https://gitdiagram.com/api/generate/stream", {
+    const request = new Request("https://studio.test/api/generate/stream", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

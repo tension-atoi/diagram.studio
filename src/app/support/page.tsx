@@ -36,7 +36,6 @@ const sections: TextPageSection[] = [
     body: [
       "“Ollama is not answering”: the daemon is stopped, or listening on a different port. The expected base URL is http://127.0.0.1:11434/v1.",
       "“The local server did not answer in time”: the embedded Next.js server failed to start within 90 seconds. Read logs/server.log; a missing CACHE_KEY_SECRET or an unreadable standalone build appears there.",
-      "Diagrams disappeared after an upgrade: the cache moved from ~/.cache/gitdiagram to ~/.cache/gnu-in-labs-diagram-studio on first launch of the renamed app. Both directories are plain JSON; the old one is not read any more.",
     ],
   },
 ];

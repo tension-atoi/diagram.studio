@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getClientIp } from "~/server/http/client-ip";
 
 function requestWithHeaders(headers: Record<string, string>): Request {
-  return new Request("https://gitdiagram.com/api/generate/stream", {
+  return new Request("https://studio.test/api/generate/stream", {
     method: "POST",
     headers,
   });

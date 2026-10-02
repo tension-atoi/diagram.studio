@@ -41,7 +41,7 @@ describe("GitHub connect client helpers", () => {
   it("strips only the outcome from the address", () => {
     expect(
       withoutGitHubConnectResult(
-        "https://gitdiagram.com/o/r?tab=video&github=connected&github_from=menu#top",
+        "https://studio.test/o/r?tab=video&github=connected&github_from=menu#top",
       ),
     ).toBe("/o/r?tab=video#top");
   });

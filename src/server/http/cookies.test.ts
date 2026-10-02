@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { readCookie } from "./cookies";
 
 const request = (cookie?: string) =>
-  new Request("https://gitdiagram.com/", {
+  new Request("https://studio.test/", {
     headers: cookie ? { cookie } : {},
   });
 

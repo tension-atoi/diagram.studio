@@ -1,4 +1,3 @@
-import { createHmac } from "node:crypto";
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -37,11 +36,6 @@ const mocks = vi.hoisted(() => {
 
 vi.mock("server-only", () => ({}));
 
-/** The pre-rename derivation, kept so the fallback stays exercised. */
-const legacyGithubConnectionStorageKey = (uid: number) =>
-  createHmac("sha256", "test-cache-key-secret")
-    .update(`gitdiagram:github-account-storage:v1:${uid}`)
-    .digest("hex");
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => mocks.cookieStore),
 }));
@@ -63,8 +57,8 @@ import {
 } from "~/server/github-connect/connection";
 
 function request(
-  origin = "https://gitdiagram.com",
-  url = "https://gitdiagram.com/api/generate/stream",
+  origin = "https://studio.test",
+  url = "https://studio.test/api/generate/stream",
 ): Request {
   return new Request(url, {
     headers: {
@@ -161,7 +155,7 @@ describe("request credentials", () => {
     await setCredential("github_pat", "cookie-github");
 
     await expect(
-      resolveRequestCredentials(request("https://evil.gitdiagram.com"), {
+      resolveRequestCredentials(request("https://evil.studio.test"), {
         apiKey: "explicit-openai",
       }),
     ).resolves.toEqual({
@@ -236,9 +230,6 @@ describe("request credentials", () => {
         apiKey: undefined,
         githubPat: "ghu_current",
         githubStorageKey: githubConnectionStorageKey(42),
-        // The namespace was renamed with the product; what the sign-in wrote
-        // under the previous derivation is still readable.
-        legacyStorageKeys: [legacyGithubConnectionStorageKey(42)],
       });
       await expect(getCredentialStatus()).resolves.toMatchObject({
         githubPatConfigured: false,

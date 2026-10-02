@@ -14,13 +14,13 @@ const requestSchema = z.strictObject({
 function request(
   body: string,
   headers: HeadersInit = {},
-  url = "https://gitdiagram.com/api/example",
+  url = "https://studio.test/api/example",
 ): Request {
   return new Request(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Origin: "https://gitdiagram.com",
+      Origin: "https://studio.test",
       "Sec-Fetch-Site": "same-origin",
       ...headers,
     },

@@ -29,7 +29,7 @@ vi.mock("next/navigation", () => ({
 import { GET } from "./route";
 
 const call = (username: string, repo: string) =>
-  GET(new Request("https://gitdiagram.com/x"), {
+  GET(new Request("https://studio.test/x"), {
     params: Promise.resolve({ username, repo }),
   });
 

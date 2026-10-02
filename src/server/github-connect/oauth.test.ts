@@ -41,7 +41,7 @@ describe("GitHub connect OAuth helpers", () => {
     const url = new URL(
       buildAuthorizeUrl({
         clientId: "Iv-test",
-        redirectUri: "https://gitdiagram.com/api/github/callback",
+        redirectUri: "https://studio.test/api/github/callback",
         state: "state-123",
         codeChallenge: "challenge-abc",
       }),
@@ -52,7 +52,7 @@ describe("GitHub connect OAuth helpers", () => {
     );
     expect(Object.fromEntries(url.searchParams)).toEqual({
       client_id: "Iv-test",
-      redirect_uri: "https://gitdiagram.com/api/github/callback",
+      redirect_uri: "https://studio.test/api/github/callback",
       state: "state-123",
       code_challenge: "challenge-abc",
       code_challenge_method: "S256",
@@ -88,7 +88,7 @@ describe("GitHub connect OAuth helpers", () => {
     const tokens = await exchangeCodeForTokens(config, {
       code: "code-1",
       codeVerifier: "verifier-1",
-      redirectUri: "https://gitdiagram.com/api/github/callback",
+      redirectUri: "https://studio.test/api/github/callback",
     });
 
     const init = (
@@ -99,7 +99,7 @@ describe("GitHub connect OAuth helpers", () => {
       client_secret: "test-secret",
       code: "code-1",
       code_verifier: "verifier-1",
-      redirect_uri: "https://gitdiagram.com/api/github/callback",
+      redirect_uri: "https://studio.test/api/github/callback",
     });
     expect(tokens.accessToken).toBe("ghu_a");
     expect(tokens.refreshToken).toBe("ghr_r");
@@ -118,7 +118,7 @@ describe("GitHub connect OAuth helpers", () => {
       exchangeCodeForTokens(config, {
         code: "stale",
         codeVerifier: "v",
-        redirectUri: "https://gitdiagram.com/api/github/callback",
+        redirectUri: "https://studio.test/api/github/callback",
       }),
     ).rejects.toEqual(new GitHubTokenError("bad_verification_code"));
   });

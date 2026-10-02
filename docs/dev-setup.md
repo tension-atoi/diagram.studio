@@ -155,8 +155,7 @@ as the Node runtime (`ELECTRON_RUN_AS_NODE`).
 
 What the app does on launch, in order: read or create `config.json` in its
 userData directory, ask once for the port if there is none, mint a 0600
-`CACHE_KEY_SECRET`, migrate `~/.cache/gitdiagram` to
-`~/.cache/gnu-in-labs-diagram-studio/`, spawn the standalone server, poll it
+`CACHE_KEY_SECRET`, spawn the standalone server, poll it
 until it answers, then open the window. Server output goes to `logs/server.log`
 in the same directory.
 

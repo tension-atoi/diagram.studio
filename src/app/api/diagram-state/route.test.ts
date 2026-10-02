@@ -18,13 +18,13 @@ import { POST } from "~/app/api/diagram-state/route";
 function request(
   body: unknown,
   headers: HeadersInit = {},
-  url = "https://gitdiagram.com/api/diagram-state",
+  url = "https://studio.test/api/diagram-state",
 ): Request {
   return new Request(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Origin: "https://gitdiagram.com",
+      Origin: "https://studio.test",
       "Sec-Fetch-Site": "same-origin",
       ...headers,
     },

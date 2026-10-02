@@ -150,7 +150,7 @@ describe("validateMermaidSyntax", () => {
     const previousWindow = serverGlobal.window;
     const previousDocument = serverGlobal.document;
     const { window } = new JSDOM("<!doctype html><html><body></body></html>", {
-      url: "https://gitdiagram.local/",
+      url: "https://studio.local/",
     });
 
     serverGlobal.window = window;

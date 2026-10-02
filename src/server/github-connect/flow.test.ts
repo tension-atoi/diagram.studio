@@ -47,19 +47,17 @@ describe("GitHub connect flow helpers", () => {
   it("attaches the outcome for the page that started the sign-in", () => {
     expect(
       returnUrl(
-        "https://gitdiagram.com",
+        "https://studio.test",
         { returnTo: "/o/r", source: "repo" },
         "connected",
       ).toString(),
-    ).toBe("https://gitdiagram.com/o/r?github=connected");
+    ).toBe("https://studio.test/o/r?github=connected");
     expect(
       returnUrl(
-        "https://gitdiagram.com",
+        "https://studio.test",
         { returnTo: "/browse?page=2", source: "menu" },
         "denied",
       ).toString(),
-    ).toBe(
-      "https://gitdiagram.com/browse?page=2&github=denied&github_from=menu",
-    );
+    ).toBe("https://studio.test/browse?page=2&github=denied&github_from=menu");
   });
 });

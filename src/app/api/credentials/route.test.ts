@@ -29,14 +29,14 @@ vi.mock("~/server/http/request-credentials", async (importOriginal) => {
 
 import { POST } from "~/app/api/credentials/route";
 
-function request(body: unknown, origin = "https://gitdiagram.com"): Request {
-  return new Request("https://gitdiagram.com/api/credentials", {
+function request(body: unknown, origin = "https://studio.test"): Request {
+  return new Request("https://studio.test/api/credentials", {
     method: "POST",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       Origin: origin,
       "Sec-Fetch-Site":
-        origin === "https://gitdiagram.com" ? "same-origin" : "cross-site",
+        origin === "https://studio.test" ? "same-origin" : "cross-site",
     },
     body: JSON.stringify(body),
   });

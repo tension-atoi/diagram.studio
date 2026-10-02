@@ -54,7 +54,7 @@ function getServerWindow() {
   }
 
   serverDom = new JSDOM("<!doctype html><html><body></body></html>", {
-    url: "https://gitdiagram.local/",
+    url: "https://studio.local/",
   });
   return serverDom.window;
 }
@@ -79,7 +79,7 @@ function isLikelyServerDomWindow(value: unknown): boolean {
   return (
     candidate.location === undefined ||
     typeof candidate.location.protocol !== "string" ||
-    candidate.location.href === "https://gitdiagram.local/"
+    candidate.location.href === "https://studio.local/"
   );
 }
 

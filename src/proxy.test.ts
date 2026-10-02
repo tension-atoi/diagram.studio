@@ -9,7 +9,7 @@ import { config, proxy } from "~/proxy";
 describe("proxy", () => {
   it("rejects forged Server Action requests without caching the response", () => {
     const response = proxy(
-      new NextRequest("https://gitdiagram.com/", {
+      new NextRequest("https://studio.test/", {
         method: "POST",
         headers: { "Next-Action": "x" },
       }),
@@ -21,7 +21,7 @@ describe("proxy", () => {
   });
 
   it("allows ordinary requests as defense in depth", () => {
-    const response = proxy(new NextRequest("https://gitdiagram.com/"));
+    const response = proxy(new NextRequest("https://studio.test/"));
 
     expect(response.status).toBe(200);
     expect(response.headers.get("x-middleware-next")).toBe("1");
@@ -29,11 +29,11 @@ describe("proxy", () => {
 
   it("preserves campaign parameters when canonicalizing repository URLs", () => {
     const response = proxy(
-      new NextRequest("https://gitdiagram.com/Acme/Demo?utm_source=GitHub"),
+      new NextRequest("https://studio.test/Acme/Demo?utm_source=GitHub"),
     );
     expect(response.status).toBe(308);
     expect(response.headers.get("location")).toBe(
-      "https://gitdiagram.com/acme/demo?utm_source=GitHub",
+      "https://studio.test/acme/demo?utm_source=GitHub",
     );
   });
 
@@ -68,10 +68,10 @@ describe("proxy", () => {
     "serves the Markdown twin of %s",
     (path, headers: Record<string, string>, target) => {
       const response = proxy(
-        new NextRequest(`https://gitdiagram.com${path}`, { headers }),
+        new NextRequest(`https://studio.test${path}`, { headers }),
       );
       expect(response.headers.get("x-middleware-rewrite")).toBe(
-        `https://gitdiagram.com${target}`,
+        `https://studio.test${target}`,
       );
     },
   );
@@ -84,19 +84,17 @@ describe("proxy", () => {
     ["/acme/demo/video", "text/markdown"],
   ])("leaves %s with Accept %s alone", (path, accept) => {
     const response = proxy(
-      new NextRequest(`https://gitdiagram.com${path}`, { headers: { accept } }),
+      new NextRequest(`https://studio.test${path}`, { headers: { accept } }),
     );
     expect(response.headers.get("x-middleware-rewrite")).toBeNull();
     expect(response.headers.get("x-middleware-next")).toBe("1");
   });
 
   it("lowercases a mixed-case Markdown URL before serving it", () => {
-    const response = proxy(
-      new NextRequest("https://gitdiagram.com/Acme/Demo.md"),
-    );
+    const response = proxy(new NextRequest("https://studio.test/Acme/Demo.md"));
     expect(response.status).toBe(308);
     expect(response.headers.get("location")).toBe(
-      "https://gitdiagram.com/acme/demo.md",
+      "https://studio.test/acme/demo.md",
     );
   });
 

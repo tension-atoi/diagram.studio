@@ -25,7 +25,7 @@ describe("home page", () => {
     expect(screen.getByTestId("hero")).toBeInTheDocument();
     expect(screen.getByTestId("main-card")).toBeInTheDocument();
 
-    // No JSON-LD: the hosted gitdiagram.com WebApplication / "replace hub with
+    // No JSON-LD: the hosted WebApplication / "replace hub with
     // diagram" URL trick no longer exists, and the home page shows no FAQ.
     expect(
       document.querySelector('script[type="application/ld+json"]'),

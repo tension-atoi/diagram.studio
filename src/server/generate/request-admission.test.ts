@@ -37,7 +37,7 @@ vi.mock("~/server/http/request-credentials", () => ({
 import { admitGenerationRequest } from "./request-admission";
 
 function request(body: Record<string, unknown> = {}) {
-  return new Request("https://gitdiagram.com/api/generate/stream", {
+  return new Request("https://studio.test/api/generate/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: "openai", repo: "openai-node", ...body }),
@@ -216,7 +216,7 @@ describe("admitGenerationRequest", () => {
 
   it("rejects invalid transport input before resolving credentials", async () => {
     const invalidRequest = new Request(
-      "https://gitdiagram.com/api/generate/stream",
+      "https://studio.test/api/generate/stream",
       {
         method: "POST",
         body: "{}",

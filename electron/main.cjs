@@ -19,7 +19,6 @@ const { spawn } = require("node:child_process");
 const crypto = require("node:crypto");
 const fs = require("node:fs");
 const http = require("node:http");
-const os = require("node:os");
 const path = require("node:path");
 
 /**
@@ -31,8 +30,6 @@ const DEV_URL = process.env.ELECTRON_DEV_URL || "";
 
 /** Offered on first launch; the user confirms it before anything starts. */
 const DEFAULT_PORT = 7421;
-const CACHE_DIR_NAME = "gnu-in-labs-diagram-studio";
-const LEGACY_CACHE_DIR = path.join(os.homedir(), ".cache", "gitdiagram");
 /** Local engine defaults — no hosted service is assumed to exist. */
 const ENGINE_DEFAULTS = {
   AI_PROVIDER: "ollama",
@@ -133,19 +130,6 @@ function ensureSecret(userData) {
   fs.writeFileSync(file, `${secret}\n`, { mode: 0o600 });
   fs.chmodSync(file, 0o600);
   return secret;
-}
-
-function migrateLegacyCache() {
-  const target = path.join(os.homedir(), ".cache", CACHE_DIR_NAME);
-  try {
-    if (fs.existsSync(LEGACY_CACHE_DIR) && !fs.existsSync(target)) {
-      fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.renameSync(LEGACY_CACHE_DIR, target);
-      log(`migrated diagram cache ${LEGACY_CACHE_DIR} → ${target}`);
-    }
-  } catch (error) {
-    log(`cache migration skipped: ${error instanceof Error ? error.message : String(error)}`);
-  }
 }
 
 /* -------------------------------------------------------------------- logs */
@@ -389,7 +373,6 @@ async function bootstrap() {
 
   const port = await resolvePort(userData);
   const secret = ensureSecret(userData);
-  migrateLegacyCache();
 
   try {
     startServer({ userData, port, secret });

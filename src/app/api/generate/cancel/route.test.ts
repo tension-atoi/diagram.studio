@@ -17,13 +17,13 @@ const cancelToken = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
 function request(
   body: unknown,
   headers: HeadersInit = {},
-  url = "https://gitdiagram.com/api/generate/cancel",
+  url = "https://studio.test/api/generate/cancel",
 ): Request {
   return new Request(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Origin: "https://gitdiagram.com",
+      Origin: "https://studio.test",
       "Sec-Fetch-Site": "same-origin",
       ...headers,
     },

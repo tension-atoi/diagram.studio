@@ -63,9 +63,9 @@ listen on?** The default is `7421`. The answer is stored in `config.json` in the
 application-data directory, and both the app and any MCP client read the
 endpoint from there.
 
-It also mints a signing secret on first run, readable only by your user account,
-and migrates any diagram cache from `~/.cache/gitdiagram` to
-`~/.cache/gnu-in-labs-diagram-studio/`.
+It also mints a signing secret on first run, readable only by your user account.
+Diagrams it draws are written to `~/.cache/gnu-in-labs-diagram-studio/`, and
+**Library** in the navigation lists everything stored there.
 
 The status bar along the bottom reports what is actually running:
 

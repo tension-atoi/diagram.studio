@@ -99,11 +99,11 @@ export function sanitizeReturnPath(value: string | null): string | null {
   if (value.includes("\\")) return null;
   let url: URL;
   try {
-    url = new URL(value, "https://gitdiagram.invalid");
+    url = new URL(value, "https://studio.invalid");
   } catch {
     return null;
   }
-  if (url.origin !== "https://gitdiagram.invalid") return null;
+  if (url.origin !== "https://studio.invalid") return null;
   if (url.pathname.startsWith("/api/")) return null;
   url.searchParams.delete("github");
   url.searchParams.delete("github_from");

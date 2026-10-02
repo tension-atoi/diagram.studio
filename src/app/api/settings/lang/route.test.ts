@@ -14,7 +14,7 @@ async function loadRoute() {
 }
 
 function postRequest(body: unknown): Request {
-  return new Request("https://gitdiagram.com/api/settings/lang", {
+  return new Request("https://studio.test/api/settings/lang", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: typeof body === "string" ? body : JSON.stringify(body),

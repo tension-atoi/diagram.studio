@@ -49,12 +49,6 @@ export interface RequestCredentials {
    * 8-hour token.
    */
   githubStorageKey?: string;
-  /**
-   * Legacy namespaces to read as well as the primary one. A GitHub sign-in's
-   * namespace was renamed with the product, so a sign-in also owns whatever it
-   * wrote under the previous derivation.
-   */
-  legacyStorageKeys?: string[];
 }
 
 const COOKIE_NAMES: Record<CredentialKind, string> = {
@@ -149,7 +143,6 @@ export async function resolveRequestCredentials(
     return {
       ...explicit,
       githubStorageKey: explicit.githubStorageKey ?? explicit.githubPat,
-      legacyStorageKeys: explicit.legacyStorageKeys,
     };
   }
 
@@ -168,7 +161,6 @@ export async function resolveRequestCredentials(
         apiKey,
         githubPat: connection.token,
         githubStorageKey: connection.storageKey,
-        legacyStorageKeys: connection.legacyStorageKeys,
       }
     : { apiKey, githubPat: undefined };
 }

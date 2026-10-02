@@ -120,7 +120,7 @@ function request(
   body: Record<string, unknown> = {},
   headers: Record<string, string> = {},
 ) {
-  return new Request("https://gitdiagram.com/api/generate/stream", {
+  return new Request("https://studio.test/api/generate/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify({ username: "openai", repo: "openai-node", ...body }),
@@ -479,7 +479,7 @@ describe("POST /api/generate/stream", () => {
     );
 
     const response = await POST(
-      new Request("https://gitdiagram.com/api/generate/stream", {
+      new Request("https://studio.test/api/generate/stream", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

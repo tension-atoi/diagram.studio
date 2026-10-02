@@ -42,7 +42,7 @@ describe("GET /api/diagram-preview", () => {
       source: "artifact",
     });
     const request = new NextRequest(
-      "https://gitdiagram.com/api/diagram-preview?username=acme&repo=demo&lastSuccessfulAt=2026-07-16T07%3A00%3A00.000Z",
+      "https://studio.test/api/diagram-preview?username=acme&repo=demo&lastSuccessfulAt=2026-07-16T07%3A00%3A00.000Z",
     );
 
     const response = await GET(request);
@@ -63,7 +63,7 @@ describe("GET /api/diagram-preview", () => {
   it("rejects a malformed repository identifier before reaching storage", async () => {
     const response = await GET(
       new NextRequest(
-        "https://gitdiagram.com/api/diagram-preview?username=not%20a%20user&repo=demo",
+        "https://studio.test/api/diagram-preview?username=not%20a%20user&repo=demo",
       ),
     );
 
@@ -74,7 +74,7 @@ describe("GET /api/diagram-preview", () => {
   it("bounds the timestamp so an oversized value cannot reach storage", async () => {
     const response = await GET(
       new NextRequest(
-        `https://gitdiagram.com/api/diagram-preview?username=acme&repo=demo&lastSuccessfulAt=${"9".repeat(500)}`,
+        `https://studio.test/api/diagram-preview?username=acme&repo=demo&lastSuccessfulAt=${"9".repeat(500)}`,
       ),
     );
 
@@ -88,7 +88,7 @@ describe("GET /api/diagram-preview", () => {
 
     const response = await GET(
       new NextRequest(
-        "https://gitdiagram.com/api/diagram-preview?username=acme&repo=demo",
+        "https://studio.test/api/diagram-preview?username=acme&repo=demo",
       ),
     );
 
@@ -103,7 +103,7 @@ describe("GET /api/diagram-preview", () => {
       source: "sidecar",
     });
     const request = new NextRequest(
-      "https://gitdiagram.com/api/diagram-preview?username=acme&repo=demo&lastSuccessfulAt=2026-07-16T07%3A00%3A00.000Z",
+      "https://studio.test/api/diagram-preview?username=acme&repo=demo&lastSuccessfulAt=2026-07-16T07%3A00%3A00.000Z",
     );
 
     await GET(request);
